@@ -7,23 +7,25 @@ import uflow.data.function.immutable.RequireFunction;
 import uflow.data.model.immutable.ProcessStepModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Brigitte on 28.12.2016.
  * @author August, Brigitte, Emanuel, Stefanie
  */
 public class Step {
-    String id;
-    List<Step> prevSteps;
-    List<Step> nextSteps;
-    List<DataItem> provided;
-    List<String> required;
+    private String id;
+    private Map<String,Step> prevSteps;
+    private Map<String,Step> nextSteps;
+    private List<DataItem> provided;
+    private List<String> required;
 
     public Step(ProcessStepModel step) {
         id = step.getName();
-        prevSteps = new ArrayList<>();
-        nextSteps = new ArrayList<>();
+        prevSteps = new HashMap<>();
+        nextSteps = new HashMap<>();
         provided = new ArrayList<>();
         required = new ArrayList<>();
         for (ProcessFunction func : step.getProcessFunctions()) {
@@ -40,11 +42,15 @@ public class Step {
         }
     }
 
-    public void addPrevStep(Step step) {
-        prevSteps.add(step);
+    public void addPrevStep(String id, Step step) {
+        prevSteps.put(id, step);
     }
 
-    public void addNextStep(Step step) {
-        nextSteps.add(step);
+    public void addNextStep(String id, Step step) {
+        nextSteps.put(id, step);
+    }
+
+    public Map<String,Step> getNextSteps() {
+        return nextSteps;
     }
 }

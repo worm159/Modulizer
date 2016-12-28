@@ -22,6 +22,7 @@ public abstract class ModularizationAlgorithm {
     protected List<ProcessModel> models;
     protected ProcessModel modelToSplit;
     protected Map<String, Step> steps;
+    protected List<Step> firstSteps;
 
     public List<ProcessModel> startModularization(ProcessModel model) {
         modelToSplit = model;
@@ -34,18 +35,22 @@ public abstract class ModularizationAlgorithm {
         return null;
     }
 
-    private void generateStep(Step prev, ProcessStepModel processStep, ProcessUnitModel unit) {
+    private void generateStep(String prevKey, ProcessStepModel processStep, ProcessUnitModel unit) {
         if (processStep != null) {
             Step next = null;
-            if (steps.containsKey(processStep.getName())) {
-                next = steps.get(processStep.getName());
+            String key = processStep.getId().getKey();
+            if (steps.containsKey(key)) {
+                next = steps.get(key);
             } else {
                 next = new Step(processStep);
-                steps.put(processStep.getName(), next);
+                steps.put(key, next);
             }
-            if (prev != null) {
-                prev.addNextStep(next);
-                next.addPrevStep(prev);
+            if (prevKey == null) {
+                firstSteps.add(next);
+            } else {
+                Step prev = steps.get(prevKey);
+                prev.addNextStep(key, next);
+                next.addPrevStep(prevKey, prev);
             }
             List<String> nextStepIds = new ArrayList<>();
             for (ProcessFunction func : processStep.getProcessFunctions()) {
@@ -56,15 +61,17 @@ public abstract class ModularizationAlgorithm {
                     nextStepIds.add(targetProcessUnit + "/" + nextStep);
                 }
             }
-            for (String x : nextStepIds) {
-                String[] splitted = x.split("/");
+            for (String id : nextStepIds) {
+                String[] splitted = id.split("/");
                 String unitName = splitted[0];
                 String stepName = splitted[1];
-                if (unitName == null || unitName.isEmpty()) {
-                    generateStep(next, unit.getProcessStepModels().get(stepName), unit);
-                } else {
-                    ProcessUnitModel nextUnit = modelToSplit.getProcessUnitModels().get(unitName);
-                    generateStep(next, nextUnit.getProcessStepModels().get(stepName), nextUnit);
+                if (next.getNextSteps().get(stepName) == null) {
+                    if (unitName == null || unitName.isEmpty()) {
+                        generateStep(key, unit.getProcessStepModels().get(stepName), unit);
+                    } else {
+                        ProcessUnitModel nextUnit = modelToSplit.getProcessUnitModels().get(unitName);
+                        generateStep(key, nextUnit.getProcessStepModels().get(stepName), nextUnit);
+                    }
                 }
             }
         }

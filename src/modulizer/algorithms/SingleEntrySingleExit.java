@@ -1,5 +1,6 @@
 package modulizer.algorithms;
 
+import modulizer.model.Step;
 import uflow.data.model.immutable.ProcessModel;
 
 import java.util.List;
@@ -14,8 +15,10 @@ public class SingleEntrySingleExit extends ModularizationAlgorithm{
     @Override
     public List<ProcessModel> startModularization(ProcessModel model) {
         super.startModularization(model);
+        makeModel();
+        for (Step step : firstSteps) {
 
-        //models.add(model);
+        }
         return models;
     }
 
