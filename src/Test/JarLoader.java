@@ -22,6 +22,6 @@ public class JarLoader {
         Class cls = cl.loadClass("Test.factory.ProcessModelFactory");
 
         Method m = cls.getMethod("createCycleTest", null);
-        System.out.println(m.invoke(cls.newInstance(), args));
+        System.out.println(m.invoke(cls.newInstance(), new String[0] ));
     }
 }
