@@ -1,6 +1,7 @@
 package modulizer.algorithms;
 
 import uflow.data.model.immutable.ProcessModel;
+import uflow.data.model.immutable.ProcessStepModel;
 
 import java.util.List;
 
@@ -9,5 +10,16 @@ import java.util.List;
  * @author August, Brigitte, Emanuel, Stefanie
  */
 public abstract class ModularizationAlgorithm {
-    public abstract List<ProcessModel> startModularization(ProcessModel model);
+
+    protected List<ProcessModel> models;
+    protected ProcessModel modelToSplit;
+
+    public List<ProcessModel> startModularization(ProcessModel model) {
+        modelToSplit = model;
+    }
+
+    protected ProcessModel createNewModel() {
+        ProcessModel model = null;
+        return model;
+    }
 }

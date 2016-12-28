@@ -10,10 +10,17 @@ import java.util.ArrayList;
  * @author August, Brigitte, Emanuel, Stefanie
  */
 public class SingleEntrySingleExit extends ModularizationAlgorithm{
+
     @Override
     public List<ProcessModel> startModularization(ProcessModel model) {
-        List<ProcessModel> models = new ArrayList<>();
-        models.add(model);
+        super(model);
+        models = new ArrayList<>();
+
+        //models.add(model);
         return models;
+    }
+
+    private void makeModel() {
+
     }
 }
