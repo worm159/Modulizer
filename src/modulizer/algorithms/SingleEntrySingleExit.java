@@ -13,8 +13,7 @@ public class SingleEntrySingleExit extends ModularizationAlgorithm{
 
     @Override
     public List<ProcessModel> startModularization(ProcessModel model) {
-        super(model);
-        models = new ArrayList<>();
+        super.startModularization(model);
 
         //models.add(model);
         return models;
