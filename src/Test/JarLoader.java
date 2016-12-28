@@ -1,5 +1,10 @@
 package Test;
 
+import uflow.data.function.immutable.ProcessFunction;
+import uflow.data.model.immutable.ProcessModel;
+import uflow.data.model.immutable.ProcessStepModel;
+import uflow.data.model.immutable.ProcessUnitModel;
+
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -21,7 +26,25 @@ public class JarLoader {
         ClassLoader cl = new URLClassLoader(urls);
         Class cls = cl.loadClass("Test.factory.ProcessModelFactory");
 
-        Method m = cls.getMethod("createCycleTest", null);
-        System.out.println(m.invoke(cls.newInstance(), new String[0] ));
+        Object o = cls.newInstance();
+
+        ProcessModel test;
+        for (Method m : cls.getMethods()) {
+            if (m.getName().substring(0,6).equals("create")) {
+                //Method m = cls.getMethod("createCycleTest", null);
+                test = (ProcessModel) m.invoke(o, new String[0]);
+
+                for (ProcessUnitModel unit : test.getProcessUnitModels().getValues()) {
+                    System.out.println("Unit Start Process Step: " + unit.getStartProcessStep());
+                    for (ProcessStepModel step : unit.getProcessStepModels().getValues()) {
+                        System.out.println("Step: " + step.getName());
+                        for (ProcessFunction func : step.getProcessFunctions()) {
+                            System.out.println("Function: " + func);
+                        }
+                    }
+                }
+                System.out.println("============================================================================================");
+            }
+        }
     }
 }
