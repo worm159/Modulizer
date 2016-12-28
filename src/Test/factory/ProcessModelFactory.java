@@ -24,6 +24,10 @@ import uflow.data.model.modifier.*;
 
 public class ProcessModelFactory {
 
+  public static void main (String [ ] args) {
+    ;
+  }
+
   public static ProcessModel createCycleTest() {
     return new ProcessModelModifier()
             .setId("CycleTest")

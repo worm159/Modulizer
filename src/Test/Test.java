@@ -1,6 +1,7 @@
 package Test;
 
 import Test.factory.ProcessModelFactory;
+import uflow.data.function.immutable.ProceedFunction;
 import uflow.data.function.immutable.ProcessFunction;
 import uflow.data.model.immutable.ProcessModel;
 import uflow.data.model.immutable.ProcessStepModel;
@@ -12,14 +13,16 @@ import uflow.data.model.immutable.ProcessUnitModel;
 public class Test {
 
     public static void main (String [ ] args) {
-        ProcessModel test = ProcessModelFactory.createCycleTest();
+        ProcessModel test = ProcessModelFactory.createFunctionalTest();
 
         test.getAuthorizedStartRoles();
 
         for (ProcessUnitModel unit : test.getProcessUnitModels().getValues() ) {
+            System.out.println("Unit Start Process Step: " + unit.getStartProcessStep());
             for (ProcessStepModel step : unit.getProcessStepModels().getValues()) {
+                System.out.println("Step: " + step.getName());
                 for (ProcessFunction func : step.getProcessFunctions()) {
-                    System.out.println(func);
+                    System.out.println("Function: " + func);
                 }
             }
         }
