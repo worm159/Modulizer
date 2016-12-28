@@ -19,6 +19,7 @@ public class SingleEntrySingleExit extends ModularizationAlgorithm{
         for (Step step : firstSteps) {
 
         }
+        models.add(model);
         return models;
     }
 
