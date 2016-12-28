@@ -12,7 +12,7 @@ import uflow.data.model.immutable.ProcessUnitModel;
 public class Test {
 
     public static void main (String [ ] args) {
-        ProcessModel test = ProcessModelFactory.createPurchaseProduct();
+        ProcessModel test = ProcessModelFactory.createCycleTest();
 
         test.getAuthorizedStartRoles();
 
