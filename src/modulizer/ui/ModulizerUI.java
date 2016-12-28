@@ -1,5 +1,6 @@
 package modulizer.ui;
 
+import Test.Test;
 import Test.factory.ProcessModelFactory;
 import com.sun.org.apache.xpath.internal.SourceTree;
 import modulizer.algorithms.ModularizationAlgorithm;
@@ -13,6 +14,9 @@ import uflow.data.model.immutable.ProcessUnitModel;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import uflow.data.function.immutable.ProvideFunction;
+import uflow.data.function.immutable.RequestInputFunction;
+import uflow.data.function.immutable.RequireFunction;
 
 /**
  * Created by Brigitte on 28.12.2016.
@@ -48,39 +52,66 @@ public class ModulizerUI {
     }
 
     public static void printProcessModel(ProcessModel model) {
-        for (ProcessUnitModel unit : model.getProcessUnitModels().getValues() ) {
+        for (ProcessUnitModel unit : model.getProcessUnitModels().getValues()) {
             String startStep = unit.getStartProcessStep();
             System.out.println("Unit Start Process Step: " + startStep);
             ProcessStepModel step = unit.getProcessStepModels().get(startStep);
-            if(step != null)
-                printProcessStep(step, unit, model);
+            if (step != null) {
+                printProcessSteps(step, unit, model);
+                System.out.println("");
+            }
         }
     }
 
-    private static void printProcessStep(ProcessStepModel step, ProcessUnitModel unit, ProcessModel model) {
-        System.out.println("Process Step: " + step.getName());
-        System.out.println(step);
+    private static void printProcessSteps(ProcessStepModel step, ProcessUnitModel unit, ProcessModel model) {
+        System.out.println("Process Step:   " + step.getId().getKey());
+        System.out.println("        Name:   " + step.getName());
+//        System.out.println(step);
         List<String> nextSteps = new ArrayList<>();
         for (ProcessFunction func : step.getProcessFunctions()) {
             switch (func.getClass().getName()) {
-                // other cases
+                case "uflow.data.function.immutable.RequireFunction":
+                    RequireFunction reqFunc = (RequireFunction) func;
+                    System.out.println("    Requires:   " + reqFunc.getValues());
+                    break;
+                case "uflow.data.function.immutable.RequestInputFunction":
+                    /* not used */
+                    break;
+                case "uflow.data.function.immutable.ProvideFunction":
+                    ProvideFunction provFunc = (ProvideFunction) func;
+                    System.out.println("    Provides:   " + provFunc.getValue());
+                    break;
+                case "uflow.data.function.immutable.CallFunction":
+                    /* not used */
+                    break;
                 case "uflow.data.function.immutable.ProceedFunction":
-                    ProceedFunction f = (ProceedFunction) func;
-                    String targetProcessUnit = f.getTargetProcessUnit();
-                    String nextStep = f.getNext();
-                    nextSteps.add(targetProcessUnit+"/"+nextStep);
+                    ProceedFunction procFunc = (ProceedFunction) func;
+                    String targetProcessUnit = procFunc.getTargetProcessUnit();
+                    String nextStep = procFunc.getNext();
+                    nextSteps.add(targetProcessUnit + "/" + nextStep);
+                    System.out.println("   Next Step:   " + procFunc.getNext());
+                    break;
+                default:
                     break;
             }
         }
-        for(String x : nextSteps) {
+        for (String x : nextSteps) {
             String[] splitted = x.split("/");
             String unitName = splitted[0];
             String stepName = splitted[1];
-            if(unitName==null || unitName.isEmpty()) {
-                printProcessStep(unit.getProcessStepModels().get(stepName),unit,model);
+            ProcessStepModel nextStep;
+            ProcessUnitModel nextUnit;
+            if (unitName == null || unitName.isEmpty()) {
+                nextStep = unit.getProcessStepModels().get(stepName);
+                nextUnit = unit;
             } else {
-                ProcessUnitModel nextUnit = model.getProcessUnitModels().get(unitName);
-                printProcessStep(nextUnit.getProcessStepModels().get(splitted[1]),nextUnit,model);
+                nextUnit = model.getProcessUnitModels().get(unitName);
+                nextStep = nextUnit.getProcessStepModels().get(splitted[1]);
+            }
+
+            if (nextStep != null && nextUnit != null) {
+                System.out.println("");
+                printProcessSteps(nextStep, nextUnit, model);
             }
         }
     }
