@@ -31,7 +31,11 @@ public class ModulizerUI {
         // create Window
         // selection of modularization algorithm
         // upload of process model
-
+        JFrame frame = new JFrame("Modulizer");
+        frame.setContentPane(new ModulizerUI().panel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
         ModularizationAlgorithm algorithm = new SingleEntrySingleExit();
         ProcessModel model = ProcessModelFactory.createPurchaseProduct();
 
