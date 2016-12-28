@@ -2,16 +2,17 @@ package modulizer.algorithms;
 
 import uflow.data.model.immutable.ProcessModel;
 
+import java.util.List;
 import java.util.ArrayList;
 
 /**
  * Created by Brigitte on 28.12.2016.
  * @author August, Brigitte, Emanuel, Stefanie
  */
-public class SingleEntrySingleExit implements ModularizationAlgorithm{
+public class SingleEntrySingleExit extends ModularizationAlgorithm{
     @Override
-    public ArrayList<ProcessModel> startModularization(ProcessModel model) {
-        ArrayList<ProcessModel> models = new ArrayList<>();
+    public List<ProcessModel> startModularization(ProcessModel model) {
+        List<ProcessModel> models = new ArrayList<>();
         models.add(model);
         return models;
     }
