@@ -2,12 +2,14 @@ package modulizer.algorithms;
 
 import uflow.data.model.immutable.ProcessModel;
 
+import java.util.ArrayList;
+
 /**
  * Created by Brigitte on 28.12.2016.
  */
 public class Clustering implements ModularizationAlgorithm {
     @Override
-    public ProcessModel startModularization(ProcessModel model) {
+    public ArrayList<ProcessModel> startModularization(ProcessModel model) {
         return null;
     }
 }
