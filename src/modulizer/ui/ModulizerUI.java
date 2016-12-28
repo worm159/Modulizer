@@ -12,8 +12,8 @@ public class ModulizerUI {
         // create Window
         // selection of modularization algorithm
         // upload of process model
-        ModularizationAlgorithm algorithm;
-        ProcessModel model;
+        ModularizationAlgorithm algorithm = null;
+        ProcessModel model = null;
 
         // start of modularization
         // get the modularized process model
