@@ -32,7 +32,9 @@ public class Print {
     }
 
     private static void printProcessSteps(ProcessStepModel step, ProcessUnitModel unit, ProcessModel model) {
+        ModulizerGUI.jTextAreaOutput.append("Process Step:   " + step.getId().getKey() + "\n");
         System.out.println("Process Step:   " + step.getId().getKey());
+        ModulizerGUI.jTextAreaOutput.append("        Name:   " + step.getName() + "\n");
         System.out.println("        Name:   " + step.getName());
 //        System.out.println(step);
         List<String> nextSteps = new ArrayList<>();
