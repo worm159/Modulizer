@@ -53,4 +53,7 @@ public class Step {
     public Map<String,Step> getNextSteps() {
         return nextSteps;
     }
+    public Map<String,Step> getPrevSteps() {
+        return prevSteps;
+    }
 }

@@ -26,11 +26,14 @@ public abstract class ModularizationAlgorithm {
 
     protected List<Step> finishedSteps;
 
+    protected ProcessModel currentModel;
+
     public List<ProcessModel> startModularization(ProcessModel model) {
         modelToSplit = model;
         models = new ArrayList<>();
         steps = new HashMap<>();
         firstSteps = new ArrayList<>();
+        finishedSteps = new ArrayList<>();
         for (ProcessUnitModel unit : modelToSplit.getProcessUnitModels().getValues()) {
             ProcessStepModel firstStep = unit.getProcessStepModels().get(unit.getStartProcessStep());
             generateStep(null, firstStep, unit);
