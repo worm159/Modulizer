@@ -1,63 +1,31 @@
-package modulizer.ui;
+package modulizer.print;
 
-import Test.Test;
-import Test.factory.ProcessModelFactory;
-import com.sun.org.apache.xpath.internal.SourceTree;
-import modulizer.algorithms.ModularizationAlgorithm;
-import modulizer.algorithms.SingleEntrySingleExit;
+import java.util.ArrayList;
+import java.util.List;
+import modulizer.ui.ModulizerGUI;
 import uflow.data.function.immutable.ProceedFunction;
 import uflow.data.function.immutable.ProcessFunction;
+import uflow.data.function.immutable.ProvideFunction;
+import uflow.data.function.immutable.RequireFunction;
 import uflow.data.model.immutable.ProcessModel;
 import uflow.data.model.immutable.ProcessStepModel;
 import uflow.data.model.immutable.ProcessUnitModel;
 
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
-import uflow.data.function.immutable.ProvideFunction;
-import uflow.data.function.immutable.RequestInputFunction;
-import uflow.data.function.immutable.RequireFunction;
-
 /**
- * Created by Brigitte on 28.12.2016.
- * @author August, Brigitte, Emanuel, Stefanie
+ *
+ * @author Emanu
  */
-public class ModulizerUI {
-
-    private List<String> printedSteps;
-
-    private JPanel panel;
-    private JComboBox algorithm;
-    private JTextField processModel;
-    private JTextPane textPane1;
-
-    public static void main(String[] args) {
-        // create Window
-        // selection of modularization algorithm
-        // upload of process model
-        JFrame frame = new JFrame("Modulizer");
-        frame.setContentPane(new ModulizerUI().panel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
-        ModularizationAlgorithm algorithm = new SingleEntrySingleExit();
-        ProcessModel model = ProcessModelFactory.createPurchaseProductExtended();
-
-        // get the modularized process model
-        List<ProcessModel> modularized = algorithm.startModularization(model);
-
-        // print the modularized process model
-        for(ProcessModel m : modularized)
-            printProcessModel(m);
-    }
+public class Print {
 
     public static void printProcessModel(ProcessModel model) {
         for (ProcessUnitModel unit : model.getProcessUnitModels().getValues()) {
             String startStep = unit.getStartProcessStep();
+            ModulizerGUI.jTextAreaOutput.append("Unit Start Process Step: " + startStep + "\n");
             System.out.println("Unit Start Process Step: " + startStep);
             ProcessStepModel step = unit.getProcessStepModels().get(startStep);
             if (step != null) {
                 printProcessSteps(step, unit, model);
+                ModulizerGUI.jTextAreaOutput.append("\n");
                 System.out.println("");
             }
         }
@@ -72,6 +40,7 @@ public class ModulizerUI {
             switch (func.getClass().getName()) {
                 case "uflow.data.function.immutable.RequireFunction":
                     RequireFunction reqFunc = (RequireFunction) func;
+                    ModulizerGUI.jTextAreaOutput.append("    Requires:   " + reqFunc.getValues() + "\n");
                     System.out.println("    Requires:   " + reqFunc.getValues());
                     break;
                 case "uflow.data.function.immutable.RequestInputFunction":
@@ -79,6 +48,7 @@ public class ModulizerUI {
                     break;
                 case "uflow.data.function.immutable.ProvideFunction":
                     ProvideFunction provFunc = (ProvideFunction) func;
+                    ModulizerGUI.jTextAreaOutput.append("    Provides:   " + provFunc.getValue() + "\n");
                     System.out.println("    Provides:   " + provFunc.getValue());
                     break;
                 case "uflow.data.function.immutable.CallFunction":
@@ -89,6 +59,7 @@ public class ModulizerUI {
                     String targetProcessUnit = procFunc.getTargetProcessUnit();
                     String nextStep = procFunc.getNext();
                     nextSteps.add(targetProcessUnit + "/" + nextStep);
+                    ModulizerGUI.jTextAreaOutput.append("   Next Step:   " + procFunc.getNext() + "\n");
                     System.out.println("   Next Step:   " + procFunc.getNext());
                     break;
                 default:
@@ -110,9 +81,10 @@ public class ModulizerUI {
             }
 
             if (nextStep != null && nextUnit != null) {
-                System.out.println("");
+                ModulizerGUI.jTextAreaOutput.append("\n");
                 printProcessSteps(nextStep, nextUnit, model);
             }
         }
     }
+
 }
