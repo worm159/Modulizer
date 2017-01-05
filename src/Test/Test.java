@@ -13,7 +13,7 @@ import uflow.data.model.immutable.ProcessUnitModel;
 public class Test {
 
     public static void main (String [ ] args) {
-        ProcessModel test = ProcessModelFactory.createECSBDemoModel();
+        ProcessModel test = ProcessModelFactory.createBsp1();
 
         test.getAuthorizedStartRoles();
 
