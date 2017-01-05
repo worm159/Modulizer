@@ -1,5 +1,6 @@
 package Test;
 
+import uflow.data.function.immutable.ProceedFunction;
 import uflow.data.function.immutable.ProcessFunction;
 import uflow.data.model.immutable.ProcessModel;
 import uflow.data.model.immutable.ProcessStepModel;
@@ -17,7 +18,7 @@ public class ModelNavigator {
     }
 
     public ProcessStepModel getSESEEntry(ProcessModel m) {
-        System.out.println(getFirstSteps(m));
+        //System.out.println(getFirstSteps(m));
 
         return null;
     }
@@ -25,6 +26,23 @@ public class ModelNavigator {
     public ProcessStepModel getSESEExit(ProcessModel m, ProcessStepModel entry) {
 
         return null;
+    }
+
+    public String printModel(ProcessModel m) {
+
+        for (ProcessStepModel step: getFirstSteps(m)) {
+            printStep(m, step);
+        }
+
+        return null;
+    }
+
+    private void printStep(ProcessModel m, ProcessStepModel step) {
+        System.out.println(step);
+        for (ProcessStepModel next: getNextSteps(m, step)) {
+            if (next != null)
+                printStep(m, next);
+        }
     }
 
     public ArrayList<ProcessStepModel> getFirstSteps(ProcessModel m) { /***********************************************/
@@ -59,7 +77,9 @@ public class ModelNavigator {
         ArrayList<ProcessStepModel> steps = new ArrayList<>();
 
         for (ProcessFunction func : step.getProcessFunctions()) {
-            ;
+            if (func.getClass() == ProceedFunction.class) {
+                steps.add( getStep(m, ((ProceedFunction)func).getNext()) );
+            }
         }
 
         return steps;

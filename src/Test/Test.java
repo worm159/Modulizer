@@ -3,6 +3,7 @@ package Test;
 import Test.factory.ProcessModelFactory;
 import uflow.data.function.immutable.ProceedFunction;
 import uflow.data.function.immutable.ProcessFunction;
+import uflow.data.function.modifier.ProceedFunctionModifier;
 import uflow.data.model.immutable.ProcessModel;
 import uflow.data.model.immutable.ProcessStepModel;
 import uflow.data.model.immutable.ProcessUnitModel;
@@ -18,9 +19,10 @@ public class Test {
 
         ModelNavigator mn = new ModelNavigator();
 
-        mn.getSESEEntry(test);
+        //mn.getSESEEntry(test);
 
-
+        mn.printModel(test);
+/*
         test.getAuthorizedStartRoles();
 
         for (ProcessUnitModel unit : test.getProcessUnitModels().getValues() ) {
@@ -29,10 +31,12 @@ public class Test {
                 System.out.println("Step: " + step.getName());
                 for (ProcessFunction func : step.getProcessFunctions()) {
                     System.out.println("Function: " + func);
-                    //System.out.println("")
+                    if (func.getClass() == ProceedFunction.class)
+                        System.out.println("ProceedFunction Klasse: " + func.getClass());
                 }
             }
         }
+        */
 
     }
 }
