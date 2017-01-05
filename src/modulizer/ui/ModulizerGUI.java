@@ -3,7 +3,12 @@ package modulizer.ui;
 import Test.factory.ProcessModelFactory;
 import javax.swing.JFileChooser;
 import static modulizer.print.Print.printProcessModel;
+
+import modulizer.algorithms.ModularizationAlgorithm;
+import modulizer.algorithms.SingleEntrySingleExit;
 import uflow.data.model.immutable.ProcessModel;
+
+import java.util.List;
 
 /**
  *
@@ -137,8 +142,13 @@ public class ModulizerGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonBrowseActionPerformed
 
     private void jButtonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartActionPerformed
-        ProcessModel model = ProcessModelFactory.createBsp1();
-        printProcessModel(model);
+        ProcessModel model = ProcessModelFactory.createFunctionalTest();
+        ModularizationAlgorithm algorithm = new SingleEntrySingleExit();
+        List<ProcessModel> modularized = algorithm.startModularization(model);
+        for(ProcessModel x : modularized) {
+            printProcessModel(x);
+        }
+        //printProcessModel(model);
     }//GEN-LAST:event_jButtonStartActionPerformed
 
     /**
