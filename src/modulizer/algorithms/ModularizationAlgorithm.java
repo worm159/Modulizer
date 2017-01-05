@@ -19,18 +19,22 @@ import java.util.Map;
  */
 public abstract class ModularizationAlgorithm {
 
-    protected List<ProcessModel> models;
+    protected Map<String,ProcessModel> models;
     protected ProcessModel modelToSplit;
     protected Map<String, Step> steps;
     protected List<Step> firstSteps;
 
     protected List<Step> finishedSteps;
 
-    public List<ProcessModel> startModularization(ProcessModel model) {
+    protected ProcessModel currentModel;
+    protected Map<String,String> outerModels;
+
+    public Map<String,ProcessModel> startModularization(ProcessModel model) {
         modelToSplit = model;
-        models = new ArrayList<>();
+        models = new HashMap<>();
         steps = new HashMap<>();
         firstSteps = new ArrayList<>();
+        finishedSteps = new ArrayList<>();
         for (ProcessUnitModel unit : modelToSplit.getProcessUnitModels().getValues()) {
             ProcessStepModel firstStep = unit.getProcessStepModels().get(unit.getStartProcessStep());
             generateStep(null, firstStep, unit);
