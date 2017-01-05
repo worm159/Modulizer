@@ -1,5 +1,6 @@
 package modulizer.algorithms;
 
+import Test.ModelNavigator;
 import modulizer.model.Step;
 import uflow.data.model.immutable.ProcessModel;
 import uflow.data.model.immutable.ProcessStepModel;
@@ -40,6 +41,7 @@ public class SingleEntrySingleExit extends ModularizationAlgorithm{
     }
 
     private void handleStep(Step step) {
+        ModelNavigator mn = new ModelNavigator();
         if(!finishedSteps.contains(step)){
             // check if all the previous Steps are finished
             boolean prevFinished = true;
@@ -58,14 +60,17 @@ public class SingleEntrySingleExit extends ModularizationAlgorithm{
                 }
                 ProcessStepModel processStep = modelToSplit.getProcessUnitModels().get(step.getUnitId()).
                         getProcessStepModels().get(step.getId());
+                ProcessStepModel ps;
                 if(step.getNextSteps().isEmpty()) {
                     unitModifier.setProcessStepModel(step.getId(),processStep);
+                    finishedSteps.add(step);
                 } else if (step.getNextSteps().size()==1) {
                     unitModifier.setProcessStepModel(step.getId(),processStep);
+                    finishedSteps.add(step);
                     for(Step next : step.getNextSteps().values()) {
                         handleStep(next);
                     }
-                } else if (false) {
+                } else if ( (ps = mn.getSESEExit(modelToSplit,mn.getStep(modelToSplit,step.getId()))) != null) {
                     /* if SESE is fulfilled then
                      * finish the current model and put it in models
                      * make a new model and set it as current model
@@ -73,6 +78,7 @@ public class SingleEntrySingleExit extends ModularizationAlgorithm{
                      */
                 } else {
                     unitModifier.setProcessStepModel(step.getId(),processStep);
+                    finishedSteps.add(step);
                     for(Step next : step.getNextSteps().values()) {
                         handleStep(next);
                     }
