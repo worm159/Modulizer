@@ -21,17 +21,20 @@ public class Print {
     static ArrayList<String> printedSteps = new ArrayList<>();
 
     public static void printProcessModel(ProcessModel model) {
+        printedSteps.clear();
+        ModulizerGUI.jTextAreaOutput.setText("");
         for (ProcessUnitModel unit : model.getProcessUnitModels().getValues()) {
             String startStep = unit.getStartProcessStep();
-            ModulizerGUI.jTextAreaOutput.append("Unit Start Process Step: " + startStep + "\n");
-            System.out.println("Unit Start Process Step: " + startStep);
-            ProcessStepModel step = unit.getProcessStepModels().get(startStep);
-            System.out.println(step.getId().getKey());
-            if (step != null && !printedSteps.contains(step.getId().getKey())) {
-                printedSteps.add(step.getId().getKey());
-                printProcessSteps(step, unit, model);
-                ModulizerGUI.jTextAreaOutput.append("\n");
-                System.out.println("");
+            if (startStep != null && !startStep.isEmpty()) {
+                ModulizerGUI.jTextAreaOutput.append("Unit Start Process Step: " + startStep + "\n");
+                System.out.println("Unit " + unit.getName() + " Start Process Step: " + startStep);
+                ProcessStepModel step = unit.getProcessStepModels().get(startStep);
+                if (step != null && !printedSteps.contains(step.getId().getKey())) {
+                    printedSteps.add(step.getId().getKey());
+                    printProcessSteps(step, unit, model);
+                    ModulizerGUI.jTextAreaOutput.append("\n");
+                    System.out.println("");
+                }
             }
         }
     }
