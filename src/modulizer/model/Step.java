@@ -17,13 +17,15 @@ import java.util.Map;
  */
 public class Step {
     private String id;
+    private String unitId;
     private Map<String,Step> prevSteps;
     private Map<String,Step> nextSteps;
     private List<DataItem> provided;
     private List<String> required;
 
-    public Step(ProcessStepModel step) {
+    public Step(ProcessStepModel step, String unitId) {
         id = step.getName();
+        this.unitId = unitId;
         prevSteps = new HashMap<>();
         nextSteps = new HashMap<>();
         provided = new ArrayList<>();
@@ -56,4 +58,6 @@ public class Step {
     public Map<String,Step> getPrevSteps() {
         return prevSteps;
     }
+    public String getId() { return id; }
+    public String getUnitId() { return unitId; }
 }

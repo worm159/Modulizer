@@ -46,10 +46,10 @@ public class ModulizerUI {
         ProcessModel model = ProcessModelFactory.createPurchaseProductExtended();
 
         // get the modularized process model
-        Map<String, ProcessModel> modularized = algorithm.startModularization(model);
+        List<ProcessModel> modularized = algorithm.startModularization(model);
 
         // print the modularized process model
-        for(ProcessModel m : modularized.values())
+        for(ProcessModel m : modularized)
             printProcessModel(m);
     }
 

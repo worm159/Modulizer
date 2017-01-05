@@ -6,6 +6,7 @@ import uflow.data.function.immutable.ProcessFunction;
 import uflow.data.model.immutable.ProcessModel;
 import uflow.data.model.immutable.ProcessStepModel;
 import uflow.data.model.immutable.ProcessUnitModel;
+import uflow.data.model.modifier.ProcessModelModifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,26 +20,33 @@ import java.util.Map;
  */
 public abstract class ModularizationAlgorithm {
 
-    protected Map<String,ProcessModel> models;
+    protected Map<String,ProcessModelModifier> models;
     protected ProcessModel modelToSplit;
     protected Map<String, Step> steps;
     protected List<Step> firstSteps;
+    protected List<ProcessModel> result;
 
     protected List<Step> finishedSteps;
 
-    protected ProcessModel currentModel;
+    protected ProcessModelModifier currentModel;
     protected Map<String,String> outerModels;
+    protected int number;
 
-    public Map<String,ProcessModel> startModularization(ProcessModel model) {
+    public List<ProcessModel> startModularization(ProcessModel model) {
         modelToSplit = model;
         models = new HashMap<>();
         steps = new HashMap<>();
         firstSteps = new ArrayList<>();
+        result = new ArrayList<>();
         finishedSteps = new ArrayList<>();
+        outerModels = new HashMap<>();
         for (ProcessUnitModel unit : modelToSplit.getProcessUnitModels().getValues()) {
             ProcessStepModel firstStep = unit.getProcessStepModels().get(unit.getStartProcessStep());
             generateStep(null, firstStep, unit);
         }
+        currentModel = new ProcessModelModifier().setId("Model1");
+        models.put("Model1",currentModel);
+        number = 2;
         return null;
     }
 
@@ -49,7 +57,7 @@ public abstract class ModularizationAlgorithm {
             if (steps.containsKey(key)) {
                 next = steps.get(key);
             } else {
-                next = new Step(processStep);
+                next = new Step(processStep,unit.getId().getKey());
                 steps.put(key, next);
             }
             if (prevKey == null) {

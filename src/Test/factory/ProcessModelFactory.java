@@ -24,6 +24,56 @@ import uflow.data.model.modifier.*;
 
 public class ProcessModelFactory {
 
+    /**
+     * Prozessmodell ohne Zerteilung
+     */
+
+    public static ProcessModel createBspOhneZerteilung() {
+        return new ProcessModelModifier()
+                .setId("BeispielOhneZerteilung")
+                .setName("Beispiel Ohne Zerteilung")
+                .setCreator("FK")
+                .setDescription("Testbeispiel für Modularisierung ohne Zerteilung")
+                .addAuthorizedStartRole("Stefanie")
+                .setProcessUnitModel("Unit-1", new ProcessUnitModelModifier()
+                        .setId("Unit-1")
+                        .setName("Unit-1")
+                        .addAuthorizedRole("Requester")
+                        .setStartProcessStep("Entry Step")
+                        .setProcessStepModel("Entry Step", new ProcessStepModelModifier()
+                                .addProcessFunction(new ProceedFunctionModifier()
+                                        .setNext("Step 2")
+                                        .getProceedFunction()
+                                )
+                                .getProcessStepModel()
+                        )
+                        .setProcessStepModel("Step 2", new ProcessStepModelModifier()
+                                .addProcessFunction(new ProceedFunctionModifier()
+                                        .setNext("Step 3")
+                                        .getProceedFunction()
+                                )
+                                .getProcessStepModel()
+                        )
+
+                        .setProcessStepModel("Step 3", new ProcessStepModelModifier()
+                                .addProcessFunction(new ProceedFunctionModifier()
+                                        .setNext("End Step")
+                                        .getProceedFunction()
+                                )
+                                .getProcessStepModel()
+                        )
+
+                        .setProcessStepModel("End Step", new ProcessStepModelModifier()
+                                .getProcessStepModel()
+                        )
+                        .getProcessUnitModel()
+                )
+                .getProcessModel();
+    }
+    /**
+     * Prozessmodell ohne Zerteilung Ende
+     */
+
     public static ProcessModel createBsp1() {
         return new ProcessModelModifier()
                 .setId("Beispiel01")

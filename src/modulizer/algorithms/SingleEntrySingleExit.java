@@ -2,7 +2,12 @@ package modulizer.algorithms;
 
 import modulizer.model.Step;
 import uflow.data.model.immutable.ProcessModel;
+import uflow.data.model.immutable.ProcessStepModel;
+import uflow.data.model.immutable.ProcessUnitModel;
+import uflow.data.model.modifier.ProcessModelModifier;
+import uflow.data.model.modifier.ProcessUnitModelModifier;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,14 +17,26 @@ import java.util.Map;
 public class SingleEntrySingleExit extends ModularizationAlgorithm{
 
     @Override
-    public Map<String, ProcessModel> startModularization(ProcessModel model) {
+    public List<ProcessModel> startModularization(ProcessModel model) {
         super.startModularization(model);
-        // create a model and set it as current model
         for (Step step : firstSteps) {
+            ProcessUnitModelModifier unitModifier;
+            ProcessUnitModel unitModel = currentModel.getProcessModel()
+                    .getProcessUnitModels().get(step.getUnitId());
+            if(unitModel == null) {
+                unitModifier = new ProcessUnitModelModifier();
+                currentModel.setProcessUnitModel(step.getUnitId(), unitModifier.getProcessUnitModel());
+            } else {
+                unitModifier = new ProcessUnitModelModifier(unitModel);
+            }
+            unitModifier.setStartProcessStep(step.getId());
             handleStep(step);
         }
-        models.put("OldModel",model);
-        return models;
+        for(ProcessModelModifier m : models.values()) {
+            result.add(m.getProcessModel());
+        }
+        //result.add(model);
+        return result;
     }
 
     private void handleStep(Step step) {
@@ -30,12 +47,21 @@ public class SingleEntrySingleExit extends ModularizationAlgorithm{
                 if(!finishedSteps.contains(prev)) prevFinished = false;
             }
             if(prevFinished) {
+                ProcessUnitModelModifier unitModifier;
+                ProcessUnitModel unitModel = currentModel.getProcessModel()
+                        .getProcessUnitModels().get(step.getUnitId());
+                if(unitModel == null) {
+                    unitModifier = new ProcessUnitModelModifier();
+                    currentModel.setProcessUnitModel(step.getUnitId(), unitModifier.getProcessUnitModel());
+                } else {
+                    unitModifier = new ProcessUnitModelModifier(unitModel);
+                }
+                ProcessStepModel processStep = modelToSplit.getProcessUnitModels().get(step.getUnitId()).
+                        getProcessStepModels().get(step.getId());
                 if(step.getNextSteps().isEmpty()) {
-                    // put step in current Model
+                    unitModifier.setProcessStepModel(step.getId(),processStep);
                 } else if (step.getNextSteps().size()==1) {
-                    // put step in current Model
-
-                    // call this function for the next step
+                    unitModifier.setProcessStepModel(step.getId(),processStep);
                     for(Step next : step.getNextSteps().values()) {
                         handleStep(next);
                     }
@@ -46,9 +72,10 @@ public class SingleEntrySingleExit extends ModularizationAlgorithm{
                      * continue with the recurssive method
                      */
                 } else {
-                    /* else if SESE is not fulfilled then
-                     * continue in the current model
-                     */
+                    unitModifier.setProcessStepModel(step.getId(),processStep);
+                    for(Step next : step.getNextSteps().values()) {
+                        handleStep(next);
+                    }
                 }
             }
         }

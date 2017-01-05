@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class Repetition extends ModularizationAlgorithm {
     @Override
-    public Map<String,ProcessModel> startModularization(ProcessModel model) {
+    public List<ProcessModel> startModularization(ProcessModel model) {
         return null;
     }
 }
