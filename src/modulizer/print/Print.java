@@ -13,9 +13,12 @@ import uflow.data.model.immutable.ProcessUnitModel;
 
 /**
  *
- * @author Emanu
+ * @author August, Brigitte, Emanuel, Stefanie
  */
 public class Print {
+
+    //TODO: Schleifen und Verzweigen → nichts darf doppelt ausgegeben werden.
+    static ArrayList<String> printedSteps = new ArrayList<>();
 
     public static void printProcessModel(ProcessModel model) {
         for (ProcessUnitModel unit : model.getProcessUnitModels().getValues()) {
@@ -23,7 +26,9 @@ public class Print {
             ModulizerGUI.jTextAreaOutput.append("Unit Start Process Step: " + startStep + "\n");
             System.out.println("Unit Start Process Step: " + startStep);
             ProcessStepModel step = unit.getProcessStepModels().get(startStep);
-            if (step != null) {
+            System.out.println(step.getId().getKey());
+            if (step != null && !printedSteps.contains(step.getId().getKey())) {
+                printedSteps.add(step.getId().getKey());
                 printProcessSteps(step, unit, model);
                 ModulizerGUI.jTextAreaOutput.append("\n");
                 System.out.println("");
@@ -82,8 +87,9 @@ public class Print {
                 nextStep = nextUnit.getProcessStepModels().get(splitted[1]);
             }
 
-            if (nextStep != null && nextUnit != null) {
+            if (nextStep != null && nextUnit != null && !printedSteps.contains(nextStep.getId().getKey())) {
                 ModulizerGUI.jTextAreaOutput.append("\n");
+                printedSteps.add(nextStep.getId().getKey());
                 printProcessSteps(nextStep, nextUnit, model);
             }
         }

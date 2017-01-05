@@ -14,6 +14,8 @@ import uflow.data.model.immutable.ProcessUnitModel;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import uflow.data.function.immutable.ProvideFunction;
 import uflow.data.function.immutable.RequestInputFunction;
 import uflow.data.function.immutable.RequireFunction;
@@ -44,10 +46,10 @@ public class ModulizerUI {
         ProcessModel model = ProcessModelFactory.createPurchaseProductExtended();
 
         // get the modularized process model
-        List<ProcessModel> modularized = algorithm.startModularization(model);
+        Map<String, ProcessModel> modularized = algorithm.startModularization(model);
 
         // print the modularized process model
-        for(ProcessModel m : modularized)
+        for(ProcessModel m : modularized.values())
             printProcessModel(m);
     }
 

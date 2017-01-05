@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public abstract class ModularizationAlgorithm {
 
-    protected List<ProcessModel> models;
+    protected Map<String,ProcessModel> models;
     protected ProcessModel modelToSplit;
     protected Map<String, Step> steps;
     protected List<Step> firstSteps;
@@ -27,10 +27,11 @@ public abstract class ModularizationAlgorithm {
     protected List<Step> finishedSteps;
 
     protected ProcessModel currentModel;
+    protected Map<String,String> outerModels;
 
-    public List<ProcessModel> startModularization(ProcessModel model) {
+    public Map<String,ProcessModel> startModularization(ProcessModel model) {
         modelToSplit = model;
-        models = new ArrayList<>();
+        models = new HashMap<>();
         steps = new HashMap<>();
         firstSteps = new ArrayList<>();
         finishedSteps = new ArrayList<>();

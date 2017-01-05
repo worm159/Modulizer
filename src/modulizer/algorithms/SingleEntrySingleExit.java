@@ -1,11 +1,9 @@
 package modulizer.algorithms;
 
 import modulizer.model.Step;
-import uflow.data.function.immutable.ProcessFunction;
 import uflow.data.model.immutable.ProcessModel;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by Brigitte on 28.12.2016.
@@ -14,13 +12,13 @@ import java.util.ArrayList;
 public class SingleEntrySingleExit extends ModularizationAlgorithm{
 
     @Override
-    public List<ProcessModel> startModularization(ProcessModel model) {
+    public Map<String, ProcessModel> startModularization(ProcessModel model) {
         super.startModularization(model);
         // create a model and set it as current model
         for (Step step : firstSteps) {
             handleStep(step);
         }
-        models.add(model);
+        models.put("OldModel",model);
         return models;
     }
 
@@ -41,14 +39,14 @@ public class SingleEntrySingleExit extends ModularizationAlgorithm{
                     for(Step next : step.getNextSteps().values()) {
                         handleStep(next);
                     }
-                } else {
-                    /* check if SESE is fulfilled
-                     * if SESE is fulfilled then
+                } else if (false) {
+                    /* if SESE is fulfilled then
                      * finish the current model and put it in models
                      * make a new model and set it as current model
-                     * continue with the recursive method
-                     *
-                     * else if SESE is not fulfilled then
+                     * continue with the recurssive method
+                     */
+                } else {
+                    /* else if SESE is not fulfilled then
                      * continue in the current model
                      */
                 }
