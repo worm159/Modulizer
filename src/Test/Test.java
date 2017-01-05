@@ -13,7 +13,13 @@ import uflow.data.model.immutable.ProcessUnitModel;
 public class Test {
 
     public static void main (String [ ] args) {
-        ProcessModel test = ProcessModelFactory.createBsp1();
+        ProcessModel test = ProcessModelFactory.createBsp2();
+
+
+        ModelNavigator mn = new ModelNavigator();
+
+        mn.getSESEEntry(test);
+
 
         test.getAuthorizedStartRoles();
 
@@ -23,8 +29,10 @@ public class Test {
                 System.out.println("Step: " + step.getName());
                 for (ProcessFunction func : step.getProcessFunctions()) {
                     System.out.println("Function: " + func);
+                    //System.out.println("")
                 }
             }
         }
+
     }
 }
