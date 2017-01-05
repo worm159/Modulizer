@@ -130,14 +130,15 @@ public class ModulizerGUI extends javax.swing.JFrame {
 
         final JFileChooser jFileChooser1 = new JFileChooser();
         int returnVal = jFileChooser1.showOpenDialog(jPanel1);
-        jTextFieldPath.setText(jFileChooser1.getSelectedFile().getAbsolutePath());
+        if(returnVal == 0){
+            jTextFieldPath.setText(jFileChooser1.getSelectedFile().getAbsolutePath());
+        }
         
     }//GEN-LAST:event_jButtonBrowseActionPerformed
 
     private void jButtonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartActionPerformed
-        ProcessModel model = ProcessModelFactory.createPurchaseProductExtended();
+        ProcessModel model = ProcessModelFactory.createBsp1();
         printProcessModel(model);
-//        jTextAreaOutput.repaint();
     }//GEN-LAST:event_jButtonStartActionPerformed
 
     /**
