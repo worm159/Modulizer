@@ -14,14 +14,17 @@ import uflow.data.model.immutable.ProcessUnitModel;
 public class Test {
 
     public static void main (String [ ] args) {
-        ProcessModel test = ProcessModelFactory.createBsp2();
+        ProcessModel test = ProcessModelFactory.createBspSeseVerschachtelt2End();
+        ModelNavigator mn = new ModelNavigator(test);
+        mn.printModel();
+        System.out.println(mn.isExitToEntry(mn.getStep("SESE 1 Start"), mn.getStep("SESE 1 left")));
+        System.out.println(mn.getSESEExitToEntry(mn.getStep("SESE 1 right, SESE 2 Start")));
 
+        System.out.println("");
 
-        ModelNavigator mn = new ModelNavigator();
-
-        //mn.getSESEEntry(test);
-
-        mn.printModel(test);
+        ProcessModel test2 = ProcessModelFactory.createBspSeseEinfach();
+        ModelNavigator mn2 = new ModelNavigator(test2);
+        System.out.println(mn2.getSESEExitToEntry(mn2.getStep("SESE Start")));
 /*
         test.getAuthorizedStartRoles();
 
