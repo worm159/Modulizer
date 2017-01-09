@@ -1,5 +1,6 @@
 package modulizer.algorithms;
 
+import Test.ModelNavigator;
 import modulizer.model.Step;
 import uflow.data.function.immutable.ProceedFunction;
 import uflow.data.function.immutable.ProcessFunction;
@@ -27,9 +28,11 @@ public abstract class ModularizationAlgorithm {
     protected List<ProcessModel> result;
 
     protected List<Step> finishedSteps;
+    protected ModelNavigator mn;
 
     protected ProcessModelModifier currentModel;
     protected Map<String,String> outerModels;
+    protected Map<String,String> seseEndSteps;
     protected int number;
 
     public List<ProcessModel> startModularization(ProcessModel model) {
@@ -39,7 +42,9 @@ public abstract class ModularizationAlgorithm {
         firstSteps = new ArrayList<>();
         result = new ArrayList<>();
         finishedSteps = new ArrayList<>();
+        mn = new ModelNavigator(model);
         outerModels = new HashMap<>();
+        seseEndSteps = new HashMap<>();
         for (ProcessUnitModel unit : modelToSplit.getProcessUnitModels().getValues()) {
             ProcessStepModel firstStep = unit.getProcessStepModels().get(unit.getStartProcessStep());
             generateStep(null, firstStep, unit);
