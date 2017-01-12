@@ -11,12 +11,22 @@ import java.util.Map;
 public class Clustering extends ModularizationAlgorithm {
 
     /**
+     * initializes all the lists and maps,
+     * converts the ProcessStepModels to Steps
+     * and creates a new ProcessModelModifier for the first model
      *
-     * @param model
-     * @return
+     * @param model the model that should be modularized
+     */
+    public Clustering(ProcessModel model) {
+        super(model);
+    }
+
+    /**
+     *
+     * @return result of the modularization as a list of ProcessModels
      */
     @Override
-    public List<ProcessModel> startModularization(ProcessModel model) {
+    public List<ProcessModel> startModularization() {
         return null;
     }
 }

@@ -8,6 +8,7 @@ import uflow.data.model.immutable.ProcessModel;
 import uflow.data.model.immutable.ProcessStepModel;
 import uflow.data.model.immutable.ProcessUnitModel;
 import uflow.data.model.modifier.ProcessModelModifier;
+import uflow.data.model.modifier.ProcessUnitModelModifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,84 +17,58 @@ import java.util.Map;
 
 /**
  * Created by Brigitte on 28.12.2016.
- *
+ * This abstract class is the superclass of our four algorithms
+ * and contains methods that can be used by all four modularization algorithms
  * @author August, Brigitte, Emanuel, Stefanie
  */
 public abstract class ModularizationAlgorithm {
 
-    /**
-     *
-     */
-    protected Map<String,ProcessModelModifier> models;
+    ProcessModel modelToSplit;
+    Map<String,ProcessModelModifier> models;
+    List<ProcessModel> result;
+    ProcessModelModifier currentModel;
+    int modelNumber;
+
+    Map<String, Step> steps;
+    List<Step> firstSteps;
+    List<Step> finishedSteps;
+
+    ModelNavigator mn;
 
     /**
-     *
+     * initializes all the lists and maps,
+     * converts the ProcessStepModels to Steps
+     * and creates a new ProcessModelModifier for the first model
+     * @param model the model that should be modularized
      */
-    protected ProcessModel modelToSplit;
-
-    /**
-     *
-     */
-    protected Map<String, Step> steps;
-
-    /**
-     *
-     */
-    protected List<Step> firstSteps;
-
-    /**
-     *
-     */
-    protected List<ProcessModel> result;
-
-    /**
-     *
-     */
-    protected List<Step> finishedSteps;
-
-    /**
-     *
-     */
-    protected ModelNavigator mn;
-
-    /**
-     *
-     */
-    protected ProcessModelModifier currentModel;
-
-    /**
-     *
-     */
-    protected Map<String,ProcessStepModel> seseEndSteps;
-
-    /**
-     *
-     */
-    protected int number;
-
-    /**
-     *
-     * @param model
-     * @return
-     */
-    public List<ProcessModel> startModularization(ProcessModel model) {
+    public ModularizationAlgorithm(ProcessModel model) {
         modelToSplit = model;
         models = new HashMap<>();
+        result = new ArrayList<>();
+
         steps = new HashMap<>();
         firstSteps = new ArrayList<>();
-        result = new ArrayList<>();
         finishedSteps = new ArrayList<>();
+
         mn = new ModelNavigator(model);
-        seseEndSteps = new HashMap<>();
+
+        // convert the ProcessStepModels into Steps
         for (ProcessUnitModel unit : modelToSplit.getProcessUnitModels().getValues()) {
             ProcessStepModel firstStep = unit.getProcessStepModels().get(unit.getStartProcessStep());
             generateStep(null, firstStep, unit);
         }
+
+        // create the first ProcessModelModifier and increase the modelNumber
         currentModel = new ProcessModelModifier().setId("Model1");
         models.put("Model1",currentModel);
-        number = 2;
-        return null;
+        modelNumber = 2;
     }
+
+    /**
+     *
+     * @return result of the modularization as a list of ProcessModels
+     */
+    public abstract List<ProcessModel> startModularization();
 
     private void generateStep(String prevKey, ProcessStepModel processStep, ProcessUnitModel unit) {
         if (processStep != null) {
@@ -138,11 +113,22 @@ public abstract class ModularizationAlgorithm {
     }
 
     /**
-     *
-     * @return
+     * This method searches for the ProcessUnitModel to which the Step belongs
+     * @param step the step for which the Unit should be searched
+     * @return the ProcessUnitModelModifier
      */
-    protected ProcessModel createNewModel() {
-        ProcessModel model = null;
-        return model;
+    ProcessUnitModelModifier getUnitModifier(Step step) {
+        ProcessUnitModelModifier unitModifier;
+        // try to get the Unit to which the Step belongs
+        ProcessUnitModel unitModel = currentModel.getProcessModel()
+                .getProcessUnitModels().get(step.getUnitId());
+        if(unitModel == null) {
+            // if the Unit does not exist it has to be created
+            unitModifier = new ProcessUnitModelModifier();
+            currentModel.setProcessUnitModel(step.getUnitId(), unitModifier.getProcessUnitModel());
+        } else {
+            unitModifier = new ProcessUnitModelModifier(unitModel);
+        }
+        return unitModifier;
     }
 }

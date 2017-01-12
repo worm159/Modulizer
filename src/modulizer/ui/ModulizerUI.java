@@ -46,11 +46,11 @@ public class ModulizerUI {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
-        ModularizationAlgorithm algorithm = new SingleEntrySingleExit();
         ProcessModel model = ProcessModelFactory.createPurchaseProductExtended();
+        ModularizationAlgorithm algorithm = new SingleEntrySingleExit(model);
 
         // get the modularized process model
-        List<ProcessModel> modularized = algorithm.startModularization(model);
+        List<ProcessModel> modularized = algorithm.startModularization();
 
         // print the modularized process model
         for(ProcessModel m : modularized)
