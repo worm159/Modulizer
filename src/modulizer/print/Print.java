@@ -23,6 +23,7 @@ public class Print {
     public static void printProcessModel(ProcessModel model) {
         printedSteps.clear();
         ModulizerGUI.jTextAreaOutput.setText("");
+        ModulizerGUI.jTextAreaOutput.append(model.getId().getKey() + "\n");
         for (ProcessUnitModel unit : model.getProcessUnitModels().getValues()) {
             String startStep = unit.getStartProcessStep();
             if (startStep != null && !startStep.isEmpty()) {
