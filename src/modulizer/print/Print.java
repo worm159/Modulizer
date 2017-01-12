@@ -24,10 +24,12 @@ public class Print {
         ModulizerGUI.jTextAreaOutput.append(model.getId().getKey() + "\n");
         for (ProcessUnitModel unit : model.getProcessUnitModels().getValues()) {
             String startStep = unit.getStartProcessStep();
-            ModulizerGUI.jTextAreaOutput.append("Unit Start Process Step: " + startStep + "\n");
-            System.out.println("Unit Start Process Step: " + startStep);
             ProcessStepModel step = unit.getProcessStepModels().get(startStep);
-            System.out.println(step.getId().getKey());
+            if(!startStep.isEmpty() && startStep != null && step != null) {
+                ModulizerGUI.jTextAreaOutput.append("Unit Start Process Step: " + startStep + "\n");
+                System.out.println("Unit Start Process Step: " + startStep);
+                System.out.println(step.getId().getKey());
+            }
             if (step != null && !printedSteps.contains(step.getId().getKey())) {
                 printedSteps.add(step.getId().getKey());
                 printProcessSteps(step, unit, model);

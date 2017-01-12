@@ -271,7 +271,7 @@ public class ProcessModelFactory {
                         )
                         .setProcessStepModel("SESE left", new ProcessStepModelModifier()
                                 .addProcessFunction(new ProceedFunctionModifier()
-                                        .setNext("SESE END")
+                                        .setNext("SESE End")
                                         .setTargetUnit("Unit-2")
                                         .getProceedFunction()
                                 )
@@ -333,7 +333,7 @@ public class ProcessModelFactory {
                                 .getProcessStepModel()
                         )
 
-                        .setProcessStepModel("End Step ", new ProcessStepModelModifier()
+                        .setProcessStepModel("End Step", new ProcessStepModelModifier()
                                 .getProcessStepModel()
                         )
                         .getProcessUnitModel()

@@ -46,6 +46,7 @@ public class SingleEntrySingleExit extends ModularizationAlgorithm{
 
     private void handleStep(Step step) {
         if(!finishedSteps.contains(step)){
+            System.out.println(step.getId());
             // check if all the previous Steps are finished
             boolean prevFinished = true;
             for(Step prev : step.getPrevSteps().values()){
