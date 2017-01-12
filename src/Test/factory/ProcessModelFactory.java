@@ -276,7 +276,6 @@ public class ProcessModelFactory {
                                         .getProceedFunction()
                                 )
                                 .getProcessStepModel()
-
                         )
                         .getProcessUnitModel()
                 )
@@ -341,7 +340,6 @@ public class ProcessModelFactory {
                 )
                 .getProcessModel();
     }
-
 
     /**
      * eigene Beispiele SESE Ende
