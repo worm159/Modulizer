@@ -21,6 +21,11 @@ import java.util.Map;
  */
 public class SingleEntrySingleExit extends ModularizationAlgorithm{
 
+    /**
+     *
+     * @param model
+     * @return
+     */
     @Override
     public List<ProcessModel> startModularization(ProcessModel model) {
         super.startModularization(model);

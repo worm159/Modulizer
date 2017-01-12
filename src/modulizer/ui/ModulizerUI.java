@@ -33,6 +33,10 @@ public class ModulizerUI {
     private JTextField processModel;
     private JTextPane textPane1;
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         // create Window
         // selection of modularization algorithm
@@ -53,6 +57,10 @@ public class ModulizerUI {
             printProcessModel(m);
     }
 
+    /**
+     *
+     * @param model
+     */
     public static void printProcessModel(ProcessModel model) {
         for (ProcessUnitModel unit : model.getProcessUnitModels().getValues()) {
             String startStep = unit.getStartProcessStep();

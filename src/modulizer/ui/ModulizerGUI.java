@@ -1,6 +1,7 @@
 package modulizer.ui;
 
 import Test.factory.ProcessModelFactory;
+import java.io.File;
 import javax.swing.JFileChooser;
 import static modulizer.print.Print.printProcessModel;
 
@@ -9,6 +10,7 @@ import modulizer.algorithms.SingleEntrySingleExit;
 import uflow.data.model.immutable.ProcessModel;
 
 import java.util.List;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -36,9 +38,12 @@ public class ModulizerGUI extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaOutput = new javax.swing.JTextArea();
         jButtonStart = new javax.swing.JButton();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(640, 480));
+        setTitle("Modulizer");
+        setMinimumSize(new java.awt.Dimension(800, 600));
 
         jPanel1.setMinimumSize(new java.awt.Dimension(640, 480));
 
@@ -73,24 +78,35 @@ public class ModulizerGUI extends javax.swing.JFrame {
             }
         });
 
+        jComboBox1.setEnabled(false);
+
+        jLabel3.setText("Please choose the model to modularize:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jComboBoxAlgorithm, javax.swing.GroupLayout.Alignment.LEADING, 0, 504, Short.MAX_VALUE)
-                            .addComponent(jTextFieldPath, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jTextFieldPath)
+                            .addComponent(jComboBoxAlgorithm, 0, 669, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButtonBrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButtonStart, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jButtonStart, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel3))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -103,13 +119,17 @@ public class ModulizerGUI extends javax.swing.JFrame {
                     .addComponent(jTextFieldPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonBrowse))
                 .addGap(18, 18, 18)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboBoxAlgorithm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonStart))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -134,18 +154,32 @@ public class ModulizerGUI extends javax.swing.JFrame {
     private void jButtonBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBrowseActionPerformed
 
         final JFileChooser jFileChooser1 = new JFileChooser();
+        FileNameExtensionFilter classfilter = new FileNameExtensionFilter("Class Files (*.class)", "class");
+
+        jFileChooser1.setDialogTitle("Open Class File");
+// set selected filter
+        jFileChooser1.setFileFilter(classfilter);
+
         int returnVal = jFileChooser1.showOpenDialog(jPanel1);
-        if(returnVal == 0){
-            jTextFieldPath.setText(jFileChooser1.getSelectedFile().getAbsolutePath());
+
+        if (returnVal == 0) {
+            File classFile = jFileChooser1.getSelectedFile();
+            if (classFile.getName().endsWith(".class")) {
+                jTextFieldPath.setText(jFileChooser1.getSelectedFile().getAbsolutePath());
+            } else {
+                jTextFieldPath.setText("The selected File is not a *.class File. \n Please select a *.class File for modularization!");
+            }
+
         }
-        
+
     }//GEN-LAST:event_jButtonBrowseActionPerformed
 
     private void jButtonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartActionPerformed
+        ModulizerGUI.jTextAreaOutput.setText("");
         ProcessModel model = ProcessModelFactory.createBspSese2Start2Unit();
         ModularizationAlgorithm algorithm = new SingleEntrySingleExit();
         List<ProcessModel> modularized = algorithm.startModularization(model);
-        for(ProcessModel x : modularized) {
+        for (ProcessModel x : modularized) {
             printProcessModel(x);
         }
         //printProcessModel(model);
@@ -170,9 +204,11 @@ public class ModulizerGUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonBrowse;
     private javax.swing.JButton jButtonStart;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBoxAlgorithm;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     public static javax.swing.JTextArea jTextAreaOutput;

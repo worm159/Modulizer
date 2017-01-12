@@ -21,6 +21,7 @@ public class JarLoader {
         File file  = new File("C:\\Users\\augus\\IdeaProjects\\Modulizer\\out\\production\\Modulizer\\Test\\factory\\ProcessModelFactory.class");
 
         URL url = file.toURL();
+        System.out.println(url);
         URL[] urls = new URL[]{url};
 
         ClassLoader cl = new URLClassLoader(urls);

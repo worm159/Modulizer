@@ -21,19 +21,61 @@ import java.util.Map;
  */
 public abstract class ModularizationAlgorithm {
 
+    /**
+     *
+     */
     protected Map<String,ProcessModelModifier> models;
+
+    /**
+     *
+     */
     protected ProcessModel modelToSplit;
+
+    /**
+     *
+     */
     protected Map<String, Step> steps;
+
+    /**
+     *
+     */
     protected List<Step> firstSteps;
+
+    /**
+     *
+     */
     protected List<ProcessModel> result;
 
+    /**
+     *
+     */
     protected List<Step> finishedSteps;
+
+    /**
+     *
+     */
     protected ModelNavigator mn;
 
+    /**
+     *
+     */
     protected ProcessModelModifier currentModel;
+
+    /**
+     *
+     */
     protected Map<String,ProcessStepModel> seseEndSteps;
+
+    /**
+     *
+     */
     protected int number;
 
+    /**
+     *
+     * @param model
+     * @return
+     */
     public List<ProcessModel> startModularization(ProcessModel model) {
         modelToSplit = model;
         models = new HashMap<>();
@@ -95,6 +137,10 @@ public abstract class ModularizationAlgorithm {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     protected ProcessModel createNewModel() {
         ProcessModel model = null;
         return model;

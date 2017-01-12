@@ -20,9 +20,12 @@ public class Print {
     //TODO: Schleifen und Verzweigen → nichts darf doppelt ausgegeben werden.
     static ArrayList<String> printedSteps = new ArrayList<>();
 
+    /**
+     *
+     * @param model
+     */
     public static void printProcessModel(ProcessModel model) {
         printedSteps.clear();
-        ModulizerGUI.jTextAreaOutput.setText("");
         ModulizerGUI.jTextAreaOutput.append(model.getId().getKey() + "\n");
         for (ProcessUnitModel unit : model.getProcessUnitModels().getValues()) {
             String startStep = unit.getStartProcessStep();

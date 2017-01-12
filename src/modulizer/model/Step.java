@@ -23,6 +23,11 @@ public class Step {
     private List<DataItem> provided;
     private List<String> required;
 
+    /**
+     *
+     * @param step
+     * @param unitId
+     */
     public Step(ProcessStepModel step, String unitId) {
         id = step.getName();
         this.unitId = unitId;
@@ -44,20 +49,49 @@ public class Step {
         }
     }
 
+    /**
+     *
+     * @param id
+     * @param step
+     */
     public void addPrevStep(String id, Step step) {
         prevSteps.put(id, step);
     }
 
+    /**
+     *
+     * @param id
+     * @param step
+     */
     public void addNextStep(String id, Step step) {
         nextSteps.put(id, step);
     }
 
+    /**
+     *
+     * @return
+     */
     public Map<String,Step> getNextSteps() {
         return nextSteps;
     }
+
+    /**
+     *
+     * @return
+     */
     public Map<String,Step> getPrevSteps() {
         return prevSteps;
     }
+
+    /**
+     *
+     * @return
+     */
     public String getId() { return id; }
+
+    /**
+     *
+     * @return
+     */
     public String getUnitId() { return unitId; }
 }
