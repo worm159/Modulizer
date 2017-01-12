@@ -21,6 +21,7 @@ public class Print {
     static ArrayList<String> printedSteps = new ArrayList<>();
 
     public static void printProcessModel(ProcessModel model) {
+        ModulizerGUI.jTextAreaOutput.append(model.getId().getKey() + "\n");
         for (ProcessUnitModel unit : model.getProcessUnitModels().getValues()) {
             String startStep = unit.getStartProcessStep();
             ModulizerGUI.jTextAreaOutput.append("Unit Start Process Step: " + startStep + "\n");

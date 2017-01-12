@@ -142,7 +142,7 @@ public class ModulizerGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonBrowseActionPerformed
 
     private void jButtonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartActionPerformed
-        ProcessModel model = ProcessModelFactory.createBspOhneZerteilung();
+        ProcessModel model = ProcessModelFactory.createBspSeseVerschachtelt2End();
         ModularizationAlgorithm algorithm = new SingleEntrySingleExit();
         List<ProcessModel> modularized = algorithm.startModularization(model);
         for(ProcessModel x : modularized) {

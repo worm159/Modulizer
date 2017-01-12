@@ -31,8 +31,7 @@ public abstract class ModularizationAlgorithm {
     protected ModelNavigator mn;
 
     protected ProcessModelModifier currentModel;
-    protected Map<String,String> outerModels;
-    protected Map<String,String> seseEndSteps;
+    protected Map<String,ProcessStepModel> seseEndSteps;
     protected int number;
 
     public List<ProcessModel> startModularization(ProcessModel model) {
@@ -43,7 +42,6 @@ public abstract class ModularizationAlgorithm {
         result = new ArrayList<>();
         finishedSteps = new ArrayList<>();
         mn = new ModelNavigator(model);
-        outerModels = new HashMap<>();
         seseEndSteps = new HashMap<>();
         for (ProcessUnitModel unit : modelToSplit.getProcessUnitModels().getValues()) {
             ProcessStepModel firstStep = unit.getProcessStepModels().get(unit.getStartProcessStep());
