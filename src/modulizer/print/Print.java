@@ -32,38 +32,38 @@ public class Print {
      */
     public static void printProcessModel(ProcessModel model) {
         printedSteps.clear();
-        ModulizerGUI.jTextAreaOutput.append(model.getId().getKey() + "\n");
+        ModulizerGUI.getjTextAreaOutput().append(model.getId().getKey() + "\n");
         for (ProcessUnitModel unit : model.getProcessUnitModels().getValues()) {
             String startStep = unit.getStartProcessStep();
             if (startStep != null && !startStep.isEmpty()) {
-                ModulizerGUI.jTextAreaOutput.append("Unit " + unit.getName() + "\n");
-                ModulizerGUI.jTextAreaOutput.append("Unit Start Process Step: " + startStep + "\n");
+                ModulizerGUI.getjTextAreaOutput().append("Unit " + unit.getName() + "\n");
+                ModulizerGUI.getjTextAreaOutput().append("Unit Start Process Step: " + startStep + "\n");
                 ProcessStepModel step = unit.getProcessStepModels().get(startStep);
                 if (step != null && !printedSteps.contains(step.getId().getKey())) {
                     printedSteps.add(step.getId().getKey());
                     printProcessSteps(step, unit, model);
-                    ModulizerGUI.jTextAreaOutput.append("\n");
+                    ModulizerGUI.getjTextAreaOutput().append("\n");
                 }
             }
         }
     }
 
     private static void printProcessSteps(ProcessStepModel step, ProcessUnitModel unit, ProcessModel model) {
-        ModulizerGUI.jTextAreaOutput.append("Process Step:   " + step.getId().getKey() + "\n");
-        ModulizerGUI.jTextAreaOutput.append("        Name:   " + step.getName() + "\n");
+        ModulizerGUI.getjTextAreaOutput().append("Process Step:   " + step.getId().getKey() + "\n");
+        ModulizerGUI.getjTextAreaOutput().append("        Name:   " + step.getName() + "\n");
         List<String> nextSteps = new ArrayList<>();
         for (ProcessFunction func : step.getProcessFunctions()) {
             switch (func.getClass().getName()) {
                 case "uflow.data.function.immutable.RequireFunction":
                     RequireFunction reqFunc = (RequireFunction) func;
-                    ModulizerGUI.jTextAreaOutput.append("    Requires:   " + reqFunc.getValues() + "\n");
+                    ModulizerGUI.getjTextAreaOutput().append("    Requires:   " + reqFunc.getValues() + "\n");
                     break;
                 case "uflow.data.function.immutable.RequestInputFunction":
                     /* not used */
                     break;
                 case "uflow.data.function.immutable.ProvideFunction":
                     ProvideFunction provFunc = (ProvideFunction) func;
-                    ModulizerGUI.jTextAreaOutput.append("    Provides:   " + provFunc.getValue() + "\n");
+                    ModulizerGUI.getjTextAreaOutput().append("    Provides:   " + provFunc.getValue() + "\n");
                     break;
                 case "uflow.data.function.immutable.CallFunction":
                     /* not used */
@@ -73,7 +73,7 @@ public class Print {
                     String targetProcessUnit = procFunc.getTargetProcessUnit();
                     String nextStep = procFunc.getNext();
                     nextSteps.add(targetProcessUnit + "/" + nextStep);
-                    ModulizerGUI.jTextAreaOutput.append("   Next Step:   " + procFunc.getNext() + "\n");
+                    ModulizerGUI.getjTextAreaOutput().append("   Next Step:   " + procFunc.getNext() + "\n");
                     break;
                 default:
                     break;
@@ -94,7 +94,7 @@ public class Print {
             }
 
             if (nextStep != null && nextUnit != null && !printedSteps.contains(nextStep.getId().getKey())) {
-                ModulizerGUI.jTextAreaOutput.append("\n");
+                ModulizerGUI.getjTextAreaOutput().append("\n");
                 printedSteps.add(nextStep.getId().getKey());
                 printProcessSteps(nextStep, nextUnit, model);
             }
