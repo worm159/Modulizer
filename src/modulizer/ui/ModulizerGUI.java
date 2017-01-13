@@ -50,6 +50,7 @@ public class ModulizerGUI extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jComboBoxAlgorithm = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
+        jTextAreaOutput = new javax.swing.JTextArea();
         jButtonStart = new javax.swing.JButton();
         jComboBoxModel = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
@@ -281,7 +282,7 @@ public class ModulizerGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    public static final javax.swing.JTextArea jTextAreaOutput = new javax.swing.JTextArea();
+    public static javax.swing.JTextArea jTextAreaOutput;
     private javax.swing.JTextField jTextFieldPath;
     // End of variables declaration//GEN-END:variables
 }
