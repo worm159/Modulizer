@@ -17,6 +17,7 @@ import uflow.data.model.immutable.ProcessModel;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -282,7 +283,18 @@ public class ModulizerGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    public static javax.swing.JTextArea jTextAreaOutput;
+    private static javax.swing.JTextArea jTextAreaOutput;
     private javax.swing.JTextField jTextFieldPath;
     // End of variables declaration//GEN-END:variables
+
+    public static JTextArea getjTextAreaOutput() {
+        return jTextAreaOutput;
+    }
+
+    public static void setjTextAreaOutput(JTextArea jTextAreaOutput) {
+        ModulizerGUI.jTextAreaOutput = jTextAreaOutput;
+    }
+
+
+
 }
