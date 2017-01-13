@@ -72,7 +72,7 @@ public abstract class ModularizationAlgorithm {
 
     private void generateStep(String prevKey, ProcessStepModel processStep, ProcessUnitModel unit) {
         if (processStep != null) {
-            Step next = null;
+            Step next;
             String key = processStep.getId().getKey();
             if (steps.containsKey(key)) {
                 next = steps.get(key);
