@@ -2,6 +2,11 @@ package modulizer.ui;
 
 import Test.factory.ProcessModelFactory;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import javax.swing.JFileChooser;
 import static modulizer.print.Print.printProcessModel;
 
@@ -10,6 +15,8 @@ import modulizer.algorithms.SingleEntrySingleExit;
 import uflow.data.model.immutable.ProcessModel;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -18,11 +25,18 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class ModulizerGUI extends javax.swing.JFrame {
 
+    ProcessModel model = ProcessModelFactory.createBspSeseEinfach();
+
     /**
      * Creates new form ModulizerGUI
      */
     public ModulizerGUI() {
         initComponents();
+        for (Method m : ProcessModelFactory.class.getMethods()) {
+            if (m.getName().contains("create")) {
+                jComboBoxModel.addItem(m.getName());
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -38,7 +52,7 @@ public class ModulizerGUI extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaOutput = new javax.swing.JTextArea();
         jButtonStart = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        jComboBoxModel = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -49,7 +63,9 @@ public class ModulizerGUI extends javax.swing.JFrame {
 
         jLabel1.setText("Please select a Process Model:");
 
+        jTextFieldPath.setEditable(false);
         jTextFieldPath.setToolTipText("Path to a Process Model");
+        jTextFieldPath.setEnabled(false);
         jTextFieldPath.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldPathActionPerformed(evt);
@@ -57,6 +73,7 @@ public class ModulizerGUI extends javax.swing.JFrame {
         });
 
         jButtonBrowse.setText("Browse...");
+        jButtonBrowse.setEnabled(false);
         jButtonBrowse.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonBrowseActionPerformed(evt);
@@ -78,7 +95,11 @@ public class ModulizerGUI extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setEnabled(false);
+        jComboBoxModel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxModelActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Please choose the model to modularize:");
 
@@ -101,7 +122,7 @@ public class ModulizerGUI extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButtonBrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButtonStart, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jComboBoxModel, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
@@ -121,7 +142,7 @@ public class ModulizerGUI extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jComboBoxModel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -164,8 +185,51 @@ public class ModulizerGUI extends javax.swing.JFrame {
 
         if (returnVal == 0) {
             File classFile = jFileChooser1.getSelectedFile();
+            String fileName = classFile.getName().split("\\.")[0];
+            String filePath = classFile.getPath().split(fileName)[0];
+            System.out.println(filePath);
+            System.out.println("Filename = " + fileName);
             if (classFile.getName().endsWith(".class")) {
-                jTextFieldPath.setText(jFileChooser1.getSelectedFile().getAbsolutePath());
+                try {
+                    jTextFieldPath.setText(jFileChooser1.getSelectedFile().getAbsolutePath());
+                    URL url = new File(filePath).toURI().toURL();
+//                    URL url = new URL("file:///" + filePath.replaceAll("\\", "/"));
+                    URL[] urls = new URL[]{url};
+
+                    ClassLoader cl = new URLClassLoader(urls);
+                    Class cls = null;
+                    try {
+                        cls = cl.loadClass(fileName);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(ModulizerGUI.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (NoClassDefFoundError e) {
+                        int startIndex = e.getMessage().lastIndexOf(" ") + 1;
+                        int endIndex = e.getMessage().length() - 1;
+                        String classPackage = e.getMessage().substring(startIndex, endIndex).replaceAll("/", "\\.");
+                        try {
+                            cls = cl.loadClass(classPackage);
+                        } catch (ClassNotFoundException ex) {
+                            Logger.getLogger(ModulizerGUI.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                    }
+                    if (cls != null) {
+                        Object o = cls.newInstance();
+
+                        for (Method m : cls.getMethods()) {
+                            if (m.getName().substring(0, 6).equals("create")) {
+                                jComboBoxModel.addItem(m.getName());
+                                jComboBoxModel.setEnabled(true);
+                            }
+                        }
+                    }
+                } catch (MalformedURLException ex) {
+                    Logger.getLogger(ModulizerGUI.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InstantiationException ex) {
+                    Logger.getLogger(ModulizerGUI.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(ModulizerGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
             } else {
                 jTextFieldPath.setText("The selected File is not a *.class File. \n Please select a *.class File for modularization!");
             }
@@ -176,14 +240,29 @@ public class ModulizerGUI extends javax.swing.JFrame {
 
     private void jButtonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartActionPerformed
         ModulizerGUI.jTextAreaOutput.setText("");
-        ProcessModel model = ProcessModelFactory.createBspSese2Start2Unit();
-        ModularizationAlgorithm algorithm = new SingleEntrySingleExit();
-        List<ProcessModel> modularized = algorithm.startModularization(model);
+        ModularizationAlgorithm algorithm = new SingleEntrySingleExit(model);
+        List<ProcessModel> modularized = algorithm.startModularization();
         for (ProcessModel x : modularized) {
             printProcessModel(x);
         }
         //printProcessModel(model);
     }//GEN-LAST:event_jButtonStartActionPerformed
+
+    private void jComboBoxModelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxModelActionPerformed
+        for (Method m : ProcessModelFactory.class.getMethods()) {
+            if (m.getName().equals(jComboBoxModel.getSelectedItem())) {
+                try {
+                    model = (ProcessModel) m.invoke(null, null);
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(ModulizerGUI.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalArgumentException ex) {
+                    Logger.getLogger(ModulizerGUI.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InvocationTargetException ex) {
+                    Logger.getLogger(ModulizerGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }//GEN-LAST:event_jComboBoxModelActionPerformed
 
     /**
      * @param args the command line arguments
@@ -204,8 +283,8 @@ public class ModulizerGUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonBrowse;
     private javax.swing.JButton jButtonStart;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBoxAlgorithm;
+    private javax.swing.JComboBox<String> jComboBoxModel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
