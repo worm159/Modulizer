@@ -17,9 +17,15 @@ import uflow.data.model.immutable.ProcessUnitModel;
  */
 public class Print {
 
-    //TODO: Schleifen und Verzweigen → nichts darf doppelt ausgegeben werden.
     static ArrayList<String> printedSteps = new ArrayList<>();
 
+    /*
+        private constructor to hide the implicit public one.
+    */
+    private Print() {
+        throw new IllegalAccessError("Print class");
+    }
+    
     /**
      *
      * @param model
@@ -30,14 +36,13 @@ public class Print {
         for (ProcessUnitModel unit : model.getProcessUnitModels().getValues()) {
             String startStep = unit.getStartProcessStep();
             if (startStep != null && !startStep.isEmpty()) {
+                ModulizerGUI.jTextAreaOutput.append("Unit " + unit.getName() + "\n");
                 ModulizerGUI.jTextAreaOutput.append("Unit Start Process Step: " + startStep + "\n");
-                System.out.println("Unit " + unit.getName() + " Start Process Step: " + startStep);
                 ProcessStepModel step = unit.getProcessStepModels().get(startStep);
                 if (step != null && !printedSteps.contains(step.getId().getKey())) {
                     printedSteps.add(step.getId().getKey());
                     printProcessSteps(step, unit, model);
                     ModulizerGUI.jTextAreaOutput.append("\n");
-                    System.out.println("");
                 }
             }
         }
@@ -45,17 +50,13 @@ public class Print {
 
     private static void printProcessSteps(ProcessStepModel step, ProcessUnitModel unit, ProcessModel model) {
         ModulizerGUI.jTextAreaOutput.append("Process Step:   " + step.getId().getKey() + "\n");
-        System.out.println("Process Step:   " + step.getId().getKey());
         ModulizerGUI.jTextAreaOutput.append("        Name:   " + step.getName() + "\n");
-        System.out.println("        Name:   " + step.getName());
-//        System.out.println(step);
         List<String> nextSteps = new ArrayList<>();
         for (ProcessFunction func : step.getProcessFunctions()) {
             switch (func.getClass().getName()) {
                 case "uflow.data.function.immutable.RequireFunction":
                     RequireFunction reqFunc = (RequireFunction) func;
                     ModulizerGUI.jTextAreaOutput.append("    Requires:   " + reqFunc.getValues() + "\n");
-                    System.out.println("    Requires:   " + reqFunc.getValues());
                     break;
                 case "uflow.data.function.immutable.RequestInputFunction":
                     /* not used */
@@ -63,7 +64,6 @@ public class Print {
                 case "uflow.data.function.immutable.ProvideFunction":
                     ProvideFunction provFunc = (ProvideFunction) func;
                     ModulizerGUI.jTextAreaOutput.append("    Provides:   " + provFunc.getValue() + "\n");
-                    System.out.println("    Provides:   " + provFunc.getValue());
                     break;
                 case "uflow.data.function.immutable.CallFunction":
                     /* not used */
@@ -74,7 +74,6 @@ public class Print {
                     String nextStep = procFunc.getNext();
                     nextSteps.add(targetProcessUnit + "/" + nextStep);
                     ModulizerGUI.jTextAreaOutput.append("   Next Step:   " + procFunc.getNext() + "\n");
-                    System.out.println("   Next Step:   " + procFunc.getNext());
                     break;
                 default:
                     break;

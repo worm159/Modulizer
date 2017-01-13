@@ -2,9 +2,9 @@ package modulizer.ui;
 
 import Test.factory.ProcessModelFactory;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import javax.swing.JFileChooser;
@@ -50,7 +50,6 @@ public class ModulizerGUI extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jComboBoxAlgorithm = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextAreaOutput = new javax.swing.JTextArea();
         jButtonStart = new javax.swing.JButton();
         jComboBoxModel = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
@@ -196,7 +195,7 @@ public class ModulizerGUI extends javax.swing.JFrame {
 //                    URL url = new URL("file:///" + filePath.replaceAll("\\", "/"));
                     URL[] urls = new URL[]{url};
 
-                    ClassLoader cl = new URLClassLoader(urls);
+                    URLClassLoader cl = new URLClassLoader(urls);
                     Class cls = null;
                     try {
                         cls = cl.loadClass(fileName);
@@ -223,13 +222,10 @@ public class ModulizerGUI extends javax.swing.JFrame {
                             }
                         }
                     }
-                } catch (MalformedURLException ex) {
+                    cl.close();
+                } catch (InstantiationException | IllegalAccessException | IOException ex) {
                     Logger.getLogger(ModulizerGUI.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InstantiationException ex) {
-                    Logger.getLogger(ModulizerGUI.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IllegalAccessException ex) {
-                    Logger.getLogger(ModulizerGUI.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                } 
             } else {
                 jTextFieldPath.setText("The selected File is not a *.class File. \n Please select a *.class File for modularization!");
             }
@@ -242,10 +238,9 @@ public class ModulizerGUI extends javax.swing.JFrame {
         ModulizerGUI.jTextAreaOutput.setText("");
         ModularizationAlgorithm algorithm = new SingleEntrySingleExit(model);
         List<ProcessModel> modularized = algorithm.startModularization();
-        for (ProcessModel x : modularized) {
+        modularized.forEach((x) -> {
             printProcessModel(x);
-        }
-        //printProcessModel(model);
+        }); //printProcessModel(model);
     }//GEN-LAST:event_jButtonStartActionPerformed
 
     private void jComboBoxModelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxModelActionPerformed
@@ -253,11 +248,7 @@ public class ModulizerGUI extends javax.swing.JFrame {
             if (m.getName().equals(jComboBoxModel.getSelectedItem())) {
                 try {
                     model = (ProcessModel) m.invoke(null, null);
-                } catch (IllegalAccessException ex) {
-                    Logger.getLogger(ModulizerGUI.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IllegalArgumentException ex) {
-                    Logger.getLogger(ModulizerGUI.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InvocationTargetException ex) {
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                     Logger.getLogger(ModulizerGUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -290,7 +281,7 @@ public class ModulizerGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    public static javax.swing.JTextArea jTextAreaOutput;
+    public static final javax.swing.JTextArea jTextAreaOutput = new javax.swing.JTextArea();
     private javax.swing.JTextField jTextFieldPath;
     // End of variables declaration//GEN-END:variables
 }
