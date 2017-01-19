@@ -29,7 +29,7 @@ public class Step {
      * @param unitId
      */
     public Step(ProcessStepModel step, String unitId) {
-        id = step.getName();
+        id = step.getId().getKey();
         this.unitId = unitId;
         prevSteps = new HashMap<>();
         nextSteps = new HashMap<>();

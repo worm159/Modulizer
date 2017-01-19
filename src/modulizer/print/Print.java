@@ -32,7 +32,7 @@ public class Print {
      */
     public static void printProcessModel(ProcessModel model) {
         printedSteps.clear();
-        ModulizerGUI.getjTextAreaOutput().append(model.getId().getKey() + "\n");
+        ModulizerGUI.getjTextAreaOutput().append("Model: " + model.getId().getKey() + "\n");
         for (ProcessUnitModel unit : model.getProcessUnitModels().getValues()) {
             String startStep = unit.getStartProcessStep();
             if (startStep != null && !startStep.isEmpty()) {
@@ -44,6 +44,52 @@ public class Print {
                     printProcessSteps(step, unit, model);
                     ModulizerGUI.getjTextAreaOutput().append("\n");
                 }
+            }
+        }
+    }
+
+    /**
+     *
+     * @param model
+     */
+    public static void printDataObjectProcessModel(ProcessModel model) {
+        ModulizerGUI.getjTextAreaOutput().append("Model: " + model.getId().getKey() + "\n");
+        for (ProcessUnitModel unit : model.getProcessUnitModels().getValues()) {
+            ModulizerGUI.getjTextAreaOutput().append("Unit: " + unit.getName() + "\n");
+            for (ProcessStepModel step : unit.getProcessStepModels().getValues()) {
+                printProcessStep(step, model.getId().getKey());
+            }
+            ModulizerGUI.getjTextAreaOutput().append("\n");
+        }
+    }
+
+    private static void printProcessStep(ProcessStepModel step, String dataObject) {
+        ModulizerGUI.getjTextAreaOutput().append("Process Step:   " + step.getId().getKey() + "\n");
+        ModulizerGUI.getjTextAreaOutput().append("        Name:   " + step.getName() + "\n");
+        for (ProcessFunction func : step.getProcessFunctions()) {
+            switch (func.getClass().getName()) {
+                case "uflow.data.function.immutable.RequireFunction":
+                    RequireFunction reqFunc = (RequireFunction) func;
+                    if (reqFunc.getValues().contains(dataObject)) {
+                        ModulizerGUI.getjTextAreaOutput().append("    Requires:   " + dataObject + "\n");
+                    }
+                    break;
+                case "uflow.data.function.immutable.ProvideFunction":
+                    ProvideFunction provFunc = (ProvideFunction) func;
+                    if (provFunc.getKey().equals(dataObject)) {
+                        ModulizerGUI.getjTextAreaOutput().append("    Provides:   " + dataObject + "\n");
+                    }
+                    break;
+                case "uflow.data.function.immutable.ProceedFunction":
+                    ProceedFunction procFunc = (ProceedFunction) func;
+                    if (false/*if the dataObject is the value of this procFunc*/) {
+                        String nextStep = procFunc.getNext();
+                        ModulizerGUI.getjTextAreaOutput().append("   Next Step:   " + procFunc.getNext() + "\n");
+                        ModulizerGUI.getjTextAreaOutput().append("       Value:   " + dataObject + "\n");
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     }

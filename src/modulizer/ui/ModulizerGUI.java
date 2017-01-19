@@ -9,7 +9,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import javax.swing.JFileChooser;
 import static modulizer.print.Print.printProcessModel;
+import static modulizer.print.Print.printDataObjectProcessModel;
 
+import modulizer.algorithms.DataObjects;
 import modulizer.algorithms.ModularizationAlgorithm;
 import modulizer.algorithms.SingleEntrySingleExit;
 import uflow.data.model.immutable.ProcessModel;
@@ -238,10 +240,11 @@ public class ModulizerGUI extends javax.swing.JFrame {
 
     private void jButtonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartActionPerformed
         ModulizerGUI.jTextAreaOutput.setText("");
-        ModularizationAlgorithm algorithm = new SingleEntrySingleExit(model);
+        ModularizationAlgorithm algorithm = new DataObjects(model);
         List<ProcessModel> modularized = algorithm.startModularization();
         modularized.forEach((x) -> {
-            printProcessModel(x);
+            //printProcessModel(x);
+            printDataObjectProcessModel(x);
         }); //printProcessModel(model);
     }//GEN-LAST:event_jButtonStartActionPerformed
 
