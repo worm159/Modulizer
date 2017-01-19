@@ -35,10 +35,15 @@ public class SingleEntrySingleExit extends ModularizationAlgorithm{
     public SingleEntrySingleExit(ProcessModel model) {
         super(model);
         seseEndSteps = new HashMap<>();
+
+        // create the first ProcessModelModifier and increase the modelNumber
+        currentModel = new ProcessModelModifier().setId("Model1");
+        models.put("Model1",currentModel);
+        modelNumber = 2;
     }
 
     /**
-     * modularizes the model based on the Singel Entry Single Exit algorithm
+     * modularizes the model based on the Single Entry Single Exit algorithm
      *
      * @return result of the modularization as a list of ProcessModels
      */

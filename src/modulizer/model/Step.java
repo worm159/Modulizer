@@ -20,7 +20,7 @@ public class Step {
     private String unitId;
     private Map<String,Step> prevSteps;
     private Map<String,Step> nextSteps;
-    private List<DataItem> provided;
+    private List<String> provided;
     private List<String> required;
 
     /**
@@ -39,7 +39,7 @@ public class Step {
             String c = func.getClass().getName();
             switch (c) {
                 case "uflow.data.function.immutable.ProvideFunction":
-                    provided.add(((ProvideFunction)func).getValue());
+                    provided.add(((ProvideFunction)func).getKey());
                     break;
                 case "uflow.data.function.immutable.RequireFunction":
                     for(String s : ((RequireFunction) func).getValues()) {
@@ -94,4 +94,21 @@ public class Step {
      * @return
      */
     public String getUnitId() { return unitId; }
+
+    /**
+     *
+     * @return
+     */
+    public List<String> getProvided() {
+        return provided;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public List<String> getRequired() {
+        return required;
+    }
+
 }

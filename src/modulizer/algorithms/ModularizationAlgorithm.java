@@ -57,11 +57,6 @@ public abstract class ModularizationAlgorithm {
             ProcessStepModel firstStep = unit.getProcessStepModels().get(unit.getStartProcessStep());
             generateStep(null, firstStep, unit);
         }
-
-        // create the first ProcessModelModifier and increase the modelNumber
-        currentModel = new ProcessModelModifier().setId("Model1");
-        models.put("Model1",currentModel);
-        modelNumber = 2;
     }
 
     /**
