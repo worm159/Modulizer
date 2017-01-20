@@ -7,11 +7,13 @@ import uflow.data.model.modifier.ProcessModelModifier;
 import uflow.data.model.modifier.ProcessUnitModelModifier;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Created by Brigitte on 28.12.2016.
+ * @author August, Brigitte, Emanuel, Stefanie
  */
 public class DataObjects extends ModularizationAlgorithm {
     /**
@@ -54,6 +56,11 @@ public class DataObjects extends ModularizationAlgorithm {
                 ProcessUnitModelModifier unitModifier = getUnitModifier(step);
                 unitModifier.setProcessStepModel(step.getId(),processStep);
             }
+            //Map<String,String> proceededDataObjects = new HashMap<>();
+            //proceededDataObjects.putAll(step.getProceeded());
+            //for (String nextStep : proceededDataObjects.keySet()) {
+            //
+            //}
         }
         for(ProcessModelModifier m : models.values()) {
             result.add(m.getProcessModel());
