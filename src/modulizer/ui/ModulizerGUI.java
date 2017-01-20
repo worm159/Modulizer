@@ -60,7 +60,7 @@ public class ModulizerGUI extends javax.swing.JFrame {
         jButtonStart = new javax.swing.JButton();
         jComboBoxModel = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
-        jComboBoxModelSelect = new javax.swing.JComboBox<>();
+        jComboBoxModularizedModel = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Modulizer");
@@ -110,7 +110,12 @@ public class ModulizerGUI extends javax.swing.JFrame {
 
         jLabel3.setText("Please choose the model to modularize:");
 
-        jComboBoxModelSelect.setEnabled(false);
+        jComboBoxModularizedModel.setEnabled(false);
+        jComboBoxModularizedModel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxModularizedModelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -128,7 +133,7 @@ public class ModulizerGUI extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jComboBoxModelSelect, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jComboBoxModularizedModel, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addGap(0, 0, Short.MAX_VALUE))
@@ -160,7 +165,7 @@ public class ModulizerGUI extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jComboBoxAlgorithm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBoxModelSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jComboBoxModularizedModel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jButtonStart, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
@@ -267,15 +272,15 @@ public class ModulizerGUI extends javax.swing.JFrame {
         }
         if (algorithm != null) {
             List<ProcessModel> modularized = algorithm.startModularization();
-            jComboBoxModelSelect.removeAllItems();
-            jComboBoxModelSelect.addItem("Print All");
+            jComboBoxModularizedModel.removeAllItems();
+            jComboBoxModularizedModel.addItem("Print All");
             modularized.forEach((x) -> {
                 modularizedMap.put(x.getId().getKey(), x);
-                jComboBoxModelSelect.addItem(x.getId().getKey());
+                jComboBoxModularizedModel.addItem(x.getId().getKey());
                 //printProcessModel(x);
                 printDataObjectProcessModel(x);
             });
-            jComboBoxModelSelect.setEnabled(true);
+            jComboBoxModularizedModel.setEnabled(true);
         }
     }//GEN-LAST:event_jButtonStartActionPerformed
 
@@ -284,12 +289,25 @@ public class ModulizerGUI extends javax.swing.JFrame {
             if (m.getName().equals("create" + jComboBoxModel.getSelectedItem())) {
                 try {
                     model = (ProcessModel) m.invoke(null, null);
+                    System.out.println(model.getName());
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                     Logger.getLogger(ModulizerGUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
     }//GEN-LAST:event_jComboBoxModelActionPerformed
+
+    private void jComboBoxModularizedModelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxModularizedModelActionPerformed
+        String selectedItem = jComboBoxModularizedModel.getSelectedItem().toString();
+        jTextAreaOutput.setText("");
+        if (!selectedItem.isEmpty() && !selectedItem.equals("Print All")) {
+            printDataObjectProcessModel(modularizedMap.get(selectedItem));
+        } else {
+            modularizedMap.forEach((key, model) -> {
+                printDataObjectProcessModel(model);
+            });
+        }
+    }//GEN-LAST:event_jComboBoxModularizedModelActionPerformed
 
     /**
      * @param args the command line arguments
@@ -312,7 +330,7 @@ public class ModulizerGUI extends javax.swing.JFrame {
     private javax.swing.JButton jButtonStart;
     private javax.swing.JComboBox<String> jComboBoxAlgorithm;
     private javax.swing.JComboBox<String> jComboBoxModel;
-    private javax.swing.JComboBox<String> jComboBoxModelSelect;
+    private javax.swing.JComboBox<String> jComboBoxModularizedModel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

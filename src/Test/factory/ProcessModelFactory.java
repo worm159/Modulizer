@@ -7,6 +7,7 @@ import uflow.data.common.modifier.ListModifier;
 import uflow.data.common.modifier.MapModifier;
 import uflow.data.function.immutable.ProceedFunction;
 import uflow.data.function.immutable.ProvideFunction;
+import uflow.data.function.immutable.RequireFunction;
 import uflow.data.function.modifier.*;
 import uflow.data.input.immutable.CheckboxInput;
 import uflow.data.input.immutable.DropdownInput;
@@ -14,6 +15,7 @@ import uflow.data.input.immutable.RadioInput;
 import uflow.data.input.immutable.TextInput;
 import uflow.data.input.modifier.FormModifier;
 import uflow.data.model.immutable.ProcessModel;
+import uflow.data.model.immutable.ProcessStepModel;
 import uflow.data.model.modifier.*;
 
 /**
@@ -727,8 +729,100 @@ public class ProcessModelFactory {
                 .getProcessModel();
     }
 
+    // Beispiele Data Objects
 
-     /**
+    public static ProcessModel createDataObjectsV1() {
+        return new ProcessModelModifier()
+                .setId("BeispielDataObjectsV1")
+                .setName("Beispiel Data Objects V1")
+                .setDescription("Testbeispiel für Modularisierung Data Objects V1")
+
+                //Unit 1
+                .setProcessUnitModel("Unit-1", new ProcessUnitModelModifier()
+                                .setId("Unit-1")
+                                .setName("Unit-1")
+                                .addAuthorizedRole("PersonUnit1")
+                                .setStartProcessStep("Entry Step 1")
+
+                                .setProcessStepModel("Entry Step 1", new ProcessStepModelModifier()
+                                                .addProcessFunction(new ProvideFunctionModifier()
+                                                                .setTo("Unit-2")
+                                                                .setValue("Obj1", "Obj1")
+                                                                .setLabel("Obj1")
+                                                                .getProvideFunction()
+                                                )
+                                                .addProcessFunction(new ProceedFunctionModifier()
+                                                        .setNext("Unit 1 Step 2")
+                                                        .addValue("Obj2", "Obj2")
+                                                        .getProceedFunction()
+                                                )
+                                                .getProcessStepModel()
+                                )
+                                .setProcessStepModel("Unit 1 Step 2", new ProcessStepModelModifier()
+                                        .addProcessFunction(new RequireFunctionModifier()
+                                                .addValue("Obj2")
+                                                .getRequireFunction()
+                                        )
+                                        .addProcessFunction(new RequireFunctionModifier()
+                                                .addValue("Obj3")
+                                                .getRequireFunction()
+                                        )
+                                        .addProcessFunction(new ProceedFunctionModifier()
+                                                .setNext("Unit 1 Step 3")
+                                                .addValue("Obj3", "Obj3")
+                                                .getProceedFunction()
+                                        )
+                                        .getProcessStepModel()
+                                )
+                                .setProcessStepModel("Unit 1 Step 3", new ProcessStepModelModifier()
+                                        .addProcessFunction(new ProceedFunctionModifier()
+                                                .setNext("Unit 2 Step 3")
+                                                .setTargetUnit("Unit-2")
+                                                .addValue("Obj4", "Obj4")
+                                                .getProceedFunction()
+                                        )
+                                        .getProcessStepModel()
+                                )
+                                .getProcessUnitModel()
+                )
+
+                //Unit 2
+                .setProcessUnitModel("Unit-2", new ProcessUnitModelModifier()
+                                .setId("Unit-2")
+                                .setName("Unit-2")
+                                .addAuthorizedRole("PersonUnit2")
+                                .setStartProcessStep("Entry Step 2")
+
+
+                                .setProcessStepModel("Entry Step 2", new ProcessStepModelModifier()
+                                        .addProcessFunction(new RequireFunctionModifier()
+                                                .addValue("Obj1")
+                                                .getRequireFunction()
+                                        )
+                                        .addProcessFunction(new ProceedFunctionModifier()
+                                                .setNext("Unit 2 Step 2")
+                                                .getProceedFunction()
+                                        )
+                                        .getProcessStepModel()
+                                )
+                                .setProcessStepModel("Unit 2 Step 2", new ProcessStepModelModifier()
+                                                .addProcessFunction(new ProvideFunctionModifier()
+                                                                .setTo("Unit-1")
+                                                                .setValue("Obj3", "Obj3")
+                                                                .setLabel("Obj3")
+                                                                .getProvideFunction()
+                                                )
+                                                .getProcessStepModel()
+                                )
+                                .setProcessStepModel("Unit 2 Step 3", new ProcessStepModelModifier()
+                                        .getProcessStepModel()
+                                )
+                                .getProcessUnitModel()
+                ).getProcessModel();
+    }
+
+
+    /**
      * eigene Beispiele Ende
      */
 
