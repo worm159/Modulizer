@@ -118,14 +118,21 @@ public class ModelNavigator {
     }
 
     /**
-     * Liefert true zruück, wenn Step1 irgendein Vorgänger von Step2 ist
+     * Liefert true zruück, wenn step1 irgendein Vorgänger von step2 ist
      * @param step1
      * @param step2
      * @return
      */
     public boolean isStepBeforeStep(ProcessStepModel step1, ProcessStepModel step2) {
+        if (step2 == null)                      return false;
+        if (step1.equals(step2))                return true;
+        if (getPrevSteps(step2).size() == 0)    return false;
 
-        return false;
+        boolean ret = false;
+        for (ProcessStepModel prev: getPrevSteps(step2))
+            ret = ret || isStepBeforeStep(step1, prev);
+
+        return ret;
     }
 
     /**

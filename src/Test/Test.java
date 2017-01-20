@@ -49,7 +49,13 @@ public class Test {
         System.out.println("=========================================================================================");
         System.out.println("Exit: " + mn3.getSESEExitToEntry(mn3.getStep(id)));
 
+        System.out.println("Ist step1 ein Vorgänger von step 2 TEST =========================================================================================");
+        ProcessModel test4 = ProcessModelFactory.createSese2UnitKeineZerteilungV2();
+        ModelNavigator mn4 = new ModelNavigator(test4);
 
+        Id id1 = new Id("ProcessStepModel", "SESE Start ?", "Sese2UnitKeineZerteilungV2/Unit-1");
+        Id id2 = new Id("ProcessStepModel", "SESE End ?", "Sese2UnitKeineZerteilungV2/Unit-1");
+        System.out.println(mn4.isStepBeforeStep(mn4.getStep(id1), mn4.getStep(id2)));
 
 
 
