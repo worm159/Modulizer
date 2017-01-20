@@ -56,11 +56,7 @@ public class DataObjects extends ModularizationAlgorithm {
                 ProcessUnitModelModifier unitModifier = getUnitModifier(step);
                 unitModifier.setProcessStepModel(step.getId(),processStep);
             }
-            //Map<String,String> proceededDataObjects = new HashMap<>();
-            //proceededDataObjects.putAll(step.getProceeded());
-            //for (String nextStep : proceededDataObjects.keySet()) {
-            //
-            //}
+
         }
         for(ProcessModelModifier m : models.values()) {
             result.add(m.getProcessModel());

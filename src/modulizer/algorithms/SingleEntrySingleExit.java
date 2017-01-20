@@ -89,7 +89,7 @@ public class SingleEntrySingleExit extends ModularizationAlgorithm{
                             .getProcessStepModels().get(prev.getId());
                     boolean isPrev = mn.isStepBeforeStep(processStep,prevStep);
                     if(isPrev) prevWithCycle=true;
-                    else prevWithoutCycle=true;
+                    else if (!finishedSteps.contains(prev)) prevWithoutCycle=true;
                 }
             }
             /**

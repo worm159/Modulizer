@@ -30,7 +30,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class ModulizerGUI extends javax.swing.JFrame {
 
-    ProcessModel model = ProcessModelFactory.createBspSeseEinfach();
+    ProcessModel model = ProcessModelFactory.createSeseEinfach();
     Map<String, ProcessModel> modularizedMap = new HashMap<>();
 
     /**
