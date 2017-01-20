@@ -108,7 +108,8 @@ public abstract class ModularizationAlgorithm {
     }
 
     /**
-     * This method searches for the ProcessUnitModel to which the Step belongs
+     * method that searches for the ProcessUnitModel to which the Step belongs
+     *
      * @param step the step for which the Unit should be searched
      * @return the ProcessUnitModelModifier
      */
