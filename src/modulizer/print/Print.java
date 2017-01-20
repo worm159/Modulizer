@@ -2,6 +2,7 @@ package modulizer.print;
 
 import java.util.ArrayList;
 import java.util.List;
+import modulizer.algorithms.ModularizationAlgorithm;
 import modulizer.ui.ModulizerGUI;
 import uflow.data.function.immutable.ProceedFunction;
 import uflow.data.function.immutable.ProcessFunction;
@@ -21,11 +22,26 @@ public class Print {
 
     /*
         private constructor to hide the implicit public one.
-    */
+     */
     private Print() {
         throw new IllegalAccessError("Print class");
     }
-    
+
+    public static void printModel(ProcessModel model, String chosenAlgorithm) {
+        switch (chosenAlgorithm) {
+            case "Single Entry Single Exit":
+                printProcessModel(model);
+                break;
+            case "Data objects":
+                printDataObjectProcessModel(model);
+                break;
+            case "Repetition":
+            case "Clustering":
+            default:
+                break;
+        }
+    }
+
     /**
      *
      * @param model

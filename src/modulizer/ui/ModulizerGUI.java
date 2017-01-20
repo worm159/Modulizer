@@ -9,8 +9,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
 import javax.swing.JFileChooser;
-import static modulizer.print.Print.printProcessModel;
-import static modulizer.print.Print.printDataObjectProcessModel;
 
 import modulizer.algorithms.DataObjects;
 import modulizer.algorithms.ModularizationAlgorithm;
@@ -23,6 +21,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import modulizer.print.Print;
+import static modulizer.print.Print.printModel;
 
 /**
  *
@@ -31,6 +31,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class ModulizerGUI extends javax.swing.JFrame {
 
     ProcessModel model = ProcessModelFactory.createSeseEinfach();
+    String chosenAlgorithm;
     Map<String, ProcessModel> modularizedMap = new HashMap<>();
 
     /**
@@ -255,8 +256,8 @@ public class ModulizerGUI extends javax.swing.JFrame {
 
     private void jButtonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartActionPerformed
         ModulizerGUI.jTextAreaOutput.setText("");
-        String chosenAlgorithm = jComboBoxAlgorithm.getSelectedItem().toString();
         ModularizationAlgorithm algorithm = null;
+        chosenAlgorithm = jComboBoxAlgorithm.getSelectedItem().toString();
         switch (chosenAlgorithm) {
             case "Single Entry Single Exit":
                 algorithm = new SingleEntrySingleExit(model);
@@ -271,14 +272,14 @@ public class ModulizerGUI extends javax.swing.JFrame {
                 break;
         }
         if (algorithm != null) {
-            List<ProcessModel> modularized = algorithm.startModularization();
             jComboBoxModularizedModel.removeAllItems();
+            modularizedMap.clear();
+            List<ProcessModel> modularized = algorithm.startModularization();
             jComboBoxModularizedModel.addItem("Print All");
             modularized.forEach((x) -> {
                 modularizedMap.put(x.getId().getKey(), x);
                 jComboBoxModularizedModel.addItem(x.getId().getKey());
-                //printProcessModel(x);
-                printDataObjectProcessModel(x);
+                printModel(x, chosenAlgorithm);
             });
             jComboBoxModularizedModel.setEnabled(true);
         }
@@ -289,7 +290,6 @@ public class ModulizerGUI extends javax.swing.JFrame {
             if (m.getName().equals("create" + jComboBoxModel.getSelectedItem())) {
                 try {
                     model = (ProcessModel) m.invoke(null, null);
-                    System.out.println(model.getName());
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                     Logger.getLogger(ModulizerGUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -298,14 +298,16 @@ public class ModulizerGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBoxModelActionPerformed
 
     private void jComboBoxModularizedModelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxModularizedModelActionPerformed
-        String selectedItem = jComboBoxModularizedModel.getSelectedItem().toString();
-        jTextAreaOutput.setText("");
-        if (!selectedItem.isEmpty() && !selectedItem.equals("Print All")) {
-            printDataObjectProcessModel(modularizedMap.get(selectedItem));
-        } else {
-            modularizedMap.forEach((key, model) -> {
-                printDataObjectProcessModel(model);
-            });
+        if (0 < jComboBoxModularizedModel.getItemCount()) {
+            String selectedItem = jComboBoxModularizedModel.getSelectedItem().toString();
+            jTextAreaOutput.setText("");
+            if (!selectedItem.isEmpty() && !selectedItem.equals("Print All")) {
+                printModel(modularizedMap.get(selectedItem), chosenAlgorithm);
+            } else {
+                modularizedMap.forEach((key, value) -> {
+                    printModel(value, chosenAlgorithm);
+                });
+            }
         }
     }//GEN-LAST:event_jComboBoxModularizedModelActionPerformed
 
