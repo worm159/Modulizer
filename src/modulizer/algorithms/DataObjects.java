@@ -59,7 +59,7 @@ public class DataObjects extends ModularizationAlgorithm {
             unitModifier.setProcessStepModel(step.getId(),processStep);
         }
         for (ProcessFunction func : processStep.getProcessFunctions()) {
-            if(func.getClass().getName().equals("uflow.data.immutable.ProceedFunction")) {
+            if(func.getClass().getName().equals("uflow.data.function.immutable.ProceedFunction")) {
                 ProceedFunction f = (ProceedFunction) func;
                 String targetProcessUnit = f.getTargetProcessUnit();
                 String next = f.getNext();
@@ -71,6 +71,14 @@ public class DataObjects extends ModularizationAlgorithm {
                         ProcessStepModel nextStep = unitModifier.getProcessUnitModel().getProcessStepModels().get(next);
                         if(nextStep != null) {
                             unitModifier.setProcessStepModel(next,nextStep);
+                        }
+                    } else {
+                        ProcessUnitModelModifier nextUnitModifier = getUnitModifier(steps.get(next));
+                        if(nextUnitModifier != null) {
+                            ProcessStepModel nextStep = nextUnitModifier.getProcessUnitModel().getProcessStepModels().get(next);
+                            if(nextStep != null) {
+                                nextUnitModifier.setProcessStepModel(next,nextStep);
+                            }
                         }
                     }
                 }
