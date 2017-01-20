@@ -23,7 +23,6 @@ public class Step {
     private Map<String,Step> nextSteps;
     private List<String> provided;
     private List<String> required;
-    private Map<String,String> proceeded;
 
     /**
      * constructor of Step, which expects the step that should be transformed and the id of its Unit
@@ -47,14 +46,6 @@ public class Step {
                 case "uflow.data.function.immutable.RequireFunction":
                     for(String s : ((RequireFunction) func).getValues()) {
                         required.add(s);
-                    }
-                    break;
-                case "uflow.data.function.immutable.ProceedFunction":
-                    ProceedFunction procFunc = (ProceedFunction) func;
-                    String targetProcessUnit = procFunc.getTargetProcessUnit();
-                    String nextStep = procFunc.getNext();
-                    for (String dataObject : procFunc.getValues().getKeys()) {
-                        proceeded.put(targetProcessUnit + "/" + nextStep,dataObject);
                     }
                     break;
                 default:
@@ -131,14 +122,5 @@ public class Step {
      */
     public List<String> getRequired() {
         return required;
-    }
-
-    /**
-     * method to get the nextSteps with the corresponding Data Objects
-     *
-     * @return the map of the nextSteps that receive Data Objects
-     */
-    public Map<String, String> getProceeded() {
-        return proceeded;
     }
 }
