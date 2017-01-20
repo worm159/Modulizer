@@ -53,9 +53,11 @@ public class Test {
         ProcessModel test4 = ProcessModelFactory.createSese2UnitKeineZerteilungV2();
         ModelNavigator mn4 = new ModelNavigator(test4);
 
-        Id id1 = new Id("ProcessStepModel", "SESE Start ?", "Sese2UnitKeineZerteilungV2/Unit-1");
-        Id id2 = new Id("ProcessStepModel", "SESE End ?", "Sese2UnitKeineZerteilungV2/Unit-1");
+        Id id2 = new Id("ProcessStepModel", "SESE Start ?", "Sese2UnitKeineZerteilungV2/Unit-1");
+        Id id1 = new Id("ProcessStepModel", "SESE End ?", "Sese2UnitKeineZerteilungV2/Unit-1");
         System.out.println(mn4.isStepBeforeStep(mn4.getStep(id1), mn4.getStep(id2)));
+
+        System.out.println(mn4.isStepAfterStep(mn4.getStep(id1), mn4.getStep(id2)));
 
 
 
