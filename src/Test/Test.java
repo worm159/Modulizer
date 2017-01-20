@@ -1,6 +1,7 @@
 package Test;
 
 import Test.factory.ProcessModelFactory;
+import uflow.data.common.immutable.Id;
 import uflow.data.function.immutable.ProceedFunction;
 import uflow.data.function.immutable.ProcessFunction;
 import uflow.data.function.modifier.ProceedFunctionModifier;
@@ -14,18 +15,47 @@ import uflow.data.model.immutable.ProcessUnitModel;
 public class Test {
 
     public static void main (String [ ] args) {
-        ProcessModel test = ProcessModelFactory.createBspSeseVerschachtelt2End();
+        Id id = null;
+
+        ProcessModel test = ProcessModelFactory.createSeseVerschachtelt2End();
         ModelNavigator mn = new ModelNavigator(test);
-        mn.printModel();
-        System.out.println(mn.isExitToEntry(mn.getStep("SESE 1 Start"), mn.getStep("SESE 1 left")));
+        /*old: System.out.println(mn.isExitToEntry(mn.getStep("SESE 1 Start"), mn.getStep("SESE 1 left")));
         System.out.println(mn.getSESEExitToEntry(mn.getStep("SESE 1 right, SESE 2 Start")));
+        */
+
 
         System.out.println("");
 
-        ProcessModel test2 = ProcessModelFactory.createBspSeseEinfach();
+        ProcessModel test2 = ProcessModelFactory.createSeseEinfach();
         ModelNavigator mn2 = new ModelNavigator(test2);
-        System.out.println(mn2.getSESEExitToEntry(mn2.getStep("SESE Start")));
-/*
+        id = new Id("ProcessStepModel", "SESE Start", "SeseEinfach/Unit-1");
+        System.out.println(mn2.getStep(id));
+        System.out.println("Exit: " + mn2.getSESEExitToEntry(mn2.getStep(id)));
+
+        System.out.println("");
+        System.out.println(mn2.getPrevSteps(mn2.getStep(id)));
+
+        System.out.println("");
+        System.out.println("");
+
+        ProcessModel test3 = ProcessModelFactory.createSese2UnitKeineZerteilungV2();
+        ModelNavigator mn3 = new ModelNavigator(test3);
+        System.out.println(mn3.getFirstSteps());
+        id = new Id("ProcessStepModel", "SESE Start ?", "Sese2UnitKeineZerteilungV2/Unit-1");
+        System.out.println(id);
+        System.out.println(mn3.getStep(id));
+        System.out.println(mn3.getNextSteps(mn3.getStep(id)));
+
+        System.out.println("=========================================================================================");
+        System.out.println("Exit: " + mn3.getSESEExitToEntry(mn3.getStep(id)));
+
+
+
+
+
+
+
+        /*
         test.getAuthorizedStartRoles();
 
         for (ProcessUnitModel unit : test.getProcessUnitModels().getValues() ) {

@@ -69,26 +69,52 @@ public class ModelNavigator {
      */
     public boolean isExitToEntry(ProcessStepModel entry, ProcessStepModel step) {
 
-        if (entry == null)                      return false;
-        if (entry.equals(step))                 return true;
-        if (getNextSteps(entry).size() == 0)    return false;
+        boolean ret = true;
+
+        ret = ret && isExitToEntryForward(entry, step);
+        if (!ret) return false;
+        //System.out.println("Start Backward ***************************************************************************");
+        ret = ret && isExitToEntryBackward(entry, step);
+
+        return ret;
+    }
+
+    /**
+     * Überprüfen, ob alle Pfade rückwerts (der Vorgänger) zu entry führen
+     * @param entry
+     * @param exit
+     * @return
+     */
+    private boolean isExitToEntryBackward(ProcessStepModel entry, ProcessStepModel exit) {
+        if (exit == null)                      return false;
+        if (entry.equals(exit))                return true;
+        if (getPrevSteps(exit).size() == 0)    return false;
 
         boolean ret = true;
-        // Überprüfen, ob alle nachfolgenden Pfade zu step führen:
-        for (ProcessStepModel next: getNextSteps(entry)) {
-           ret = ret && isExitToEntry(next, step);
-        }
-
-        // Überprüfen, ob alle Pfade rückwerts (der Vorgänger) zu entry führen:
-        for (ProcessStepModel prev: getPrevSteps(step)) {
-            ret = ret && isExitToEntry(step, entry);
+        for (ProcessStepModel prev: getPrevSteps(exit)) {
+            ret = ret && isExitToEntryBackward(entry, prev);
         }
 
         return ret;
     }
 
-    private boolean isExitToEntryForward(ProcessModel entry, ProcessStepModel step) {
-        return true;
+    /**
+     * Überprüfen, ob alle nachfolgenden Pfade zu step führen
+     * @param entry
+     * @param exit
+     * @return
+     */
+    private boolean isExitToEntryForward(ProcessStepModel entry, ProcessStepModel exit) {
+        if (entry == null)                      return false;
+        if (entry.equals(exit))                 return true;
+        if (getNextSteps(entry).size() == 0)    return false;
+
+        boolean ret = true;
+        for (ProcessStepModel next: getNextSteps(entry)) {
+            ret = ret && isExitToEntryForward(next, exit);
+        }
+
+        return ret;
     }
 
     /**
@@ -177,11 +203,33 @@ public class ModelNavigator {
     public ArrayList<ProcessStepModel> getPrevSteps(ProcessStepModel step) { /*************************/
         ArrayList<ProcessStepModel> steps = new ArrayList<>();
 
+        Id id = null;
+
         for (ProcessUnitModel unit : m.getProcessUnitModels().getValues() )
             for (ProcessStepModel step_tmp : unit.getProcessStepModels().getValues())
+                /* new */
+                for (ProcessFunction func : step_tmp.getProcessFunctions()) {
+                    if (func.getClass() == ProceedFunction.class) {
+                        if (((ProceedFunction) func).getTargetProcessUnit().equals(""))
+                            id = new Id("ProcessStepModel", ((ProceedFunction) func).getNext(), step.getId().getContext());
+                        else
+                            id = new Id("ProcessStepModel", ((ProceedFunction) func).getNext(), unit.getId().getContext() + "/" + ((ProceedFunction) func).getTargetProcessUnit());
+
+                        if (getStep(id) != null && getStep(id).equals(step)) {
+                            //System.out.println(id);
+                            //System.out.println(getStep(id));
+                            //System.out.println("Vorgänger: " + step_tmp);
+                            steps.add(step_tmp);
+                        }
+                    }
+                }
+                /* old:
                 if (step_tmp.equals(step))
                     steps.add(step);
+                    */
 
+        //System.out.println("Anzahl Vorgänger: " + steps.size());
+        //System.out.println("");
         return steps;
     }
 
@@ -191,6 +239,8 @@ public class ModelNavigator {
      * @return
      */
     public ArrayList<ProcessStepModel> getNextSteps(ProcessStepModel step) {
+        if (step == null) return null;
+
         ArrayList<ProcessStepModel> steps = new ArrayList<>();
 
         Id id = null;
@@ -201,7 +251,9 @@ public class ModelNavigator {
                     id = new Id("ProcessStepModel", ((ProceedFunction)func).getNext(), step.getId().getContext());
                 else
                     id = new Id("ProcessStepModel", ((ProceedFunction)func).getNext(), ((ProceedFunction)func).getTargetProcessUnit());
-                steps.add( getStep(id) );
+
+                if (getStep(id) != null)
+                    steps.add( getStep(id) );
                 // old: steps.add( getStep(((ProceedFunction)func).getNext()) );
             }
         }
