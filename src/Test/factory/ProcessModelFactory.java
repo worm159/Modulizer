@@ -29,7 +29,7 @@ import uflow.data.model.modifier.*;
 public class ProcessModelFactory {
 
     /**
-     * eigene Beispiele
+     * Examples Start
      * * @author August, Brigitte, Emanuel, Stefanie
      */
 
@@ -74,7 +74,7 @@ public class ProcessModelFactory {
                 .getProcessModel();
     }
 
-// Beispiele SESE
+// Examples SESE
 
     public static ProcessModel createSeseEinfach() {
         return new ProcessModelModifier()
@@ -726,7 +726,7 @@ public class ProcessModelFactory {
                 .getProcessModel();
     }
 
-    // Beispiele Data Objects
+    // Examples Data Objects
 
     public static ProcessModel createDataObjectsV1() {
         return new ProcessModelModifier()
@@ -903,7 +903,7 @@ public class ProcessModelFactory {
     }
 
     /**
-     * eigene Beispiele Ende
+     * Examples End
      */
 
     public static ProcessModel createCycleTest() {
