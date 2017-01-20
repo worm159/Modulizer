@@ -731,11 +731,11 @@ public class ProcessModelFactory {
 
     // Beispiele Data Objects
 
-    public static ProcessModel createDataObjectsZerteilungV1() {
+    public static ProcessModel createDataObjectsV1() {
         return new ProcessModelModifier()
-                .setId("BeispielDataObjectsZerteilungV1")
-                .setName("Beispiel Data Objects Zerteilung V1")
-                .setDescription("Testbeispiel für Modularisierung Data Objects Zerteilung V1")
+                .setId("BeispielDataObjectsV1")
+                .setName("Beispiel Data Objects V1")
+                .setDescription("Testbeispiel für Modularisierung Data Objects V1")
 
                 //Unit 1
                 .setProcessUnitModel("Unit-1", new ProcessUnitModelModifier()
@@ -746,10 +746,9 @@ public class ProcessModelFactory {
 
                                 .setProcessStepModel("Entry Step 1", new ProcessStepModelModifier()
                                                 .addProcessFunction(new ProvideFunctionModifier()
-                                                                .setTo("Entry Step 2")
+                                                                .setTo("Unit-2")
                                                                 .setValue("Obj1", "Obj1")
                                                                 .setLabel("Obj1")
-//                                              .setTargetUnit("Unit-2")
                                                                 .getProvideFunction()
                                                 )
                                                 .addProcessFunction(new ProceedFunctionModifier()
@@ -775,7 +774,6 @@ public class ProcessModelFactory {
                                         )
                                         .getProcessStepModel()
                                 )
-
                                 .setProcessStepModel("Unit 1 Step 3", new ProcessStepModelModifier()
                                         .addProcessFunction(new ProceedFunctionModifier()
                                                 .setNext("Unit 2 Step 3")
@@ -807,18 +805,15 @@ public class ProcessModelFactory {
                                         )
                                         .getProcessStepModel()
                                 )
-
                                 .setProcessStepModel("Unit 2 Step 2", new ProcessStepModelModifier()
                                                 .addProcessFunction(new ProvideFunctionModifier()
-                                                                .setTo("Unit 1 Step 2")
+                                                                .setTo("Unit-1")
                                                                 .setValue("Obj3", "Obj3")
                                                                 .setLabel("Obj3")
-//                                              .setTargetUnit("Unit-1")
                                                                 .getProvideFunction()
                                                 )
                                                 .getProcessStepModel()
                                 )
-
                                 .setProcessStepModel("Unit 2 Step 3", new ProcessStepModelModifier()
                                         .getProcessStepModel()
                                 )
