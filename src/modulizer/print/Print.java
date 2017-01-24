@@ -98,7 +98,7 @@ public class Print {
                     break;
                 case "uflow.data.function.immutable.ProceedFunction":
                     ProceedFunction procFunc = (ProceedFunction) func;
-                    if (false/*if the dataObject is the value of this procFunc*/) {
+                    if (procFunc.getValues().containsKey(dataObject)) {
                         String nextStep = procFunc.getNext();
                         ModulizerGUI.getjTextAreaOutput().append("   Next Step:   " + procFunc.getNext() + "\n");
                         ModulizerGUI.getjTextAreaOutput().append("       Value:   " + dataObject + "\n");
