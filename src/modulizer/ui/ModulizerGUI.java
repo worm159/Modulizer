@@ -21,7 +21,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import modulizer.print.Print;
 import static modulizer.print.Print.printModel;
 
 /**
@@ -100,12 +99,6 @@ public class ModulizerGUI extends javax.swing.JFrame {
         jButtonStart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonStartActionPerformed(evt);
-            }
-        });
-
-        jComboBoxModel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBoxModelActionPerformed(evt);
             }
         });
 
@@ -258,6 +251,7 @@ public class ModulizerGUI extends javax.swing.JFrame {
         ModulizerGUI.jTextAreaOutput.setText("");
         ModularizationAlgorithm algorithm = null;
         chosenAlgorithm = jComboBoxAlgorithm.getSelectedItem().toString();
+        setProcessModel();
         switch (chosenAlgorithm) {
             case "Single Entry Single Exit":
                 algorithm = new SingleEntrySingleExit(model);
@@ -285,7 +279,7 @@ public class ModulizerGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonStartActionPerformed
 
-    private void jComboBoxModelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxModelActionPerformed
+    private void setProcessModel() {
         for (Method m : ProcessModelFactory.class.getMethods()) {
             if (m.getName().equals("create" + jComboBoxModel.getSelectedItem())) {
                 try {
@@ -295,7 +289,8 @@ public class ModulizerGUI extends javax.swing.JFrame {
                 }
             }
         }
-    }//GEN-LAST:event_jComboBoxModelActionPerformed
+    }
+
 
     private void jComboBoxModularizedModelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxModularizedModelActionPerformed
         if (0 < jComboBoxModularizedModel.getItemCount()) {

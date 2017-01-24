@@ -2,7 +2,6 @@ package modulizer.print;
 
 import java.util.ArrayList;
 import java.util.List;
-import modulizer.algorithms.ModularizationAlgorithm;
 import modulizer.ui.ModulizerGUI;
 import uflow.data.function.immutable.ProceedFunction;
 import uflow.data.function.immutable.ProcessFunction;
@@ -155,7 +154,7 @@ public class Print {
                 nextStep = nextUnit.getProcessStepModels().get(splitted[1]);
             }
 
-            if (nextStep != null && nextUnit != null && !printedSteps.contains(nextStep.getId().getKey())) {
+            if (nextStep != null && !printedSteps.contains(nextStep.getId().getKey())) {
                 ModulizerGUI.getjTextAreaOutput().append("\n");
                 printedSteps.add(nextStep.getId().getKey());
                 printProcessSteps(nextStep, nextUnit, model);
