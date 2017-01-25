@@ -73,8 +73,8 @@ public class Print {
             ModulizerGUI.getjTextAreaOutput().append("Unit: " + unit.getName() + "\n");
             for (ProcessStepModel step : unit.getProcessStepModels().getValues()) {
                 printProcessStep(step, model.getId().getKey());
+                ModulizerGUI.getjTextAreaOutput().append("\n");
             }
-            ModulizerGUI.getjTextAreaOutput().append("\n");
         }
     }
 

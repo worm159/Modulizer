@@ -2,13 +2,17 @@ package modulizer.algorithms;
 
 import Test.ModelNavigator;
 import modulizer.model.Step;
+import modulizer.ui.ModulizerGUI;
 import uflow.data.common.immutable.Id;
 import uflow.data.function.immutable.ProceedFunction;
 import uflow.data.function.immutable.ProcessFunction;
+import uflow.data.function.immutable.ProvideFunction;
+import uflow.data.function.immutable.RequireFunction;
 import uflow.data.model.immutable.ProcessModel;
 import uflow.data.model.immutable.ProcessStepModel;
 import uflow.data.model.immutable.ProcessUnitModel;
 import uflow.data.model.modifier.ProcessModelModifier;
+import uflow.data.model.modifier.ProcessStepModelModifier;
 import uflow.data.model.modifier.ProcessUnitModelModifier;
 
 import java.util.ArrayList;
@@ -113,7 +117,7 @@ public abstract class ModularizationAlgorithm {
     /**
      * method that searches for the ProcessUnitModel to which the Step belongs
      *
-     * @param step the step for which the Unit should be searched
+     * @param step the Step for which the Unit should be searched
      * @return the ProcessUnitModelModifier
      */
     ProcessUnitModelModifier getUnitModifier(Step step) {
@@ -131,6 +135,12 @@ public abstract class ModularizationAlgorithm {
         return unitModifier;
     }
 
+    /**
+     * method that searches for the ProcessUnitModel to which the ProcessStepModel belongs
+     *
+     * @param step the Step for which the Unit should be searched
+     * @return the ProcessUnitModelModifier
+     */
     ProcessUnitModelModifier getUnitModifier(ProcessStepModel step) {
         ProcessUnitModelModifier unitModifier;
         // try to get the Unit to which the Step belongs
@@ -144,5 +154,21 @@ public abstract class ModularizationAlgorithm {
             unitModifier = new ProcessUnitModelModifier(unitModel);
         }
         return unitModifier;
+    }
+
+    /**
+     * method that creates a copy of the given ProcessStepModel
+     *
+     * @param step the Step that should be copied
+     * @return the copied ProcessStepModel
+     */
+    ProcessStepModel copyStep(ProcessStepModel step) {
+        ProcessStepModelModifier copy = new ProcessStepModelModifier();
+        copy.setId(step.getId().getKey());
+        copy.setName(step.getName());
+        for (ProcessFunction func : step.getProcessFunctions()) {
+            copy.addProcessFunction(func);
+        }
+        return copy.getProcessStepModel();
     }
 }

@@ -53,10 +53,11 @@ public class DataObjects extends ModularizationAlgorithm {
         dataObjects.addAll(step.getRequired());
         ProcessStepModel processStep = modelToSplit.getProcessUnitModels().get(step.getUnitId())
                 .getProcessStepModels().get(step.getId());
+        ProcessStepModel copiedStep = copyStep(processStep);
         for(String dataObject : dataObjects) {
             getCurrentModel(dataObject);
             ProcessUnitModelModifier unitModifier = getUnitModifier(step);
-            unitModifier.setProcessStepModel(step.getId(),processStep);
+            unitModifier.setProcessStepModel(step.getId(),copiedStep);
         }
         for (ProcessFunction func : processStep.getProcessFunctions()) {
             if(func.getClass().getName().equals("uflow.data.function.immutable.ProceedFunction")) {
@@ -66,18 +67,22 @@ public class DataObjects extends ModularizationAlgorithm {
                 for(String dataObject : f.getValues().getKeys()) {
                     getCurrentModel(dataObject);
                     ProcessUnitModelModifier unitModifier = getUnitModifier(step);
-                    unitModifier.setProcessStepModel(step.getId(),processStep);
+                    unitModifier.setProcessStepModel(step.getId(),copiedStep);
+                    ProcessStepModel nextStep,copiedNextStep;
                     if (targetProcessUnit == null || targetProcessUnit.isEmpty()) {
-                        ProcessStepModel nextStep = unitModifier.getProcessUnitModel().getProcessStepModels().get(next);
+                        nextStep = modelToSplit.getProcessUnitModels().get(step.getUnitId()).getProcessStepModels().get(next);
                         if(nextStep != null) {
-                            unitModifier.setProcessStepModel(next,nextStep);
+                            copiedNextStep = copyStep(nextStep);
+                            unitModifier.setProcessStepModel(next,copiedNextStep);
                         }
                     } else {
                         ProcessUnitModelModifier nextUnitModifier = getUnitModifier(steps.get(next));
                         if(nextUnitModifier != null) {
-                            ProcessStepModel nextStep = nextUnitModifier.getProcessUnitModel().getProcessStepModels().get(next);
+                            nextStep = modelToSplit.getProcessUnitModels().get(targetProcessUnit)
+                                    .getProcessStepModels().get(next);
                             if(nextStep != null) {
-                                nextUnitModifier.setProcessStepModel(next,nextStep);
+                                copiedNextStep = copyStep(nextStep);
+                                nextUnitModifier.setProcessStepModel(next,copiedNextStep);
                             }
                         }
                     }
