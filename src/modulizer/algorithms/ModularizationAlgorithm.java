@@ -2,6 +2,7 @@ package modulizer.algorithms;
 
 import Test.ModelNavigator;
 import modulizer.model.Step;
+import uflow.data.common.immutable.Id;
 import uflow.data.function.immutable.ProceedFunction;
 import uflow.data.function.immutable.ProcessFunction;
 import uflow.data.model.immutable.ProcessModel;
@@ -32,6 +33,7 @@ public abstract class ModularizationAlgorithm {
     Map<String, Step> steps;
     List<Step> firstSteps;
     List<Step> finishedSteps;
+    List<Id> finished;
 
     ModelNavigator mn;
 
@@ -49,6 +51,7 @@ public abstract class ModularizationAlgorithm {
         steps = new HashMap<>();
         firstSteps = new ArrayList<>();
         finishedSteps = new ArrayList<>();
+        finished = new ArrayList<>();
 
         mn = new ModelNavigator(model);
 
@@ -122,6 +125,21 @@ public abstract class ModularizationAlgorithm {
             // if the Unit does not exist it has to be created
             unitModifier = new ProcessUnitModelModifier();
             currentModel.setProcessUnitModel(step.getUnitId(), unitModifier.getProcessUnitModel());
+        } else {
+            unitModifier = new ProcessUnitModelModifier(unitModel);
+        }
+        return unitModifier;
+    }
+
+    ProcessUnitModelModifier getUnitModifier(ProcessStepModel step) {
+        ProcessUnitModelModifier unitModifier;
+        // try to get the Unit to which the Step belongs
+        ProcessUnitModel unitModel = currentModel.getProcessModel()
+                .getProcessUnitModels().get(step.getId().getContext());
+        if(unitModel == null) {
+            // if the Unit does not exist it has to be created
+            unitModifier = new ProcessUnitModelModifier();
+            currentModel.setProcessUnitModel(step.getId().getContext(), unitModifier.getProcessUnitModel());
         } else {
             unitModifier = new ProcessUnitModelModifier(unitModel);
         }
