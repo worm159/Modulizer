@@ -25,6 +25,8 @@ import java.util.Map;
 public class SingleEntrySingleExit extends ModularizationAlgorithm{
 
     private Map<String,ProcessStepModel> seseEndSteps;
+    private boolean dataObjectFlows = false;
+    private int minimalSese = 4;
 
     /**
      * initializes all the lists and maps,
@@ -36,6 +38,20 @@ public class SingleEntrySingleExit extends ModularizationAlgorithm{
     public SingleEntrySingleExit(ProcessModel model) {
         super(model);
         seseEndSteps = new HashMap<>();
+
+        // create the first ProcessModelModifier and increase the modelNumber
+        currentModel = new ProcessModelModifier().setId("Model1");
+        models.put("Model1",currentModel);
+        modelNumber = 2;
+    }
+
+    public SingleEntrySingleExit(ProcessModel model, boolean dataObjectFlows, int minimalSese) {
+        super(model);
+        seseEndSteps = new HashMap<>();
+        this.dataObjectFlows = dataObjectFlows;
+        if(minimalSese > 4) {
+            this.minimalSese = minimalSese;
+        }
 
         // create the first ProcessModelModifier and increase the modelNumber
         currentModel = new ProcessModelModifier().setId("Model1");
