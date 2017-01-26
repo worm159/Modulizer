@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.text.ParseException;
 import java.util.HashMap;
 import javax.swing.JFileChooser;
 
@@ -61,6 +62,9 @@ public class ModulizerGUI extends javax.swing.JFrame {
         jComboBoxModel = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
         jComboBoxModularizedModel = new javax.swing.JComboBox<>();
+        jCheckBoxDataFlows = new javax.swing.JCheckBox();
+        jSpinnerMinElements = new javax.swing.JSpinner();
+        jLabelMinNumber = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Modulizer");
@@ -90,6 +94,11 @@ public class ModulizerGUI extends javax.swing.JFrame {
         jLabel2.setText("Please select a modularization algorithm:");
 
         jComboBoxAlgorithm.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Single Entry Single Exit", "Data objects", "Repetition", "Clustering" }));
+        jComboBoxAlgorithm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxAlgorithmActionPerformed(evt);
+            }
+        });
 
         jTextAreaOutput.setColumns(20);
         jTextAreaOutput.setRows(5);
@@ -111,6 +120,14 @@ public class ModulizerGUI extends javax.swing.JFrame {
             }
         });
 
+        jCheckBoxDataFlows.setText("include Data Flows");
+        jCheckBoxDataFlows.setToolTipText("");
+
+        jSpinnerMinElements.setModel(new javax.swing.SpinnerNumberModel(4, 4, null, 1));
+        jSpinnerMinElements.setToolTipText("4 Elements = modularize every time");
+
+        jLabelMinNumber.setText("min. Number of Elements for SESE Modularization");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -126,14 +143,21 @@ public class ModulizerGUI extends javax.swing.JFrame {
                             .addComponent(jLabel3))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jComboBoxModularizedModel, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jTextFieldPath, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBoxAlgorithm, javax.swing.GroupLayout.Alignment.LEADING, 0, 669, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jComboBoxAlgorithm, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jComboBoxModularizedModel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jTextFieldPath)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jSpinnerMinElements, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabelMinNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jCheckBoxDataFlows))
+                                    .addComponent(jLabel2))
+                                .addGap(0, 152, Short.MAX_VALUE)))
+                        .addGap(12, 12, 12)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButtonBrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButtonStart, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -161,8 +185,13 @@ public class ModulizerGUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jComboBoxModularizedModel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jButtonStart, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jSpinnerMinElements, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelMinNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jCheckBoxDataFlows))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -254,7 +283,15 @@ public class ModulizerGUI extends javax.swing.JFrame {
         setProcessModel();
         switch (chosenAlgorithm) {
             case "Single Entry Single Exit":
-                algorithm = new SingleEntrySingleExit(model);
+                try {
+                    jSpinnerMinElements.commitEdit();
+                } catch (ParseException e) {
+                    jTextAreaOutput.setText("Nur Zahlen erlaubt!!!");
+                }
+                boolean dataObjectFlows = jCheckBoxDataFlows.isSelected();
+                int minimalSese = (Integer) jSpinnerMinElements.getValue();
+                System.out.println(dataObjectFlows + "   " + minimalSese);
+                algorithm = new SingleEntrySingleExit(model, dataObjectFlows, minimalSese);
                 break;
             case "Data objects":
                 algorithm = new DataObjects(model);
@@ -306,6 +343,27 @@ public class ModulizerGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jComboBoxModularizedModelActionPerformed
 
+    private void jComboBoxAlgorithmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxAlgorithmActionPerformed
+        chosenAlgorithm = jComboBoxAlgorithm.getSelectedItem().toString();
+        switch (chosenAlgorithm) {
+            case "Single Entry Single Exit":
+                jSpinnerMinElements.setVisible(true);
+                jCheckBoxDataFlows.setVisible(true);
+                jLabelMinNumber.setVisible(true);
+                break;
+            case "Data objects":
+                jSpinnerMinElements.setVisible(false);
+                jCheckBoxDataFlows.setVisible(false);
+                jLabelMinNumber.setVisible(false);
+            case "Repetition":
+            case "Clustering":
+                break;
+            default:
+                jTextAreaOutput.setText("Sorry! Something bad happend trying to use your chosen algorithm, please call your administrator!");
+                break;
+        }
+    }//GEN-LAST:event_jComboBoxAlgorithmActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -325,14 +383,17 @@ public class ModulizerGUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonBrowse;
     private javax.swing.JButton jButtonStart;
+    private javax.swing.JCheckBox jCheckBoxDataFlows;
     private javax.swing.JComboBox<String> jComboBoxAlgorithm;
     private javax.swing.JComboBox<String> jComboBoxModel;
     private javax.swing.JComboBox<String> jComboBoxModularizedModel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabelMinNumber;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSpinner jSpinnerMinElements;
     private static javax.swing.JTextArea jTextAreaOutput;
     private javax.swing.JTextField jTextFieldPath;
     // End of variables declaration//GEN-END:variables
