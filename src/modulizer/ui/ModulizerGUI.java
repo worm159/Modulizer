@@ -307,6 +307,9 @@ public class ModulizerGUI extends javax.swing.JFrame {
             modularizedMap.clear();
             List<ProcessModel> modularized = algorithm.startModularization();
             jComboBoxModularizedModel.addItem("Print All");
+            if (modularized.isEmpty()) {
+                jTextAreaOutput.setText("Sorry, there was nothing to modularize!");
+            }
             modularized.forEach((x) -> {
                 modularizedMap.put(x.getId().getKey(), x);
                 jComboBoxModularizedModel.addItem(x.getId().getKey());
@@ -352,11 +355,11 @@ public class ModulizerGUI extends javax.swing.JFrame {
                 jLabelMinNumber.setVisible(true);
                 break;
             case "Data objects":
+            case "Repetition":
+            case "Clustering":
                 jSpinnerMinElements.setVisible(false);
                 jCheckBoxDataFlows.setVisible(false);
                 jLabelMinNumber.setVisible(false);
-            case "Repetition":
-            case "Clustering":
                 break;
             default:
                 jTextAreaOutput.setText("Sorry! Something bad happend trying to use your chosen algorithm, please call your administrator!");
