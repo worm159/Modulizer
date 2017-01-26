@@ -15,13 +15,13 @@ import java.util.Map;
 
 /**
  * Created by Brigitte on 28.12.2016.
+ * In this class the Modularization Algorithm that uses the Data Objects is implemented.
  * @author August, Brigitte, Emanuel, Stefanie
  */
 public class DataObjects extends ModularizationAlgorithm {
     /**
      * initializes all the lists and maps,
      * converts the ProcessStepModels to Steps
-     * and creates a new ProcessModelModifier for the first model
      *
      * @param model the model that should be modularized
      */

@@ -45,6 +45,15 @@ public class SingleEntrySingleExit extends ModularizationAlgorithm{
         modelNumber = 2;
     }
 
+    /**
+     * initializes all the lists and maps,
+     * converts the ProcessStepModels to Steps
+     * and creates a new ProcessModelModifier for the first model
+     *
+     * @param model the model that should be modularized
+     * @param dataObjectFlows boolean if the Data Object Flows should be considered or not
+     * @param minimalSese the minimal number of steps a valid SESE must contain
+     */
     public SingleEntrySingleExit(ProcessModel model, boolean dataObjectFlows, int minimalSese) {
         super(model);
         seseEndSteps = new HashMap<>();

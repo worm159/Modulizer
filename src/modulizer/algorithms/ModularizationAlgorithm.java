@@ -44,7 +44,7 @@ public abstract class ModularizationAlgorithm {
     /**
      * initializes all the lists and maps,
      * converts the ProcessStepModels to Steps
-     * and creates a new ProcessModelModifier for the first model
+     *
      * @param model the model that should be modularized
      */
     public ModularizationAlgorithm(ProcessModel model) {
