@@ -29,7 +29,7 @@ import static modulizer.print.Print.printModel;
  */
 public class ModulizerGUI extends javax.swing.JFrame {
 
-    ProcessModel model = ProcessModelFactory.createSeseEinfach();
+    private ProcessModel model;
     String chosenAlgorithm;
     private final Map<String, ProcessModel> modularizedMap;
 
