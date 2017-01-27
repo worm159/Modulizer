@@ -32,7 +32,7 @@ public class ProcessModelFactory {
      * CycleV1, CycleV2
      * SeseEinfach, Sese2Unit, SeseVerschachtelt2End
      * Sese2UnitKeineZerteilungV1, Sese2UnitKeineZerteilungV2
-     * SeseDoppelVerwendung, SeseKeineZerteilungV1, SeseKeineZerteilungV2
+     * SeseDoppelVerwendung, SeseGesamteZerteilung, SeseKeineZerteilungV1
      * DataObjectsV1, DataObjectsV2
      * DataObjectsMitSeseV1, DataObjectsMitSeseV2
      * ClusteringMitSeseV1, ClusteringMitSeseV2, ClusteringMitSeseV3
@@ -718,9 +718,9 @@ public class ProcessModelFactory {
                 .getProcessModel();
     }
 
-    public static ProcessModel createSeseKeineZerteilungV1() {
+    public static ProcessModel createSeseGesamteVerteilung() {
         return new ProcessModelModifier()
-                .setId("SeseKeineZerteilungV1")
+                .setId("SeseGesamteZerteilungV1")
                 .setName("SESE Keine Zerteilung V1")
                 .setDescription("Testbeispiel für Modularisierung SESE Keine Zerteilung V1")
 
@@ -781,9 +781,9 @@ public class ProcessModelFactory {
                 .getProcessModel();
     }
 
-    public static ProcessModel createSeseKeineZerteilungV2() {
+    public static ProcessModel createSeseKeineZerteilung() {
         return new ProcessModelModifier()
-                .setId("SeseKeineZerteilungV2")
+                .setId("SeseKeineZerteilung")
                 .setName("SESE Keine Zerteilung V2")
                 .setDescription("Testbeispiel für Modularisierung SESE Keine Zerteilung V2")
 
@@ -1139,6 +1139,7 @@ public class ProcessModelFactory {
                         )
                         .setProcessStepModel("Unit 1 Step 2", new ProcessStepModelModifier()
                                 .addProcessFunction(new ProceedFunctionModifier()
+                                        .setTargetUnit("Unit-1")
                                         .setNext("End Step")
                                         .getProceedFunction()
                                 )

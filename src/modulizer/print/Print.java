@@ -113,7 +113,18 @@ public class Print {
                 prevFinished = false;
             }
         }
-        if (prevFinished) {
+        boolean prevWithCycle = false;
+        boolean prevWithoutCycle = false;
+        if(!prevFinished) {
+            //loop over the previous Steps of the current Step
+            //check if the current Step is a previous Step of the previous Step -> cycle
+            for(ProcessStepModel prev : modelNavigator.getPrevSteps(step)){
+                boolean isPrev = modelNavigator.isStepBeforeStep(step,prev);
+                if(isPrev) prevWithCycle=true;
+                else if (!printedSteps.contains(prev.getId().getKey())) prevWithoutCycle=true;
+            }
+        }
+        if (prevFinished || (prevWithCycle && !prevWithoutCycle)) {
 
             outputArea.append("        Unit:   " + step.getId().getContext().split("/")[1] + "\n");
             outputArea.append("Process Step:   " + step.getId().getKey() + "\n");
