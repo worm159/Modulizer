@@ -59,7 +59,7 @@ public class Test {
 */
 
         System.out.println("=========================================================================================");
-        ProcessModel test5 = ProcessModelFactory.createSeseGesamteZerteilung();
+        ProcessModel test5 = ProcessModelFactory.createSeseV1();
         ModelNavigator mn5 = new ModelNavigator(test5, true);
 
         //Id id1 = new Id("ProcessStepModel", "SESE Left ?", "SeseKeineZerteilungV2/Unit-1");
