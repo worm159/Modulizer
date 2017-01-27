@@ -28,23 +28,22 @@ public class ProcessModelFactory {
      * Examples Start
      *
      * @author August, Brigitte, Emanuel, Stefanie
-     * keineZerteilungV1
+     * keineZerteilung
      * CycleV1, CycleV2
-     * SeseEinfach, Sese2Unit, SeseVerschachtelt2End
+     * SeseV1, SeseV2, SeseMitCycle, Sese2Unit, SeseVerschachtelt2End
      * Sese2UnitKeineZerteilungV1, Sese2UnitKeineZerteilungV2
-     * SeseDoppelVerwendung, SeseGesamteZerteilung, SeseKeineZerteilungV1
-     * SeseMitCycle
+     * SeseDoppelVerwendung, SeseKeineZerteilung
      * DataObjectsV1, DataObjectsV2
      * DataObjectsMitSeseV1, DataObjectsMitSeseV2
      * ClusteringMitSeseV1, ClusteringMitSeseV2, ClusteringMitSeseV3
      * RepetitionV1, RepetitionV2
      */
 
-    public static ProcessModel createKeineZerteilungV1() {
+    public static ProcessModel createKeineZerteilung() {
         return new ProcessModelModifier()
-                .setId("KeineZerteilungV1")
-                .setName("Keine Zerteilung V1")
-                .setDescription("Testbeispiel für Modularisierung Keine Zerteilung V1")
+                .setId("KeineZerteilung")
+                .setName("Keine Zerteilung")
+                .setDescription("Testbeispiel für Modularisierung Keine Zerteilung")
 
                 .setProcessUnitModel("Unit-1", new ProcessUnitModelModifier()
                         .setId("Unit-1")
@@ -202,11 +201,11 @@ public class ProcessModelFactory {
 
 // Examples SESE
 
-    public static ProcessModel createSeseEinfach() {
+    public static ProcessModel createSeseV1() {
         return new ProcessModelModifier()
-                .setId("SeseEinfach")
-                .setName("SESE Einfach")
-                .setDescription("Testbeispiel für Modularisierung SESE Einfach")
+                .setId("SeseV1")
+                .setName("SESE V1")
+                .setDescription("Testbeispiel für Modularisierung SESE V1")
 
                 .setProcessUnitModel("Unit-1", new ProcessUnitModelModifier()
                         .setId("Unit-1")
@@ -254,6 +253,69 @@ public class ProcessModelFactory {
                                 .getProcessStepModel()
                         )
                         .setProcessStepModel("End Step", new ProcessStepModelModifier()
+                                .getProcessStepModel()
+                        )
+                        .getProcessUnitModel()
+                )
+                .getProcessModel();
+    }
+
+    public static ProcessModel createSeseV2() {
+        return new ProcessModelModifier()
+                .setId("SeseV2")
+                .setName("SESE V2")
+                .setDescription("Testbeispiel für Modularisierung SESE V2")
+
+                .setProcessUnitModel("Unit-1", new ProcessUnitModelModifier()
+                        .setId("Unit-1")
+                        .setName("Unit-1")
+                        .addAuthorizedRole("Person Unit 1")
+                        .setStartProcessStep("Entry Step")
+
+                        .setProcessStepModel("Entry Step", new ProcessStepModelModifier()
+                                .addProcessFunction(new ProceedFunctionModifier()
+                                        .setNext("SESE Start")
+                                        .getProceedFunction()
+                                )
+                                .getProcessStepModel()
+                        )
+                        .setProcessStepModel("SESE Start", new ProcessStepModelModifier()
+                                .addProcessFunction(new ProceedFunctionModifier()
+                                        .setNext("SESE Left")
+                                        .getProceedFunction()
+                                )
+                                .addProcessFunction(new ProceedFunctionModifier()
+                                        .setNext("SESE Right")
+                                        .getProceedFunction()
+                                )
+                                .getProcessStepModel()
+                        )
+                        .setProcessStepModel("SESE Left", new ProcessStepModelModifier()
+                                .addProcessFunction(new ProceedFunctionModifier()
+                                        .setNext("SESE Step 3")
+                                        .getProceedFunction()
+                                )
+                                .addProcessFunction(new ProceedFunctionModifier()
+                                        .setNext("SESE End")
+                                        .getProceedFunction()
+                                )
+                                .getProcessStepModel()
+                        )
+                        .setProcessStepModel("SESE Right", new ProcessStepModelModifier()
+                                .addProcessFunction(new ProceedFunctionModifier()
+                                        .setNext("SESE Step 3")
+                                        .getProceedFunction()
+                                )
+                                .getProcessStepModel()
+                        )
+                        .setProcessStepModel("SESE Step 3", new ProcessStepModelModifier()
+                                .addProcessFunction(new ProceedFunctionModifier()
+                                        .setNext("SESE End")
+                                        .getProceedFunction()
+                                )
+                                .getProcessStepModel()
+                        )
+                        .setProcessStepModel("SESE End", new ProcessStepModelModifier()
                                 .getProcessStepModel()
                         )
                         .getProcessUnitModel()
@@ -719,74 +781,11 @@ public class ProcessModelFactory {
                 .getProcessModel();
     }
 
-    public static ProcessModel createSeseGesamteZerteilung() {
-        return new ProcessModelModifier()
-                .setId("SeseGesamteZerteilungV1")
-                .setName("SESE Keine Zerteilung V1")
-                .setDescription("Testbeispiel für Modularisierung SESE Keine Zerteilung V1")
-
-                .setProcessUnitModel("Unit-1", new ProcessUnitModelModifier()
-                        .setId("Unit-1")
-                        .setName("Unit-1")
-                        .addAuthorizedRole("Person Unit 1")
-                        .setStartProcessStep("Entry Step")
-
-                        .setProcessStepModel("Entry Step", new ProcessStepModelModifier()
-                                .addProcessFunction(new ProceedFunctionModifier()
-                                        .setNext("SESE Start ?")
-                                        .getProceedFunction()
-                                )
-                                .getProcessStepModel()
-                        )
-                        .setProcessStepModel("SESE Start ?", new ProcessStepModelModifier()
-                                .addProcessFunction(new ProceedFunctionModifier()
-                                        .setNext("SESE Left ?")
-                                        .getProceedFunction()
-                                )
-                                .addProcessFunction(new ProceedFunctionModifier()
-                                        .setNext("SESE Right ?")
-                                        .getProceedFunction()
-                                )
-                                .getProcessStepModel()
-                        )
-                        .setProcessStepModel("SESE Left ?", new ProcessStepModelModifier()
-                                .addProcessFunction(new ProceedFunctionModifier()
-                                        .setNext("SESE End ?")
-                                        .getProceedFunction()
-                                )
-                                .addProcessFunction(new ProceedFunctionModifier()
-                                        .setNext("End Step")
-                                        .getProceedFunction()
-                                )
-                                .getProcessStepModel()
-                        )
-                        .setProcessStepModel("SESE Right ?", new ProcessStepModelModifier()
-                                .addProcessFunction(new ProceedFunctionModifier()
-                                        .setNext("SESE End ?")
-                                        .getProceedFunction()
-                                )
-                                .getProcessStepModel()
-                        )
-                        .setProcessStepModel("SESE End ?", new ProcessStepModelModifier()
-                                .addProcessFunction(new ProceedFunctionModifier()
-                                        .setNext("End Step")
-                                        .getProceedFunction()
-                                )
-                                .getProcessStepModel()
-                        )
-                        .setProcessStepModel("End Step", new ProcessStepModelModifier()
-                                .getProcessStepModel()
-                        )
-                        .getProcessUnitModel()
-                )
-                .getProcessModel();
-    }
-
     public static ProcessModel createSeseKeineZerteilung() {
         return new ProcessModelModifier()
                 .setId("SeseKeineZerteilung")
-                .setName("SESE Keine Zerteilung V2")
-                .setDescription("Testbeispiel für Modularisierung SESE Keine Zerteilung V2")
+                .setName("SESE Keine Zerteilung")
+                .setDescription("Testbeispiel für Modularisierung SESE Keine Zerteilung")
 
                 .setProcessUnitModel("Unit-1", new ProcessUnitModelModifier()
                         .setId("Unit-1")
