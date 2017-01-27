@@ -50,7 +50,8 @@ public class ModelNavigator {
     private ProcessStepModel getSESEExitToEntry (ProcessStepModel entry, ProcessStepModel step) {
         ProcessStepModel ret = null;
 
-        if (isExitToEntry(entry, step)) return step;
+        if (getNextSteps(step).size() == 1)
+            if (isExitToEntry(entry, step)) return step;
 
         for (ProcessStepModel next: getNextSteps(step)) {
             ret = getSESEExitToEntry(entry, next);
@@ -93,9 +94,9 @@ public class ModelNavigator {
     private boolean isExitToEntryForward(ProcessStepModel entry, ProcessStepModel exit, ArrayList<ProcessStepModel> visited) {
         visited.add(entry);
 
-        if (entry == null)                                          return false;
-        if (entry.equals(exit) && getNextSteps(exit).size() == 1)   return true;
-        if (getNextSteps(entry).size() == 0)                        return false;
+        if (entry == null)                      return false;
+        if (entry.equals(exit))                 return true;
+        if (getNextSteps(entry).size() == 0)    return false;
 
         boolean ret = true;
         for (ProcessStepModel next: getNextSteps(entry)) {
