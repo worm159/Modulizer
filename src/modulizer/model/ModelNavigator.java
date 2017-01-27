@@ -15,9 +15,13 @@ import java.util.ArrayList;
 public class ModelNavigator {
 
     public ProcessModel m;
+    boolean dataObjectFlows;
+    int minimalSteps;
 
-    public ModelNavigator(ProcessModel m) {
-        this.m = m;
+    public ModelNavigator(ProcessModel m, boolean dataObjectFlows, int minimalSteps) {
+        this.m               = m;
+        this.dataObjectFlows = dataObjectFlows;
+        this.minimalSteps    = minimalSteps;
     }
 
     public ProcessStepModel getSESEEntry() {
@@ -72,8 +76,6 @@ public class ModelNavigator {
 
     /**
      * Überprüft, ob der Übergebene SESE Anfang zum Übergebnen SESE Ende passt.
-     * TODO: überprüfen, ob alle Vorgänger vom step auch wieder zurück zum entry führen. Damit wird ausgeschlossen,
-     * dass ein zweiter Start, oder ein Vorgänger vor dem Step in den SESE Block verweist.
      * @param entry
      * @param exit
      * @return
