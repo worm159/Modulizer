@@ -33,6 +33,7 @@ public class ProcessModelFactory {
      * SeseEinfach, Sese2Unit, SeseVerschachtelt2End
      * Sese2UnitKeineZerteilungV1, Sese2UnitKeineZerteilungV2
      * SeseDoppelVerwendung, SeseGesamteZerteilung, SeseKeineZerteilungV1
+     * SeseMitCycle
      * DataObjectsV1, DataObjectsV2
      * DataObjectsMitSeseV1, DataObjectsMitSeseV2
      * ClusteringMitSeseV1, ClusteringMitSeseV2, ClusteringMitSeseV3
