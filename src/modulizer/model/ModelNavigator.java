@@ -55,11 +55,13 @@ public class ModelNavigator {
             if (isStepBeforeStep(next, entry))
                 return null; // Der Startstep darf kein Vorgänger seiner Nachfolger sein (nicht in einer Schleife)
             ret = getSESEExitToEntry(entry, next, visited);
-            if (ret != null && getStepsBetweenSteps(entry, ret) >= minimalSteps)
-                return ret;
-            else if (ret != null && getStepsBetweenSteps(entry, ret) < minimalSteps)
-                return null;
         }
+
+        if (ret != null && getStepsBetweenSteps(entry, ret) >= minimalSteps)
+            return ret;
+        else if (ret != null && getStepsBetweenSteps(entry, ret) < minimalSteps)
+            return null;
+
         return ret;
     }
 
