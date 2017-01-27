@@ -36,9 +36,10 @@ public class ModelNavigator {
             return null; // Start ist kein Start. Darf nur einen Vorgänger haben.
 
         ProcessStepModel ret = null;
+        ArrayList<ProcessStepModel> visited = new ArrayList<ProcessStepModel>();
 
         for (ProcessStepModel next : getNextSteps(entry)) {
-            ret = getSESEExitToEntry(entry, next);
+            ret = getSESEExitToEntry(entry, next, visited);
             if (ret != null) return ret;
         }
         return ret;
@@ -50,14 +51,19 @@ public class ModelNavigator {
      * @param step
      * @return
      */
-    private ProcessStepModel getSESEExitToEntry (ProcessStepModel entry, ProcessStepModel step) {
+    private ProcessStepModel getSESEExitToEntry (ProcessStepModel entry, ProcessStepModel step, ArrayList<ProcessStepModel> visited) {
         ProcessStepModel ret = null;
+        visited.add(step);
+        //System.out.println("Beretis besucht: " + visited.size());
 
         if (getNextSteps(step).size() == 1)
             if (isExitToEntry(entry, step)) return step;
 
         for (ProcessStepModel next: getNextSteps(step)) {
-            ret = getSESEExitToEntry(entry, next);
+            if (isStepInArrayList(next, visited))
+                ; //System.out.println("!!Forward: Schleife entdeckt! ("+next.getName()+")");
+            else
+                ret = getSESEExitToEntry(entry, next, visited);
             if (ret != null) return ret;
         }
 
@@ -95,6 +101,8 @@ public class ModelNavigator {
      * @return
      */
     private boolean isExitToEntryForward(ProcessStepModel entry, ProcessStepModel exit, ArrayList<ProcessStepModel> visited) {
+        //System.out.println("- Bereits besuchte Steps: " + visited.size());
+        //System.out.println(" isExitToEntryForward("+exit.getName()+", " +entry.getName()+")");
         visited.add(entry);
 
         if (entry == null)                      return false;
