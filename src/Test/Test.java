@@ -14,7 +14,7 @@ public class Test {
         Id id = null;
 
         ProcessModel test = ProcessModelFactory.createSeseVerschachtelt2End();
-        ModelNavigator mn = new ModelNavigator(test);
+        ModelNavigator mn = new ModelNavigator(test, true);
         /*old: System.out.println(mn.isExitToEntry(mn.getStep("SESE 1 Start"), mn.getStep("SESE 1 left")));
         System.out.println(mn.getSESEExitToEntry(mn.getStep("SESE 1 right, SESE 2 Start")));
         */
@@ -60,7 +60,7 @@ public class Test {
 
         System.out.println("=========================================================================================");
         ProcessModel test5 = ProcessModelFactory.createSeseGesamteZerteilung();
-        ModelNavigator mn5 = new ModelNavigator(test5);
+        ModelNavigator mn5 = new ModelNavigator(test5, true);
 
         //Id id1 = new Id("ProcessStepModel", "SESE Left ?", "SeseKeineZerteilungV2/Unit-1");
         //Id id2 = new Id("ProcessStepModel", "SESE Start ?", "SeseKeineZerteilungV2/Unit-1");
