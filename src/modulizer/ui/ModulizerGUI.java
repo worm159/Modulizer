@@ -1,15 +1,16 @@
 package modulizer.ui;
 
 import Test.factory.ProcessModelFactory;
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.text.ParseException;
 import java.util.HashMap;
-import javax.swing.JFileChooser;
+//import javax.swing.JFileChooser;
+//import java.io.File;
+//import java.io.IOException;
+//import java.net.URL;
+//import java.net.URLClassLoader;
+//import javax.swing.filechooser.FileNameExtensionFilter;
 
 import modulizer.algorithms.DataObjects;
 import modulizer.algorithms.ModularizationAlgorithm;
@@ -20,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import static modulizer.print.Print.printModel;
 
 /**
