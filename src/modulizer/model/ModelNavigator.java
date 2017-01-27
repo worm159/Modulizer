@@ -1,4 +1,4 @@
-package Test;
+package modulizer.model;
 
 import uflow.data.common.immutable.Id;
 import uflow.data.function.immutable.ProceedFunction;

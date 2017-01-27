@@ -1,13 +1,10 @@
 package modulizer.algorithms;
 
-import Test.ModelNavigator;
+import modulizer.model.ModelNavigator;
 import modulizer.model.Step;
-import modulizer.ui.ModulizerGUI;
 import uflow.data.common.immutable.Id;
 import uflow.data.function.immutable.ProceedFunction;
 import uflow.data.function.immutable.ProcessFunction;
-import uflow.data.function.immutable.ProvideFunction;
-import uflow.data.function.immutable.RequireFunction;
 import uflow.data.model.immutable.ProcessModel;
 import uflow.data.model.immutable.ProcessStepModel;
 import uflow.data.model.immutable.ProcessUnitModel;

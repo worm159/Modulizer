@@ -1,13 +1,10 @@
-package Test.factory;
+package modulizer.factory;
 
 import uflow.data.base.DataItem;
 import uflow.data.common.immutable.Bool;
 import uflow.data.common.immutable.Result;
 import uflow.data.common.modifier.ListModifier;
 import uflow.data.common.modifier.MapModifier;
-import uflow.data.function.immutable.ProceedFunction;
-import uflow.data.function.immutable.ProvideFunction;
-import uflow.data.function.immutable.RequireFunction;
 import uflow.data.function.modifier.*;
 import uflow.data.input.immutable.CheckboxInput;
 import uflow.data.input.immutable.DropdownInput;
@@ -15,7 +12,6 @@ import uflow.data.input.immutable.RadioInput;
 import uflow.data.input.immutable.TextInput;
 import uflow.data.input.modifier.FormModifier;
 import uflow.data.model.immutable.ProcessModel;
-import uflow.data.model.immutable.ProcessStepModel;
 import uflow.data.model.modifier.*;
 
 /**
@@ -841,6 +837,83 @@ public class ProcessModelFactory {
                                 .getProcessStepModel()
                         )
                         .setProcessStepModel("SESE End ?", new ProcessStepModelModifier()
+                                .addProcessFunction(new ProceedFunctionModifier()
+                                        .setNext("End Step")
+                                        .getProceedFunction()
+                                )
+                                .getProcessStepModel()
+                        )
+                        .setProcessStepModel("End Step", new ProcessStepModelModifier()
+                                .getProcessStepModel()
+                        )
+                        .getProcessUnitModel()
+                )
+                .getProcessModel();
+    }
+
+    public static ProcessModel createSeseMitCycle() {
+        return new ProcessModelModifier()
+                .setId("SeseMitCycle")
+                .setName("Sese Mit Cycle")
+                .setDescription("Testbeispiel für Modularisierung SESE Mit Cycle")
+
+                .setProcessUnitModel("Unit-1", new ProcessUnitModelModifier()
+                        .setId("Unit-1")
+                        .setName("Unit-1")
+                        .addAuthorizedRole("Person Unit 1")
+                        .setStartProcessStep("Entry Step")
+
+                        .setProcessStepModel("Entry Step", new ProcessStepModelModifier()
+                                .addProcessFunction(new ProceedFunctionModifier()
+                                        .setNext("SESE Start")
+                                        .getProceedFunction()
+                                )
+                                .getProcessStepModel()
+                        )
+                        .setProcessStepModel("SESE Start", new ProcessStepModelModifier()
+                                .addProcessFunction(new ProceedFunctionModifier()
+                                        .setNext("SESE Left")
+                                        .getProceedFunction()
+                                )
+                                .addProcessFunction(new ProceedFunctionModifier()
+                                        .setNext("SESE Right 1")
+                                        .getProceedFunction()
+                                )
+                                .getProcessStepModel()
+                        )
+                        .setProcessStepModel("SESE Left", new ProcessStepModelModifier()
+                                .addProcessFunction(new ProceedFunctionModifier()
+                                        .setNext("SESE End")
+                                        .getProceedFunction()
+                                )
+                                .getProcessStepModel()
+                        )
+                        .setProcessStepModel("SESE Right 1", new ProcessStepModelModifier()
+                                .addProcessFunction(new ProceedFunctionModifier()
+                                        .setNext("SESE Right 2")
+                                        .getProceedFunction()
+                                )
+                                .getProcessStepModel()
+                        )
+                        .setProcessStepModel("SESE Right 2", new ProcessStepModelModifier()
+                                .addProcessFunction(new ProceedFunctionModifier()
+                                        .setNext("SESE End")
+                                        .getProceedFunction()
+                                )
+                                .addProcessFunction(new ProceedFunctionModifier()
+                                        .setNext("SESE Right 3")
+                                        .getProceedFunction()
+                                )
+                                .getProcessStepModel()
+                        )
+                        .setProcessStepModel("SESE Right 3", new ProcessStepModelModifier()
+                                .addProcessFunction(new ProceedFunctionModifier()
+                                        .setNext("SESE Right 1")
+                                        .getProceedFunction()
+                                )
+                                .getProcessStepModel()
+                        )
+                        .setProcessStepModel("SESE End", new ProcessStepModelModifier()
                                 .addProcessFunction(new ProceedFunctionModifier()
                                         .setNext("End Step")
                                         .getProceedFunction()

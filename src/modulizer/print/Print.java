@@ -1,6 +1,6 @@
 package modulizer.print;
 
-import Test.ModelNavigator;
+import modulizer.model.ModelNavigator;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JTextArea;

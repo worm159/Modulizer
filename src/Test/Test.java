@@ -1,13 +1,9 @@
 package Test;
 
-import Test.factory.ProcessModelFactory;
+import modulizer.factory.ProcessModelFactory;
+import modulizer.model.ModelNavigator;
 import uflow.data.common.immutable.Id;
-import uflow.data.function.immutable.ProceedFunction;
-import uflow.data.function.immutable.ProcessFunction;
-import uflow.data.function.modifier.ProceedFunctionModifier;
 import uflow.data.model.immutable.ProcessModel;
-import uflow.data.model.immutable.ProcessStepModel;
-import uflow.data.model.immutable.ProcessUnitModel;
 
 /**
  * Created by augus on 12.12.2016.
@@ -22,7 +18,7 @@ public class Test {
         /*old: System.out.println(mn.isExitToEntry(mn.getStep("SESE 1 Start"), mn.getStep("SESE 1 left")));
         System.out.println(mn.getSESEExitToEntry(mn.getStep("SESE 1 right, SESE 2 Start")));
         */
-
+/*
 
         System.out.println("");
 
@@ -53,31 +49,33 @@ public class Test {
         ProcessModel test4 = ProcessModelFactory.createSese2UnitKeineZerteilungV2();
         ModelNavigator mn4 = new ModelNavigator(test4);
 
+        System.out.println("=========================================================================================");
         Id id2 = new Id("ProcessStepModel", "SESE Start ?", "Sese2UnitKeineZerteilungV2/Unit-1");
         Id id1 = new Id("ProcessStepModel", "SESE End ?", "Sese2UnitKeineZerteilungV2/Unit-1");
         System.out.println(mn4.isStepBeforeStep(mn4.getStep(id1), mn4.getStep(id2)));
 
         System.out.println(mn4.isStepAfterStep(mn4.getStep(id1), mn4.getStep(id2)));
 
+*/
+
+        System.out.println("=========================================================================================");
+        ProcessModel test5 = ProcessModelFactory.createSeseKeineZerteilungV1();
+        ModelNavigator mn5 = new ModelNavigator(test5);
+
+        //Id id1 = new Id("ProcessStepModel", "SESE Left ?", "SeseKeineZerteilungV2/Unit-1");
+        //Id id2 = new Id("ProcessStepModel", "SESE Start ?", "SeseKeineZerteilungV2/Unit-1");
+        //System.out.println(mn5.isStepBeforeStep(mn5.getStep(id1), mn5.getStep(id2)));
+
+        id = new Id("ProcessStepModel", "SESE Start ?", "SeseKeineZerteilungV1/Unit-1");
+        Id id2 = new Id("ProcessStepModel", "End Step", "SeseKeineZerteilungV1/Unit-1");
+
+        System.out.println(mn5.isExitToEntry(mn5.getStep(id), mn5.getStep(id2)));
+
+        System.out.println("\n\nExit: " + mn5.getSESEExitToEntry(mn5.getStep(id)));
 
 
 
 
-        /*
-        test.getAuthorizedStartRoles();
-
-        for (ProcessUnitModel unit : test.getProcessUnitModels().getValues() ) {
-            System.out.println("Unit Start Process Step: " + unit.getStartProcessStep());
-            for (ProcessStepModel step : unit.getProcessStepModels().getValues()) {
-                System.out.println("Step: " + step.getName());
-                for (ProcessFunction func : step.getProcessFunctions()) {
-                    System.out.println("Function: " + func);
-                    if (func.getClass() == ProceedFunction.class)
-                        System.out.println("ProceedFunction Klasse: " + func.getClass());
-                }
-            }
-        }
-        */
 
     }
 }
