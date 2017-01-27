@@ -29,7 +29,6 @@ public class ModelNavigator {
     public ModelNavigator(ProcessModel m, boolean dataObjectFlows) {
         this.m               = m;
         this.dataObjectFlows = dataObjectFlows;
-        this.minimalSteps    = minimalSteps;
     }
 
     public ProcessStepModel getSESEEntry() {
