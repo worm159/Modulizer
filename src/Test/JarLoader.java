@@ -25,7 +25,7 @@ public class JarLoader {
         URL[] urls = new URL[]{url};
 
         ClassLoader cl = new URLClassLoader(urls);
-        Class cls = cl.loadClass("Test.factory.ProcessModelFactory");
+        Class cls = cl.loadClass("modulizer.factory.ProcessModelFactory");
 
         Object o = cls.newInstance();
 

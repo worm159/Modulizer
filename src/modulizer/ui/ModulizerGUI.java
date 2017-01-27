@@ -1,6 +1,6 @@
 package modulizer.ui;
 
-import Test.factory.ProcessModelFactory;
+import modulizer.factory.ProcessModelFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
