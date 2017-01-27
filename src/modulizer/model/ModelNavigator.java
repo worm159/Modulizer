@@ -18,7 +18,15 @@ public class ModelNavigator {
     boolean dataObjectFlows;
     int minimalSteps;
 
+    int stepcounter;
+
     public ModelNavigator(ProcessModel m, boolean dataObjectFlows, int minimalSteps) {
+        this.m               = m;
+        this.dataObjectFlows = dataObjectFlows;
+        this.minimalSteps    = minimalSteps;
+    }
+
+    public ModelNavigator(ProcessModel m, boolean dataObjectFlows) {
         this.m               = m;
         this.dataObjectFlows = dataObjectFlows;
         this.minimalSteps    = minimalSteps;
@@ -40,6 +48,7 @@ public class ModelNavigator {
             return null; // Start ist kein Start. Darf nur einen Vorgänger haben.
 
         ProcessStepModel ret = null;
+        stepcounter = 0;
         ArrayList<ProcessStepModel> visited = new ArrayList<ProcessStepModel>();
 
         for (ProcessStepModel next : getNextSteps(entry)) {
@@ -57,10 +66,13 @@ public class ModelNavigator {
      */
     private ProcessStepModel getSESEExitToEntry (ProcessStepModel entry, ProcessStepModel step, ArrayList<ProcessStepModel> visited) {
         ProcessStepModel ret = null;
+        stepcounter++;
         visited.add(step);
         //System.out.println("Beretis besucht: " + visited.size());
 
-        if (getNextSteps(step).size() <= 1)
+        // Ist nur ein Exit, wenn nur 1, oder kein Nachfolger ist UND
+        //                   wenn eine mindesanzahl an Steps erreicht wurde.
+        if (getNextSteps(step).size() <= 1 && stepcounter >= minimalSteps)
             if (isExitToEntry(entry, step)) return step;
 
         for (ProcessStepModel next: getNextSteps(step)) {
