@@ -14,11 +14,11 @@ import java.util.ArrayList;
  */
 public class ModelNavigator {
 
-    public ProcessModel m;
-    boolean dataObjectFlows;
-    int minimalSteps;
+    private ProcessModel m;
+    private boolean dataObjectFlows;
+    private int minimalSteps;
 
-    int stepcounter;
+    private int stepcounter;
 
     public ModelNavigator(ProcessModel m, boolean dataObjectFlows, int minimalSteps) {
         this.m               = m;
@@ -47,7 +47,7 @@ public class ModelNavigator {
             return null; // Start ist kein Start. Darf nur einen Vorgänger haben.
 
         ProcessStepModel ret = null;
-        stepcounter = 0;
+
         ArrayList<ProcessStepModel> visited = new ArrayList<ProcessStepModel>();
 
         for (ProcessStepModel next : getNextSteps(entry)) {
@@ -65,13 +65,12 @@ public class ModelNavigator {
      */
     private ProcessStepModel getSESEExitToEntry (ProcessStepModel entry, ProcessStepModel step, ArrayList<ProcessStepModel> visited) {
         ProcessStepModel ret = null;
-        stepcounter++;
+
         visited.add(step);
         //System.out.println("Beretis besucht: " + visited.size());
 
-        // Ist nur ein Exit, wenn nur 1, oder kein Nachfolger ist UND
-        //                   wenn eine mindesanzahl an Steps erreicht wurde.
-        if (getNextSteps(step).size() <= 1 && stepcounter >= minimalSteps)
+        // Ist nur ein Exit, wenn nur 1, oder kein Nachfolger ist
+        if (getNextSteps(step).size() <= 1)
             if (isExitToEntry(entry, step)) return step;
 
         for (ProcessStepModel next: getNextSteps(step)) {
@@ -95,6 +94,7 @@ public class ModelNavigator {
 
         boolean ret = true;
         ArrayList<ProcessStepModel> visited = new ArrayList<ProcessStepModel>();
+        stepcounter = 0;
 
         // System.out.println("Start Forward ***************************************************************************");
         ret = ret && isExitToEntryForward(entry, exit, visited);
@@ -117,10 +117,11 @@ public class ModelNavigator {
         //System.out.println("- Bereits besuchte Steps: " + visited.size());
         //System.out.println(" isExitToEntryForward("+exit.getName()+", " +entry.getName()+")");
         visited.add(entry);
+        stepcounter++;
 
-        if (entry == null)                      return false;
-        if (entry.equals(exit))                 return true;
-        if (getNextSteps(entry).size() == 0)    return false;
+        if (entry == null)                                      return false;
+        if (entry.equals(exit) && stepcounter >= minimalSteps)  return true;
+        if (getNextSteps(entry).size() == 0)                    return false;
 
         boolean ret = true;
         for (ProcessStepModel next: getNextSteps(entry)) {
