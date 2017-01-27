@@ -51,16 +51,17 @@ public class ModelNavigator {
 
         ArrayList<ProcessStepModel> visited = new ArrayList<ProcessStepModel>();
 
-        for (ProcessStepModel next : getNextSteps(entry)) {
+        for (ProcessStepModel next : getNextSteps(entry))
             if (isStepBeforeStep(next, entry))
                 return null; // Der Startstep darf kein Vorgänger seiner Nachfolger sein (nicht in einer Schleife)
-            ret = getSESEExitToEntry(entry, next, visited);
-        }
 
-        if (ret != null && getStepsBetweenSteps(entry, ret) >= minimalSteps)
-            return ret;
-        else if (ret != null && getStepsBetweenSteps(entry, ret) < minimalSteps)
-            return null;
+        for (ProcessStepModel next : getNextSteps(entry)) {
+            ret = getSESEExitToEntry(entry, next, visited);
+            if (ret != null && getStepsBetweenSteps(entry, ret) >= minimalSteps)
+                return ret;
+            else if (ret != null && getStepsBetweenSteps(entry, ret) < minimalSteps)
+                return null;
+        }
 
         return ret;
     }
@@ -111,12 +112,12 @@ public class ModelNavigator {
         boolean ret = true;
         ArrayList<ProcessStepModel> visited = new ArrayList<ProcessStepModel>();
 
-        //System.out.println("Start Forward ***************************************************************************");
+        System.out.println("Start Forward ***************************************************************************");
         ret = ret && isExitToEntryForward(entry, exit, visited);
         if (!ret) return false;
 
         visited = new ArrayList<ProcessStepModel>();
-        //System.out.println("Start Backward **************************************************************************");
+        System.out.println("Start Backward **************************************************************************");
         ret = ret && isExitToEntryBackward(entry, exit, visited);
 
         return ret;
