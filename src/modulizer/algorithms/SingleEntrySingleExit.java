@@ -320,7 +320,8 @@ public class SingleEntrySingleExit extends ModularizationAlgorithm{
                         models.put("Model"+ modelNumber,currentModel);
                         modelNumber++;
                         ProcessUnitModelModifier seseUnitModifier = new ProcessUnitModelModifier().setStartProcessStep(step.getId().getKey());
-                        currentModel.setProcessUnitModel(step.getId().getContext(), seseUnitModifier.getProcessUnitModel());
+                        String unitId = step.getId().getContext().split("/")[1];
+                        currentModel.setProcessUnitModel(unitId, seseUnitModifier.getProcessUnitModel());
                         finished.add(step.getId());
                         mn.getNextSteps(step).forEach(this::handleStep);
                         seseUnitModifier.setProcessStepModel(copiedStep.getId().getKey(),copiedStep);
