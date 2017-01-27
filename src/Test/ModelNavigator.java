@@ -32,6 +32,9 @@ public class ModelNavigator {
      * @return
      */
     public ProcessStepModel getSESEExitToEntry (ProcessStepModel entry) {
+        if (getPrevSteps(entry).size() >= 2)
+            return null; // Start ist kein Start. Darf nur einen Vorgänger haben.
+
         ProcessStepModel ret = null;
 
         for (ProcessStepModel next : getNextSteps(entry)) {
