@@ -29,8 +29,8 @@ public class Print {
         throw new IllegalAccessError("Print class");
     }
 
-    public static void printModel(ProcessModel model, String chosenAlgorithm, JTextArea jTextOutputArea) {
-        modelNavigator = new ModelNavigator(model);
+    public static void printModel(ProcessModel model, String chosenAlgorithm, JTextArea jTextOutputArea, Boolean dataFlows) {
+        modelNavigator = new ModelNavigator(model, dataFlows);
         outputArea = jTextOutputArea;
         switch (chosenAlgorithm) {
             case "Single Entry Single Exit":

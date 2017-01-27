@@ -320,7 +320,7 @@ public class ModulizerGUI extends javax.swing.JFrame {
             modularized.forEach((x) -> {
                 modularizedMap.put(x.getId().getKey(), x);
                 jComboBoxModularizedModel.addItem(x.getId().getKey());
-                printModel(x, chosenAlgorithm, jTextAreaOutputModularized);
+                printModel(x, chosenAlgorithm, jTextAreaOutputModularized, jCheckBoxDataFlows.isSelected());
             });
             jComboBoxModularizedModel.setEnabled(true);
         }
@@ -344,10 +344,10 @@ public class ModulizerGUI extends javax.swing.JFrame {
             String selectedItem = jComboBoxModularizedModel.getSelectedItem().toString();
             jTextAreaOutputModularized.setText("");
             if (!selectedItem.isEmpty() && (!"Print All".equals(selectedItem))) {
-                printModel(modularizedMap.get(selectedItem), chosenAlgorithm, jTextAreaOutputModularized);
+                printModel(modularizedMap.get(selectedItem), chosenAlgorithm, jTextAreaOutputModularized, jCheckBoxDataFlows.isSelected());
             } else {
                 modularizedMap.forEach((key, value) -> {
-                    printModel(value, chosenAlgorithm, jTextAreaOutputModularized);
+                    printModel(value, chosenAlgorithm, jTextAreaOutputModularized, jCheckBoxDataFlows.isSelected());
                 });
             }
         }
@@ -378,7 +378,7 @@ public class ModulizerGUI extends javax.swing.JFrame {
         setProcessModel();
         jTextAreaOutputModularized.setText("");
         jTextAreaOutputOriginal.setText("");
-        printModel(model, "Original", jTextAreaOutputOriginal);
+        printModel(model, "Original", jTextAreaOutputOriginal, jCheckBoxDataFlows.isSelected());
     }//GEN-LAST:event_jComboBoxModelActionPerformed
 
     /**
