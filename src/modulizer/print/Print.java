@@ -4,7 +4,6 @@ import Test.ModelNavigator;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JTextArea;
-import modulizer.ui.ModulizerGUI;
 import uflow.data.function.immutable.ProceedFunction;
 import uflow.data.function.immutable.ProcessFunction;
 import uflow.data.function.immutable.ProvideFunction;
@@ -19,9 +18,9 @@ import uflow.data.model.immutable.ProcessUnitModel;
  */
 public class Print {
 
-    static ArrayList<String> printedSteps = new ArrayList<>();
-    static ModelNavigator modelNavigator;
-    static JTextArea outputArea;
+    private static ArrayList<String> printedSteps = new ArrayList<>();
+    private static ModelNavigator modelNavigator;
+    private static JTextArea outputArea;
 
     /*
         private constructor to hide the implicit public one.
@@ -50,10 +49,6 @@ public class Print {
         }
     }
 
-    /**
-     *
-     * @param model
-     */
     private static void printProcessModel(ProcessModel model) {
         printedSteps.clear();
         outputArea.append("Model: " + model.getId().getKey() + "\n");
@@ -63,16 +58,12 @@ public class Print {
                 outputArea.append("Unit Start Process Step: " + unit.getName() + " - " + startStep + "\n");
                 ProcessStepModel step = unit.getProcessStepModels().get(startStep);
                 if (step != null && !printedSteps.contains(step.getId().getKey())) {
-                    printProcessSteps(step, model);
+                    printProcessSteps(step);
                 }
             }
         }
     }
 
-    /**
-     *
-     * @param model
-     */
     private static void printDataObjectProcessModel(ProcessModel model) {
         outputArea.append("Model: " + model.getId().getKey() + "\n");
         for (ProcessUnitModel unit : model.getProcessUnitModels().getValues()) {
@@ -114,7 +105,7 @@ public class Print {
         }
     }
 
-    private static void printProcessSteps(ProcessStepModel step, ProcessModel model) {
+    private static void printProcessSteps(ProcessStepModel step) {
         boolean prevFinished = true;
         // check if all the previous Steps are finished
         for (ProcessStepModel prev : modelNavigator.getPrevSteps(step)) {
@@ -157,7 +148,7 @@ public class Print {
             List<ProcessStepModel> nextSteps = modelNavigator.getNextSteps(step);
             for (ProcessStepModel nextStep : nextSteps) {
                 if (nextStep != null && !printedSteps.contains(nextStep.getId().getKey())) {
-                    printProcessSteps(nextStep, model);
+                    printProcessSteps(nextStep);
                 }
             }
         }
