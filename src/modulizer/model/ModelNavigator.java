@@ -107,12 +107,12 @@ public class ModelNavigator {
         boolean ret = true;
         ArrayList<ProcessStepModel> visited = new ArrayList<ProcessStepModel>();
 
-        // System.out.println("Start Forward ***************************************************************************");
+        //System.out.println("Start Forward ***************************************************************************");
         ret = ret && isExitToEntryForward(entry, exit, visited);
         if (!ret) return false;
 
         visited = new ArrayList<ProcessStepModel>();
-        // System.out.println("Start Backward **************************************************************************");
+        //System.out.println("Start Backward **************************************************************************");
         ret = ret && isExitToEntryBackward(entry, exit, visited);
 
         return ret;
@@ -125,8 +125,6 @@ public class ModelNavigator {
      * @return
      */
     private boolean isExitToEntryForward(ProcessStepModel entry, ProcessStepModel exit, ArrayList<ProcessStepModel> visited) {
-        //System.out.println("- Bereits besuchte Steps: " + visited.size());
-        //System.out.println(" isExitToEntryForward("+exit.getName()+", " +entry.getName()+")");
         visited.add(entry);
 
         if (entry == null)                      return false;
@@ -151,7 +149,10 @@ public class ModelNavigator {
      * @return
      */
     private boolean isExitToEntryBackward(ProcessStepModel entry, ProcessStepModel exit, ArrayList<ProcessStepModel> visited) {
-        visited.add(entry);
+        //System.out.println("- Bereits besuchte Steps: " + visited.size());
+        //System.out.println(" isExitToEntryBackward("+entry.getName()+", " +exit.getName()+")");
+
+        visited.add(exit);
 
         if (exit == null)                      return false;
         if (entry.equals(exit))                return true;
