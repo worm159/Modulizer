@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import static modulizer.print.Print.printModel;
 
@@ -32,12 +31,13 @@ public class ModulizerGUI extends javax.swing.JFrame {
 
     ProcessModel model = ProcessModelFactory.createSeseEinfach();
     String chosenAlgorithm;
-    Map<String, ProcessModel> modularizedMap = new HashMap<>();
+    private final Map<String, ProcessModel> modularizedMap;
 
     /**
      * Creates new form ModulizerGUI
      */
     public ModulizerGUI() {
+        this.modularizedMap = new HashMap<>();
         initComponents();
         for (Method m : ProcessModelFactory.class.getMethods()) {
             if (m.getName().contains("create")) {
@@ -80,11 +80,6 @@ public class ModulizerGUI extends javax.swing.JFrame {
         jTextFieldPath.setEditable(false);
         jTextFieldPath.setToolTipText("Path to a Process Model");
         jTextFieldPath.setEnabled(false);
-        jTextFieldPath.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldPathActionPerformed(evt);
-            }
-        });
 
         jButtonBrowse.setText("Browse...");
         jButtonBrowse.setEnabled(false);
@@ -230,75 +225,67 @@ public class ModulizerGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextFieldPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldPathActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldPathActionPerformed
-
     private void jButtonBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBrowseActionPerformed
 
-        final JFileChooser jFileChooser1 = new JFileChooser();
-        FileNameExtensionFilter classfilter = new FileNameExtensionFilter("Class Files (*.class)", "class");
-
-        jFileChooser1.setDialogTitle("Open Class File");
-// set selected filter
-        jFileChooser1.setFileFilter(classfilter);
-
-        int returnVal = jFileChooser1.showOpenDialog(jPanel1);
-
-        if (returnVal == 0) {
-            File classFile = jFileChooser1.getSelectedFile();
-            String fileName = classFile.getName().split("\\.")[0];
-            String filePath = classFile.getPath().split(fileName)[0];
-            System.out.println(filePath);
-            System.out.println("Filename = " + fileName);
-            if (classFile.getName().endsWith(".class")) {
-                try {
-                    jTextFieldPath.setText(jFileChooser1.getSelectedFile().getAbsolutePath());
-                    URL url = new File(filePath).toURI().toURL();
-//                    URL url = new URL("file:///" + filePath.replaceAll("\\", "/"));
-                    URL[] urls = new URL[]{url};
-
-                    URLClassLoader cl = new URLClassLoader(urls);
-                    Class cls = null;
-                    try {
-                        cls = cl.loadClass(fileName);
-                    } catch (ClassNotFoundException ex) {
-                        Logger.getLogger(ModulizerGUI.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (NoClassDefFoundError e) {
-                        int startIndex = e.getMessage().lastIndexOf(" ") + 1;
-                        int endIndex = e.getMessage().length() - 1;
-                        String classPackage = e.getMessage().substring(startIndex, endIndex).replaceAll("/", "\\.");
-                        try {
-                            cls = cl.loadClass(classPackage);
-                        } catch (ClassNotFoundException ex) {
-                            Logger.getLogger(ModulizerGUI.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-
-                    }
-                    if (cls != null) {
-                        Object o = cls.newInstance();
-
-                        for (Method m : cls.getMethods()) {
-                            if (m.getName().substring(0, 6).equals("create")) {
-                                jComboBoxModel.addItem(m.getName());
-                                jComboBoxModel.setEnabled(true);
-                            }
-                        }
-                    }
-                    cl.close();
-                } catch (InstantiationException | IllegalAccessException | IOException ex) {
-                    Logger.getLogger(ModulizerGUI.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            } else {
-                jTextFieldPath.setText("The selected File is not a *.class File. \n Please select a *.class File for modularization!");
-            }
-
-        }
-
+//        final JFileChooser jFileChooser1 = new JFileChooser();
+//        FileNameExtensionFilter classfilter = new FileNameExtensionFilter("Class Files (*.class)", "class");
+//
+//        jFileChooser1.setDialogTitle("Open Class File");
+//// set selected filter
+//        jFileChooser1.setFileFilter(classfilter);
+//
+//        int returnVal = jFileChooser1.showOpenDialog(jPanel1);
+//
+//        if (returnVal == 0) {
+//            File classFile = jFileChooser1.getSelectedFile();
+//            String fileName = classFile.getName().split("\\.")[0];
+//            String filePath = classFile.getPath().split(fileName)[0];
+//            if (classFile.getName().endsWith(".class")) {
+//                try {
+//                    jTextFieldPath.setText(jFileChooser1.getSelectedFile().getAbsolutePath());
+//                    URL url = new File(filePath).toURI().toURL();
+//                    URL[] urls = new URL[]{url};
+//
+//                    URLClassLoader cl = new URLClassLoader(urls);
+//                    Class cls = null;
+//                    try {
+//                        cls = cl.loadClass(fileName);
+//                    } catch (ClassNotFoundException ex) {
+//                        Logger.getLogger(ModulizerGUI.class.getName()).log(Level.SEVERE, null, ex);
+//                    } catch (NoClassDefFoundError e) {
+//                        int startIndex = e.getMessage().lastIndexOf(" ") + 1;
+//                        int endIndex = e.getMessage().length() - 1;
+//                        String classPackage = e.getMessage().substring(startIndex, endIndex).replaceAll("/", "\\.");
+//                        try {
+//                            cls = cl.loadClass(classPackage);
+//                        } catch (ClassNotFoundException ex) {
+//                            Logger.getLogger(ModulizerGUI.class.getName()).log(Level.SEVERE, null, ex);
+//                        }
+//
+//                    }
+//                    if (cls != null) {
+//                        Object o = cls.newInstance();
+//
+//                        for (Method m : cls.getMethods()) {
+//                            if (m.getName().substring(0, 6).equals("create")) {
+//                                jComboBoxModel.addItem(m.getName());
+//                                jComboBoxModel.setEnabled(true);
+//                            }
+//                        }
+//                    }
+//                    cl.close();
+//                } catch (InstantiationException | IllegalAccessException | IOException ex) {
+//                    Logger.getLogger(ModulizerGUI.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            } else {
+//                jTextFieldPath.setText("The selected File is not a *.class File. \n Please select a *.class File for modularization!");
+//            }
+//
+//        }
     }//GEN-LAST:event_jButtonBrowseActionPerformed
 
     private void jButtonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartActionPerformed
-        ModulizerGUI.jTextAreaOutputModularized.setText("");
+        jTextAreaOutputModularized.setText("");
         ModularizationAlgorithm algorithm = null;
         chosenAlgorithm = jComboBoxAlgorithm.getSelectedItem().toString();
         setProcessModel();
@@ -311,7 +298,6 @@ public class ModulizerGUI extends javax.swing.JFrame {
                 }
                 boolean dataObjectFlows = jCheckBoxDataFlows.isSelected();
                 int minimalSese = (Integer) jSpinnerMinElements.getValue();
-                System.out.println(dataObjectFlows + "   " + minimalSese);
                 algorithm = new SingleEntrySingleExit(model, dataObjectFlows, minimalSese);
                 break;
             case "Data objects":
@@ -357,7 +343,7 @@ public class ModulizerGUI extends javax.swing.JFrame {
         if (0 < jComboBoxModularizedModel.getItemCount()) {
             String selectedItem = jComboBoxModularizedModel.getSelectedItem().toString();
             jTextAreaOutputModularized.setText("");
-            if (!selectedItem.isEmpty() && !selectedItem.equals("Print All")) {
+            if (!selectedItem.isEmpty() && (!"Print All".equals(selectedItem))) {
                 printModel(modularizedMap.get(selectedItem), chosenAlgorithm, jTextAreaOutputModularized);
             } else {
                 modularizedMap.forEach((key, value) -> {
@@ -427,17 +413,8 @@ public class ModulizerGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSpinner jSpinnerMinElements;
     private javax.swing.JSplitPane jSplitPane1;
-    private static javax.swing.JTextArea jTextAreaOutputModularized;
+    private javax.swing.JTextArea jTextAreaOutputModularized;
     private javax.swing.JTextArea jTextAreaOutputOriginal;
     private javax.swing.JTextField jTextFieldPath;
     // End of variables declaration//GEN-END:variables
-
-    public static JTextArea getjTextAreaOutput() {
-        return jTextAreaOutputModularized;
-    }
-
-    public static void setjTextAreaOutput(JTextArea jTextAreaOutput) {
-        ModulizerGUI.jTextAreaOutputModularized = jTextAreaOutput;
-    }
-
 }
