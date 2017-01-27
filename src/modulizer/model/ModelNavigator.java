@@ -29,6 +29,7 @@ public class ModelNavigator {
     public ModelNavigator(ProcessModel m, boolean dataObjectFlows) {
         this.m               = m;
         this.dataObjectFlows = dataObjectFlows;
+        this.minimalSteps    = 0;
     }
 
     public ProcessStepModel getSESEEntry() {
@@ -52,9 +53,20 @@ public class ModelNavigator {
 
         for (ProcessStepModel next : getNextSteps(entry)) {
             ret = getSESEExitToEntry(entry, next, visited);
-            if (ret != null) return ret;
+            if (ret != null && getStepsBetweenSteps(entry, ret) >= minimalSteps)
+                return ret;
+            else if (ret != null && getStepsBetweenSteps(entry, ret) < minimalSteps)
+                return null;
         }
         return ret;
+    }
+
+    public int getStepsBetweenSteps(ProcessStepModel step1, ProcessStepModel step2) {
+        ArrayList<ProcessStepModel> visited = new ArrayList<ProcessStepModel>();
+
+        isExitToEntryForward(step1, step2, visited);
+
+        return visited.size();
     }
 
     /**
@@ -94,7 +106,6 @@ public class ModelNavigator {
 
         boolean ret = true;
         ArrayList<ProcessStepModel> visited = new ArrayList<ProcessStepModel>();
-        stepcounter = 0;
 
         // System.out.println("Start Forward ***************************************************************************");
         ret = ret && isExitToEntryForward(entry, exit, visited);
@@ -117,11 +128,10 @@ public class ModelNavigator {
         //System.out.println("- Bereits besuchte Steps: " + visited.size());
         //System.out.println(" isExitToEntryForward("+exit.getName()+", " +entry.getName()+")");
         visited.add(entry);
-        stepcounter++;
 
-        if (entry == null)                                      return false;
-        if (entry.equals(exit) && stepcounter >= minimalSteps)  return true;
-        if (getNextSteps(entry).size() == 0)                    return false;
+        if (entry == null)                      return false;
+        if (entry.equals(exit))                 return true;
+        if (getNextSteps(entry).size() == 0)    return false;
 
         boolean ret = true;
         for (ProcessStepModel next: getNextSteps(entry)) {
