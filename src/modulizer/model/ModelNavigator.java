@@ -52,6 +52,8 @@ public class ModelNavigator {
         ArrayList<ProcessStepModel> visited = new ArrayList<ProcessStepModel>();
 
         for (ProcessStepModel next : getNextSteps(entry)) {
+            if (isStepBeforeStep(next, entry))
+                return null; // Der Startstep darf kein Vorgänger seiner Nachfolger sein (nicht in einer Schleife)
             ret = getSESEExitToEntry(entry, next, visited);
             if (ret != null && getStepsBetweenSteps(entry, ret) >= minimalSteps)
                 return ret;
