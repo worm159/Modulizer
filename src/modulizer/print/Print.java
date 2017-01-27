@@ -60,8 +60,7 @@ public class Print {
         for (ProcessUnitModel unit : model.getProcessUnitModels().getValues()) {
             String startStep = unit.getStartProcessStep();
             if (startStep != null && !startStep.isEmpty()) {
-                outputArea.append("Unit: " + unit.getName() + "\n");
-                outputArea.append("Unit Start Process Step: " + startStep + "\n");
+                outputArea.append("Unit Start Process Step: " + unit.getName() + " - " + startStep + "\n");
                 ProcessStepModel step = unit.getProcessStepModels().get(startStep);
                 if (step != null && !printedSteps.contains(step.getId().getKey())) {
                     printProcessSteps(step, model);
@@ -86,6 +85,7 @@ public class Print {
     }
 
     private static void printProcessStep(ProcessStepModel step, String dataObject) {
+        outputArea.append("        Unit:   " + step.getId().getContext().split("/")[1] + "\n");
         outputArea.append("Process Step:   " + step.getId().getKey() + "\n");
         outputArea.append("        Name:   " + step.getName() + "\n");
         for (ProcessFunction func : step.getProcessFunctions()) {
@@ -125,6 +125,7 @@ public class Print {
         }
         if (prevFinished) {
 
+            outputArea.append("        Unit:   " + step.getId().getContext().split("/")[1] + "\n");
             outputArea.append("Process Step:   " + step.getId().getKey() + "\n");
             outputArea.append("        Name:   " + step.getName() + "\n");
 
