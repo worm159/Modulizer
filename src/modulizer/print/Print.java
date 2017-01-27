@@ -76,7 +76,6 @@ public class Print {
     private static void printDataObjectProcessModel(ProcessModel model) {
         outputArea.append("Model: " + model.getId().getKey() + "\n");
         for (ProcessUnitModel unit : model.getProcessUnitModels().getValues()) {
-            outputArea.append("Unit: " + unit.getName() + "\n");
             for (ProcessStepModel step : unit.getProcessStepModels().getValues()) {
                 printProcessStep(step, model.getId().getKey());
                 outputArea.append("\n");
