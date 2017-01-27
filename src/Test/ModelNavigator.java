@@ -31,7 +31,7 @@ public class ModelNavigator {
      * @param entry
      * @return
      */
-    public ProcessStepModel getSESEExitToEntry (ProcessStepModel entry) {
+    public ProcessStepModel getSESEExitToEntry(ProcessStepModel entry) {
         ProcessStepModel ret = null;
 
         for (ProcessStepModel next : getNextSteps(entry)) {
@@ -51,7 +51,6 @@ public class ModelNavigator {
         ProcessStepModel ret = null;
 
         if (isExitToEntry(entry, step)) return step;
-
         for (ProcessStepModel next: getNextSteps(step)) {
             ret = getSESEExitToEntry(entry, next);
             if (ret != null) return ret;
@@ -65,45 +64,17 @@ public class ModelNavigator {
      * TODO: überprüfen, ob alle Vorgänger vom step auch wieder zurück zum entry führen. Damit wird ausgeschlossen,
      * dass ein zweiter Start, oder ein Vorgänger vor dem Step in den SESE Block verweist.
      * @param entry
-     * @param exit
+     * @param step
      * @return
      */
-    public boolean isExitToEntry(ProcessStepModel entry, ProcessStepModel exit) {
+    public boolean isExitToEntry(ProcessStepModel entry, ProcessStepModel step) {
 
         boolean ret = true;
-        ArrayList<ProcessStepModel> visited = new ArrayList<ProcessStepModel>();
 
-        // System.out.println("Start Forward ***************************************************************************");
-        ret = ret && isExitToEntryForward(entry, exit, visited);
+        ret = ret && isExitToEntryForward(entry, step);
         if (!ret) return false;
-
-        visited = new ArrayList<ProcessStepModel>();
-        // System.out.println("Start Backward **************************************************************************");
-        ret = ret && isExitToEntryBackward(entry, exit, visited);
-
-        return ret;
-    }
-
-    /**
-     * Überprüfen, ob alle nachfolgenden Pfade zu step führen
-     * @param entry
-     * @param exit
-     * @return
-     */
-    private boolean isExitToEntryForward(ProcessStepModel entry, ProcessStepModel exit, ArrayList<ProcessStepModel> visited) {
-        visited.add(entry);
-
-        if (entry == null)                      return false;
-        if (entry.equals(exit))                 return true;
-        if (getNextSteps(entry).size() == 0)    return false;
-
-        boolean ret = true;
-        for (ProcessStepModel next: getNextSteps(entry)) {
-            if (isStepInArrayList(next, visited))
-                ; //System.out.println("!!Forward: Schleife entdeckt! ("+next.getName()+")");
-            else
-                ret = ret && isExitToEntryForward(next, exit, visited);
-        }
+        //System.out.println("Start Backward ***************************************************************************");
+        ret = ret && isExitToEntryBackward(entry, step);
 
         return ret;
     }
@@ -114,37 +85,36 @@ public class ModelNavigator {
      * @param exit
      * @return
      */
-    private boolean isExitToEntryBackward(ProcessStepModel entry, ProcessStepModel exit, ArrayList<ProcessStepModel> visited) {
-        visited.add(entry);
-
+    private boolean isExitToEntryBackward(ProcessStepModel entry, ProcessStepModel exit) {
         if (exit == null)                      return false;
         if (entry.equals(exit))                return true;
         if (getPrevSteps(exit).size() == 0)    return false;
 
         boolean ret = true;
         for (ProcessStepModel prev: getPrevSteps(exit)) {
-            if (isStepInArrayList(prev, visited))
-                ; //System.out.println("!!Backward: Schleife entdeckt! ("+prev.getName()+")");
-
-            else
-                ret = ret && isExitToEntryBackward(entry, prev, visited);
+            ret = ret && isExitToEntryBackward(entry, prev);
         }
 
         return ret;
     }
 
-    private boolean isStepInArrayList(ProcessStepModel step, ArrayList<ProcessStepModel> visited) {
-        for (ProcessStepModel x : visited)
-            if (x.equals(step))
-                return true;
+    /**
+     * Überprüfen, ob alle nachfolgenden Pfade zu step führen
+     * @param entry
+     * @param exit
+     * @return
+     */
+    private boolean isExitToEntryForward(ProcessStepModel entry, ProcessStepModel exit) {
+        if (entry == null)                      return false;
+        if (entry.equals(exit))                 return true;
+        if (getNextSteps(entry).size() == 0)    return false;
 
-        return false;
-    }
+        boolean ret = true;
+        for (ProcessStepModel next: getNextSteps(entry)) {
+            ret = ret && isExitToEntryForward(next, exit);
+        }
 
-    public boolean isStepBeforeStep(ProcessStepModel step1, ProcessStepModel step2) {
-        ArrayList<ProcessStepModel> visited = new ArrayList<>();
-
-        return isStepBeforeStep_2(step1, step2, visited);
+        return ret;
     }
 
     /**
@@ -153,23 +123,14 @@ public class ModelNavigator {
      * @param step2
      * @return
      */
-    private boolean isStepBeforeStep_2(ProcessStepModel step1, ProcessStepModel step2, ArrayList<ProcessStepModel> visited) {
-        if (step2 == null)
-            return false;
-        if (step1.equals(step2))
-            return true;
-
-        for (ProcessStepModel visitedstep : visited)
-            if (visitedstep.equals(step2))
-                return false;
-
-        visited.add(step2);
+    public boolean isStepBeforeStep(ProcessStepModel step1, ProcessStepModel step2) {
+        if (step2 == null)                      return false;
+        if (step1.equals(step2))                return true;
+        if (getPrevSteps(step2).size() == 0)    return false;
 
         boolean ret = false;
-        for (ProcessStepModel prev: getPrevSteps(step2)) {
-            if (prev.equals(step1)) { System.out.println("ist Vorgänger!");  return true; }
-            ret = ret || isStepBeforeStep_2(step1, prev, visited);
-        }
+        for (ProcessStepModel prev: getPrevSteps(step2))
+            ret = ret || isStepBeforeStep(step1, prev);
 
         return ret;
     }
@@ -198,8 +159,9 @@ public class ModelNavigator {
      */
     public String printModel() {
 
-        for (ProcessStepModel step: getFirstSteps())
+        for (ProcessStepModel step: getFirstSteps()) {
             printStep(step);
+        }
 
         return null;
     }
@@ -210,9 +172,10 @@ public class ModelNavigator {
      */
     private void printStep(ProcessStepModel step) {
         System.out.println(step);
-        for (ProcessStepModel next: getNextSteps(step))
+        for (ProcessStepModel next: getNextSteps(step)) {
             if (next != null)
                 printStep(next);
+        }
     }
 
     /**
@@ -223,9 +186,10 @@ public class ModelNavigator {
         ArrayList<ProcessStepModel> steps = new ArrayList<>();
 
         for (ProcessUnitModel unit : m.getProcessUnitModels().getValues() )
-            if (unit.getStartProcessStep() != null)
+            if (unit.getStartProcessStep() != null) {
                 steps.add(getStep(new Id("ProcessStepModel", unit.getStartProcessStep(), unit.getId().getContext() + "/" + unit.getId().getKey())));
-
+                //steps.add(getStep(unit.getStartProcessStep()));
+            }
         return steps;
     }
 
@@ -261,12 +225,14 @@ public class ModelNavigator {
      * @param step
      * @return
      */
-    public ArrayList<ProcessStepModel> getPrevSteps(ProcessStepModel step) {
+    public ArrayList<ProcessStepModel> getPrevSteps(ProcessStepModel step) { /*************************/
         ArrayList<ProcessStepModel> steps = new ArrayList<>();
+
         Id id = null;
 
         for (ProcessUnitModel unit : m.getProcessUnitModels().getValues() )
             for (ProcessStepModel step_tmp : unit.getProcessStepModels().getValues())
+                /* new */
                 for (ProcessFunction func : step_tmp.getProcessFunctions()) {
                     if (func.getClass() == ProceedFunction.class) {
                         if (((ProceedFunction) func).getTargetProcessUnit().equals(""))
@@ -274,10 +240,21 @@ public class ModelNavigator {
                         else
                             id = new Id("ProcessStepModel", ((ProceedFunction) func).getNext(), unit.getId().getContext() + "/" + ((ProceedFunction) func).getTargetProcessUnit());
 
-                        if (getStep(id) != null && getStep(id).equals(step))
+                        if (getStep(id) != null && getStep(id).equals(step)) {
+                            //System.out.println(id);
+                            //System.out.println(getStep(id));
+                            //System.out.println("Vorgänger: " + step_tmp);
                             steps.add(step_tmp);
+                        }
                     }
                 }
+                /* old:
+                if (step_tmp.equals(step))
+                    steps.add(step);
+                    */
+
+        //System.out.println("Anzahl Vorgänger: " + steps.size());
+        //System.out.println("");
         return steps;
     }
 
@@ -298,10 +275,11 @@ public class ModelNavigator {
                 if (((ProceedFunction)func).getTargetProcessUnit().equals(""))
                     id = new Id("ProcessStepModel", ((ProceedFunction)func).getNext(), step.getId().getContext());
                 else
-                    id = new Id("ProcessStepModel", ((ProceedFunction)func).getNext(), step.getId().getContext().split("/")[0] + "/" +((ProceedFunction)func).getTargetProcessUnit());
+                    id = new Id("ProcessStepModel", ((ProceedFunction)func).getNext(), ((ProceedFunction)func).getTargetProcessUnit());
 
                 if (getStep(id) != null)
-                    steps.add(getStep(id));
+                    steps.add( getStep(id) );
+                // old: steps.add( getStep(((ProceedFunction)func).getNext()) );
             }
         }
 
