@@ -93,9 +93,9 @@ public class ModelNavigator {
     private boolean isExitToEntryForward(ProcessStepModel entry, ProcessStepModel exit, ArrayList<ProcessStepModel> visited) {
         visited.add(entry);
 
-        if (entry == null)                      return false;
-        if (entry.equals(exit))                 return true;
-        if (getNextSteps(entry).size() == 0)    return false;
+        if (entry == null)                                          return false;
+        if (entry.equals(exit) && getNextSteps(exit).size() == 1)   return true;
+        if (getNextSteps(entry).size() == 0)                        return false;
 
         boolean ret = true;
         for (ProcessStepModel next: getNextSteps(entry)) {
