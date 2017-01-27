@@ -718,7 +718,7 @@ public class ProcessModelFactory {
                 .getProcessModel();
     }
 
-    public static ProcessModel createSeseGesamteVerteilung() {
+    public static ProcessModel createSeseGesamteZerteilung() {
         return new ProcessModelModifier()
                 .setId("SeseGesamteZerteilungV1")
                 .setName("SESE Keine Zerteilung V1")

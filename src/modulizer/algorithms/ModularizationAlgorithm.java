@@ -36,8 +36,6 @@ public abstract class ModularizationAlgorithm {
     List<Step> finishedSteps;
     List<Id> finished;
 
-    ModelNavigator mn;
-
     /**
      * initializes all the lists and maps,
      * converts the ProcessStepModels to Steps
@@ -53,8 +51,6 @@ public abstract class ModularizationAlgorithm {
         firstSteps = new ArrayList<>();
         finishedSteps = new ArrayList<>();
         finished = new ArrayList<>();
-
-        mn = new ModelNavigator(model);
 
         // convert the ProcessStepModels into Steps
         for (ProcessUnitModel unit : modelToSplit.getProcessUnitModels().getValues()) {
