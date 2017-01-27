@@ -59,23 +59,21 @@ public class Test {
 */
 
         System.out.println("=========================================================================================");
-        ProcessModel test5 = ProcessModelFactory.createSeseV1();
-        ModelNavigator mn5 = new ModelNavigator(test5, true);
+        ProcessModel test5 = ProcessModelFactory.createSeseMitCycle();
+        ModelNavigator mn5 = new ModelNavigator(test5, true, 1);
+
 
         //Id id1 = new Id("ProcessStepModel", "SESE Left ?", "SeseKeineZerteilungV2/Unit-1");
         //Id id2 = new Id("ProcessStepModel", "SESE Start ?", "SeseKeineZerteilungV2/Unit-1");
         //System.out.println(mn5.isStepBeforeStep(mn5.getStep(id1), mn5.getStep(id2)));
 
-        id = new Id("ProcessStepModel", "SESE Start ?", "SeseKeineZerteilungV1/Unit-1");
-        Id id2 = new Id("ProcessStepModel", "End Step", "SeseKeineZerteilungV1/Unit-1");
+        id = new Id("ProcessStepModel", "SESE Start", "SeseMitCycle/Unit-1");
+        Id id2 = new Id("ProcessStepModel", "SESE End", "SeseMitCycle/Unit-1");
 
-        System.out.println(mn5.isExitToEntry(mn5.getStep(id), mn5.getStep(id2)));
-
+        //System.out.println(mn5.isExitToEntry(mn5.getStep(id), mn5.getStep(id2)));
+        //System.out.println(mn5.getStep(id));
         System.out.println("\n\nExit: " + mn5.getSESEExitToEntry(mn5.getStep(id)));
 
-
-
-
-
+        //System.out.println("\n\nSteps Between: " + mn5.getStepsBetweenSteps(mn5.getStep(id), mn5.getStep(id2)));
     }
 }
