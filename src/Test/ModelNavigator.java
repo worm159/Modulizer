@@ -56,7 +56,7 @@ public class ModelNavigator {
         visited.add(step);
         //System.out.println("Beretis besucht: " + visited.size());
 
-        if (getNextSteps(step).size() == 1)
+        if (getNextSteps(step).size() <= 1)
             if (isExitToEntry(entry, step)) return step;
 
         for (ProcessStepModel next: getNextSteps(step)) {
