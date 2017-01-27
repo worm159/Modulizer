@@ -1,5 +1,6 @@
 package modulizer.algorithms;
 
+import modulizer.model.ModelNavigator;
 import uflow.data.function.immutable.ProceedFunction;
 import uflow.data.function.immutable.ProcessFunction;
 import uflow.data.function.modifier.ProceedFunctionModifier;
@@ -23,7 +24,9 @@ public class SingleEntrySingleExit extends ModularizationAlgorithm{
 
     private Map<String,ProcessStepModel> seseEndSteps;
     private boolean dataObjectFlows = false;
-    private int minimalSese = 4;
+    private int minimalSteps = 4;
+
+    ModelNavigator mn;
 
     /**
      * initializes all the lists and maps,
@@ -32,20 +35,21 @@ public class SingleEntrySingleExit extends ModularizationAlgorithm{
      *
      * @param model the model that should be modularized
      * @param dataObjectFlows boolean if the Data Object Flows should be considered or not
-     * @param minimalSese the minimal number of steps a valid SESE must contain
+     * @param minimalSteps the minimal number of steps a valid SESE must contain
      */
-    public SingleEntrySingleExit(ProcessModel model, boolean dataObjectFlows, int minimalSese) {
+    public SingleEntrySingleExit(ProcessModel model, boolean dataObjectFlows, int minimalSteps) {
         super(model);
         seseEndSteps = new HashMap<>();
         this.dataObjectFlows = dataObjectFlows;
-        if(minimalSese > 4) {
-            this.minimalSese = minimalSese;
+        if(minimalSteps > 4) {
+            this.minimalSteps = minimalSteps;
         }
 
         // create the first ProcessModelModifier and increase the modelNumber
         currentModel = new ProcessModelModifier().setId("Model1");
         models.put("Model1",currentModel);
         modelNumber = 2;
+        mn = new ModelNavigator(model,dataObjectFlows,minimalSteps);
     }
 
     /**
