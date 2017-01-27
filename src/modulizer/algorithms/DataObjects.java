@@ -9,9 +9,7 @@ import uflow.data.model.modifier.ProcessModelModifier;
 import uflow.data.model.modifier.ProcessUnitModelModifier;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Brigitte on 28.12.2016.
@@ -98,9 +96,9 @@ public class DataObjects extends ModularizationAlgorithm {
      * @param modelId the id of the model we want to get
      */
     private void getCurrentModel(String modelId) {
-        if(models.containsKey(modelId)) {
+        if(models.containsKey(modelId))
             currentModel = models.get(modelId);
-        } else {
+        else {
             currentModel = new ProcessModelModifier().setId(modelId);
             models.put(modelId,currentModel);
         }

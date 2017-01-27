@@ -272,10 +272,13 @@ public class ModelNavigator {
 
         for (ProcessFunction func : step.getProcessFunctions()) {
             if (func.getClass() == ProceedFunction.class) {
+                String qualifier = step.getId().getQualifier();
+                String context = step.getId().getContext();
+                String modelId = context.substring(0,context.indexOf('/')+1);
                 if (((ProceedFunction)func).getTargetProcessUnit().equals(""))
-                    id = new Id("ProcessStepModel", ((ProceedFunction)func).getNext(), step.getId().getContext());
+                    id = new Id(qualifier, ((ProceedFunction)func).getNext(), context);
                 else
-                    id = new Id("ProcessStepModel", ((ProceedFunction)func).getNext(), ((ProceedFunction)func).getTargetProcessUnit());
+                    id = new Id(qualifier, ((ProceedFunction)func).getNext(), modelId + ((ProceedFunction)func).getTargetProcessUnit());
 
                 if (getStep(id) != null)
                     steps.add( getStep(id) );

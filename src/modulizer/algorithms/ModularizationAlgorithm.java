@@ -144,12 +144,13 @@ public abstract class ModularizationAlgorithm {
     ProcessUnitModelModifier getUnitModifier(ProcessStepModel step) {
         ProcessUnitModelModifier unitModifier;
         // try to get the Unit to which the Step belongs
+        String unitId = step.getId().getContext().split("/")[1];
         ProcessUnitModel unitModel = currentModel.getProcessModel()
-                .getProcessUnitModels().get(step.getId().getContext());
+                .getProcessUnitModels().get(unitId);
         if(unitModel == null) {
             // if the Unit does not exist it has to be created
             unitModifier = new ProcessUnitModelModifier();
-            currentModel.setProcessUnitModel(step.getId().getContext(), unitModifier.getProcessUnitModel());
+            currentModel.setProcessUnitModel(unitId, unitModifier.getProcessUnitModel());
         } else {
             unitModifier = new ProcessUnitModelModifier(unitModel);
         }
