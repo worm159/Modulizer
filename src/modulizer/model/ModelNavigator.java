@@ -304,12 +304,24 @@ public class ModelNavigator {
         return null;
     }
 
+    public ArrayList<ProcessStepModel> getPrevSteps(ProcessStepModel step) {
+        ArrayList<ProcessStepModel> steps = new ArrayList<>();
+
+        steps = getPrevStepsNext(step);
+
+        if (this.dataObjectFlows) {
+            steps.addAll(getPrevStepsDO(step));
+        }
+
+        return steps;
+    }
+
     /**
      * Liefert alle direkten vorgänger Steps des übergenen Steps
      * @param step
      * @return
      */
-    public ArrayList<ProcessStepModel> getPrevSteps(ProcessStepModel step) {
+    public ArrayList<ProcessStepModel> getPrevStepsNext(ProcessStepModel step) {
         ArrayList<ProcessStepModel> steps = new ArrayList<>();
         Id id = null;
 
@@ -326,6 +338,36 @@ public class ModelNavigator {
                             steps.add(step_tmp);
                     }
                 }
+        return steps;
+    }
+
+    public ArrayList<ProcessStepModel> getPrevStepsDO(ProcessStepModel step) {
+        ArrayList<ProcessStepModel> steps = new ArrayList<>();
+
+        /* RequireFunction des übergebenen step finden und Unit und Key herausfinden */
+        String context = step.getId().getContext();
+        String unit = context.substring(context.indexOf('/')+1, context.length());
+        String key = "";
+        for (ProcessFunction func : step.getProcessFunctions())
+            if (func.getClass() == RequireFunction.class)
+                for (DataMap.Entry o : (DataMap)func.getDataItem())
+                    for (Object i : (DataList) o.getDataList()) {
+                        key = i.toString();
+                        /* Alle Steps finden, die in ihrer ProvideFunction die Unit und den Key hinterlegt haben */
+                        for (ProcessUnitModel u : m.getProcessUnitModels().getValues())
+                            for (ProcessStepModel step_tmp : u.getProcessStepModels().getValues())
+                                for (ProcessFunction f : step_tmp.getProcessFunctions())
+                                    if (f.getClass() == ProvideFunction.class) {
+                                        DataMap dm = (DataMap) f.getDataItem();
+                                        if (dm.get("To").toString().equals(unit) && dm.get("Key").toString().equals(key))
+                                            steps.add(step_tmp);
+                                    }
+                    }
+
+
+
+        //System.out.println("Unit: " + unit);
+        //System.out.println("Key: " + key);
         return steps;
     }
 
