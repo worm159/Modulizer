@@ -2,6 +2,7 @@ package Test;
 
 import modulizer.factory.ProcessModelFactory;
 import modulizer.model.ModelNavigator;
+import uflow.data.base.DataItem;
 import uflow.data.common.immutable.Id;
 import uflow.data.model.immutable.ProcessModel;
 
@@ -75,5 +76,18 @@ public class Test {
         System.out.println("\n\nExit: " + mn5.getSESEExitToEntry(mn5.getStep(id)));
 
         //System.out.println("\n\nSteps Between: " + mn5.getStepsBetweenSteps(mn5.getStep(id), mn5.getStep(id2)));
+
+        System.out.println("=========================================================================================");
+        ProcessModel test6 = ProcessModelFactory.createPurchaseProduct();
+        ModelNavigator mn6 = new ModelNavigator(test6, false, 1);
+        id = new Id("ProcessStepModel", "SendApprovalRequest", "PurchaseProduct/Requester");
+        System.out.println(mn6.getStep(id));
+        System.out.println("X: " + mn6.getNextSteps(mn6.getStep(id)).size());
+
+        id = new Id("ProcessStepModel", "SendApprovalResponse", "PurchaseProduct/Approver");
+        System.out.println("");
+        System.out.println("Y: " +mn6.getNextSteps(mn6.getStep(id)));
+
+        //mn6.getNextStepsDO();
     }
 }

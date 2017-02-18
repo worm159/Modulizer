@@ -1,8 +1,14 @@
 package modulizer.model;
 
+import uflow.data.base.DataItem;
+import uflow.data.base.DataList;
+import uflow.data.base.DataMap;
+import uflow.data.base.DataValue;
 import uflow.data.common.immutable.Id;
 import uflow.data.function.immutable.ProceedFunction;
 import uflow.data.function.immutable.ProcessFunction;
+import uflow.data.function.immutable.ProvideFunction;
+import uflow.data.function.immutable.RequireFunction;
 import uflow.data.model.immutable.ProcessModel;
 import uflow.data.model.immutable.ProcessStepModel;
 import uflow.data.model.immutable.ProcessUnitModel;
@@ -323,12 +329,24 @@ public class ModelNavigator {
         return steps;
     }
 
+    public ArrayList<ProcessStepModel> getNextSteps(ProcessStepModel step) {
+        ArrayList<ProcessStepModel> steps = new ArrayList<>();
+
+        steps = getNextStepsNext(step);
+
+        if (this.dataObjectFlows) {
+            steps.addAll(getNextStepsDO(step));
+        }
+
+        return steps;
+    }
+
     /**
      * Liefert alle direkten nachfolger Steps des übergebnen Steps
      * @param step
      * @return
      */
-    public ArrayList<ProcessStepModel> getNextSteps(ProcessStepModel step) {
+    public ArrayList<ProcessStepModel> getNextStepsNext(ProcessStepModel step) {
         if (step == null) return null;
 
         ArrayList<ProcessStepModel> steps = new ArrayList<>();
@@ -351,5 +369,41 @@ public class ModelNavigator {
         }
 
         return steps;
+    }
+
+    public ArrayList<ProcessStepModel> getNextStepsDO (ProcessStepModel step) {
+        ArrayList<ProcessStepModel> steps = new ArrayList<>();
+
+        Id id = null;
+
+        for (ProcessFunction func : step.getProcessFunctions()) {
+            if (func.getClass() == ProvideFunction.class) {
+                DataMap dm = (DataMap) func.getDataItem();
+                steps.add(getStepDO(dm.get("To").toString(), dm.get("Key").toString()));
+            }
+        }
+
+        return steps;
+    }
+
+    public ProcessStepModel getStepDO(String unit, String key) {
+
+        /* Finde RequireFunction für den gesuchten Value in der gesuchten Unit */
+        ProcessStepModel step = null;
+        Id id = null;
+
+        for (ProcessUnitModel u : m.getProcessUnitModels().getValues() )
+            if (u.getName().equals(unit))
+                for (ProcessStepModel step_tmp : u.getProcessStepModels().getValues())
+                    for (ProcessFunction func : step_tmp.getProcessFunctions()) {
+                        if (func.getClass() == RequireFunction.class) {
+                            DataMap dm = (DataMap)func.getDataItem();
+                            for (DataMap.Entry o : dm)
+                                if (o.getDataList().contains(key))
+                                    return step_tmp;
+                    }
+                }
+
+        return step;
     }
 }
