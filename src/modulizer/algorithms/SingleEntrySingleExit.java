@@ -117,7 +117,7 @@ public class SingleEntrySingleExit extends ModularizationAlgorithm{
                         new ProcessStepModelModifier(copiedStep).removeProcessFunction(func);
                     }
                     unitModifier.setProcessStepModel(copiedStep.getId().getKey(),copiedStep);
-                } else if (mn.getNextSteps(step).size()==1) {
+                } else if (mn.getNextSteps(step).size()<=1) {
                     // if the Step has maximum one ProceedFunction put it in the currentModel
                     finished.add(step.getId());
                     if (mn.getNextSteps(step).size()==1) {
