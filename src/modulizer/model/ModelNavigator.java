@@ -22,6 +22,7 @@ import java.util.ArrayList;
  */
 public class ModelNavigator {
 
+    private static final String MODELTYPE = "ProcessStepModel";
     private ProcessModel m;
     private boolean dataObjectFlows;
     private int minimalSteps;
@@ -59,7 +60,7 @@ public class ModelNavigator {
 
         ProcessStepModel ret = null;
 
-        ArrayList<ProcessStepModel> visited = new ArrayList<ProcessStepModel>();
+        ArrayList<ProcessStepModel> visited = new ArrayList<>();
 
         for (ProcessStepModel next : getNextSteps(entry))
             if (isStepBeforeStep(next, entry))
@@ -83,7 +84,7 @@ public class ModelNavigator {
      * @return
      */
     public int getStepsBetweenSteps(ProcessStepModel step1, ProcessStepModel step2) {
-        ArrayList<ProcessStepModel> visited = new ArrayList<ProcessStepModel>();
+        ArrayList<ProcessStepModel> visited = new ArrayList<>();
 
         isExitToEntryForward(step1, step2, visited);
 
@@ -102,15 +103,14 @@ public class ModelNavigator {
         visited.add(step);
 
         // Ist nur ein Exit, wenn nur 1, oder kein Nachfolger ist
-        if (getNextSteps(step).size() <= 1)
-            if (isExitToEntry(entry, step)) return step;
+        if (getNextSteps(step).size() <= 1 && isExitToEntry(entry, step))
+            return step;
 
         for (ProcessStepModel next: getNextSteps(step)) {
-            if (isStepInArrayList(next, visited))
-                ; //System.out.println("!!Forward: Schleife entdeckt! ("+next.getName()+")");
-            else
+            if (!isStepInArrayList(next, visited))
                 ret = getSESEExitToEntry(entry, next, visited);
-            if (ret != null) return ret;
+            if (ret != null)
+                return ret;
         }
 
         return ret;
@@ -125,14 +125,13 @@ public class ModelNavigator {
     public boolean isExitToEntry(ProcessStepModel entry, ProcessStepModel exit) {
 
         boolean ret = true;
-        ArrayList<ProcessStepModel> visited = new ArrayList<ProcessStepModel>();
+        ArrayList<ProcessStepModel> visited = new ArrayList<>();
 
-        System.out.println("Start Forward ***************************************************************************");
         ret = ret && isExitToEntryForward(entry, exit, visited);
-        if (!ret) return false;
+        if (!ret)
+            return false;
 
         visited = new ArrayList<ProcessStepModel>();
-        System.out.println("Start Backward **************************************************************************");
         ret = ret && isExitToEntryBackward(entry, exit, visited);
 
         return ret;
@@ -148,15 +147,16 @@ public class ModelNavigator {
     private boolean isExitToEntryForward(ProcessStepModel entry, ProcessStepModel exit, ArrayList<ProcessStepModel> visited) {
         visited.add(entry);
 
-        if (entry == null)                      return false;
-        if (entry.equals(exit))                 return true;
-        if (getNextSteps(entry).size() == 0)    return false;
+        if (entry == null)
+            return false;
+        if (entry.equals(exit))
+            return true;
+        if (getNextSteps(entry).size() == 0)
+            return false;
 
         boolean ret = true;
         for (ProcessStepModel next: getNextSteps(entry)) {
-            if (isStepInArrayList(next, visited))
-                ;
-            else
+            if (!isStepInArrayList(next, visited))
                 ret = ret && isExitToEntryForward(next, exit, visited);
         }
 
@@ -172,16 +172,16 @@ public class ModelNavigator {
     private boolean isExitToEntryBackward(ProcessStepModel entry, ProcessStepModel exit, ArrayList<ProcessStepModel> visited) {
         visited.add(exit);
 
-        if (exit == null)                      return false;
-        if (entry.equals(exit))                return true;
-        if (getPrevSteps(exit).size() == 0)    return false;
+        if (exit == null)
+            return false;
+        if (entry.equals(exit))
+            return true;
+        if (getPrevSteps(exit).size() == 0)
+            return false;
 
         boolean ret = true;
         for (ProcessStepModel prev: getPrevSteps(exit)) {
-            if (isStepInArrayList(prev, visited))
-                ;
-
-            else
+            if (!isStepInArrayList(prev, visited))
                 ret = ret && isExitToEntryBackward(entry, prev, visited);
         }
 
@@ -204,7 +204,7 @@ public class ModelNavigator {
 
     /**
      * Überprüft, ob step1 im Prozessmodell vohr step2 ausgeführt wird. Dient zum erkennen von Schleifen im
-     * Prozessmodell. Zum finden wird die Rekursive Methode isStepBeforeStep_2 aufgerufen
+     * Prozessmodell. Zum finden wird die Rekursive Methode isStepBeforeStepRekursiv aufgerufen
      * @param step1
      * @param step2
      * @return
@@ -212,7 +212,7 @@ public class ModelNavigator {
     public boolean isStepBeforeStep(ProcessStepModel step1, ProcessStepModel step2) {
         ArrayList<ProcessStepModel> visited = new ArrayList<>();
 
-        return isStepBeforeStep_2(step1, step2, visited);
+        return isStepBeforeStepRekursiv(step1, step2, visited);
     }
 
     /**
@@ -221,7 +221,7 @@ public class ModelNavigator {
      * @param step2
      * @return
      */
-    private boolean isStepBeforeStep_2(ProcessStepModel step1, ProcessStepModel step2, ArrayList<ProcessStepModel> visited) {
+    private boolean isStepBeforeStepRekursiv(ProcessStepModel step1, ProcessStepModel step2, ArrayList<ProcessStepModel> visited) {
         if (step2 == null)          return false;
         if (step1.equals(step2))    return true;
 
@@ -233,8 +233,9 @@ public class ModelNavigator {
 
         boolean ret = false;
         for (ProcessStepModel prev: getPrevSteps(step2)) {
-            if (prev.equals(step1)) { return true; } // Ist Vorgänger
-            ret = ret || isStepBeforeStep_2(step1, prev, visited);
+            if (prev.equals(step1))
+                return true; // Ist Vorgänger
+            ret = ret || isStepBeforeStepRekursiv(step1, prev, visited);
         }
 
         return ret;
@@ -245,12 +246,16 @@ public class ModelNavigator {
      * @param step1
      * @param step2
      * @return
+     * @deprecated Veraltet, wird nicht mehr benötigt. Fehlerfreie Funktion kann nicht garantiert werden!
      */
     @Deprecated
     public boolean isStepAfterStep(ProcessStepModel step1, ProcessStepModel step2) {
-        if (step2 == null)                      return false;
-        if (step1.equals(step2))                return true;
-        if (getPrevSteps(step2).size() == 0)    return false;
+        if (step2 == null)
+            return false;
+        if (step1.equals(step2))
+            return true;
+        if (getPrevSteps(step2).size() == 0)
+            return false;
 
         boolean ret = false;
         for (ProcessStepModel prev: getNextSteps(step2))
@@ -262,6 +267,7 @@ public class ModelNavigator {
     /**
      * Gibt textuell das gesamte Modell aus
      * @return
+     * @deprecated Veraltet, wird nicht mehr benötigt. Fehlerfreie Funktion kann nicht garantiert werden!
      */
     @Deprecated
     public String printModel() {
@@ -275,6 +281,7 @@ public class ModelNavigator {
     /**
      * Rekursive Methode zur ausgabe des Modelles
      * @param step
+     * @deprecated Veraltet, wird nicht mehr benötigt. Fehlerfreie Funktion kann nicht garantiert werden!
      */
     @Deprecated
     private void printStep(ProcessStepModel step) {
@@ -293,7 +300,7 @@ public class ModelNavigator {
 
         for (ProcessUnitModel unit : m.getProcessUnitModels().getValues() )
             if (unit.getStartProcessStep() != null)
-                steps.add(getStep(new Id("ProcessStepModel", unit.getStartProcessStep(), unit.getId().getContext() + "/" + unit.getId().getKey())));
+                steps.add(getStep(new Id(MODELTYPE, unit.getStartProcessStep(), unit.getId().getContext() + "/" + unit.getId().getKey())));
 
         return steps;
     }
@@ -302,8 +309,9 @@ public class ModelNavigator {
      * Liefert das Step Objekt des übergebenen Strings (=Name) zurück
      * @param step_id
      * @return
-     * @deprecated
+     * @deprecated Veraltet, wird nicht mehr benötigt. Fehlerfreie Funktion kann nicht garantiert werden!
      */
+    @Deprecated
     public ProcessStepModel getStep(String step_id) {
         for (ProcessUnitModel unit : m.getProcessUnitModels().getValues() )
             for (ProcessStepModel step : unit.getProcessStepModels().getValues())
@@ -332,9 +340,7 @@ public class ModelNavigator {
      * @return
      */
     public ArrayList<ProcessStepModel> getPrevSteps(ProcessStepModel step) {
-        ArrayList<ProcessStepModel> steps = new ArrayList<>();
-
-        steps = getPrevStepsNext(step);
+        ArrayList<ProcessStepModel> steps  = getPrevStepsNext(step);
 
         if (this.dataObjectFlows) {
             steps.addAll(getPrevStepsDO(step));
@@ -357,9 +363,9 @@ public class ModelNavigator {
                 for (ProcessFunction func : step_tmp.getProcessFunctions()) {
                     if (func.getClass() == ProceedFunction.class) {
                         if (((ProceedFunction) func).getTargetProcessUnit().equals(""))
-                            id = new Id("ProcessStepModel", ((ProceedFunction) func).getNext(), step.getId().getContext());
+                            id = new Id(MODELTYPE, ((ProceedFunction) func).getNext(), step.getId().getContext());
                         else
-                            id = new Id("ProcessStepModel", ((ProceedFunction) func).getNext(), unit.getId().getContext() + "/" + ((ProceedFunction) func).getTargetProcessUnit());
+                            id = new Id(MODELTYPE, ((ProceedFunction) func).getNext(), unit.getId().getContext() + "/" + ((ProceedFunction) func).getTargetProcessUnit());
 
                         if (getStep(id) != null && getStep(id).equals(step))
                             steps.add(step_tmp);
@@ -379,7 +385,7 @@ public class ModelNavigator {
         /* RequireFunction des übergebenen step finden und Unit und Key herausfinden */
         String context = step.getId().getContext();
         String unit = context.substring(context.indexOf('/')+1, context.length());
-        String key = "";
+        String key;
         for (ProcessFunction func : step.getProcessFunctions())
             if (func.getClass() == RequireFunction.class)
                 for (DataMap.Entry o : (DataMap)func.getDataItem())
@@ -406,9 +412,7 @@ public class ModelNavigator {
      * @return
      */
     public ArrayList<ProcessStepModel> getNextSteps(ProcessStepModel step) {
-        ArrayList<ProcessStepModel> steps = new ArrayList<>();
-
-        steps = getNextStepsNext(step);
+        ArrayList<ProcessStepModel> steps = getNextStepsNext(step);
 
         if (this.dataObjectFlows) {
             steps.addAll(getNextStepsDO(step));
@@ -424,7 +428,8 @@ public class ModelNavigator {
      * @return
      */
     public ArrayList<ProcessStepModel> getNextStepsNext(ProcessStepModel step) {
-        if (step == null) return null;
+        if (step == null)
+            return null;
 
         ArrayList<ProcessStepModel> steps = new ArrayList<>();
 
