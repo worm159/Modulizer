@@ -1,9 +1,7 @@
 package modulizer.model;
 
-import uflow.data.base.DataItem;
 import uflow.data.base.DataList;
 import uflow.data.base.DataMap;
-import uflow.data.base.DataValue;
 import uflow.data.common.immutable.Id;
 import uflow.data.function.immutable.ProceedFunction;
 import uflow.data.function.immutable.ProcessFunction;
@@ -17,6 +15,10 @@ import java.util.ArrayList;
 
 /**
  * Created by augus on 05.01.2017.
+ * Bietet Methoden um durch ein UFlow Modell zu Navigieren. Es können einzelne Prozessschritte gesucht werden. Zu den
+ * Prozessschritten können dessen Vorgänger und Nachfolger gefunden werden. Und dies in Abhängigkeit, ob es sich um
+ * einen DataObjekt verweis, oder einen "Next" verweis handelt.
+ * Zusätzlich bildet diese Klasse den SESE (Single Enrty, Single Exit) Algorithmus ab.
  */
 public class ModelNavigator {
 
@@ -24,25 +26,27 @@ public class ModelNavigator {
     private boolean dataObjectFlows;
     private int minimalSteps;
 
-    private int stepcounter;
-
+    /**
+     * @param m Das Modell, durch das Navigiert werden soll
+     * @param dataObjectFlows Wenn ture, dann werden DataObjektFlows als Verweis zu nächstem Step gewertet
+     * @param minimalSteps Anzahl der Steps, die midestens Notwendig sind, damit ein Modell geteilt wird
+     */
     public ModelNavigator(ProcessModel m, boolean dataObjectFlows, int minimalSteps) {
         this.m               = m;
         this.dataObjectFlows = dataObjectFlows;
         this.minimalSteps    = minimalSteps;
     }
 
+    /**
+     * @param m
+     * @param dataObjectFlows
+     */
     public ModelNavigator(ProcessModel m, boolean dataObjectFlows) {
         this.m               = m;
         this.dataObjectFlows = dataObjectFlows;
         this.minimalSteps    = 0;
     }
 
-    public ProcessStepModel getSESEEntry() {
-        //System.out.println(getFirstSteps(m));
-
-        return null;
-    }
 
     /**
      * Liefert das SESE Ende zum übergebenen Step. Falls kein SESE Ende vorhanden ist, wird null zurückgegeben.
@@ -72,6 +76,12 @@ public class ModelNavigator {
         return ret;
     }
 
+    /**
+     * Liefert die Anzahl der Prozessschritte, welche zwischen den Beiden übergenenen Prozessschritten sind
+     * @param step1
+     * @param step2
+     * @return
+     */
     public int getStepsBetweenSteps(ProcessStepModel step1, ProcessStepModel step2) {
         ArrayList<ProcessStepModel> visited = new ArrayList<ProcessStepModel>();
 
@@ -90,7 +100,6 @@ public class ModelNavigator {
         ProcessStepModel ret = null;
 
         visited.add(step);
-        //System.out.println("Beretis besucht: " + visited.size());
 
         // Ist nur ein Exit, wenn nur 1, oder kein Nachfolger ist
         if (getNextSteps(step).size() <= 1)
@@ -130,7 +139,8 @@ public class ModelNavigator {
     }
 
     /**
-     * Überprüfen, ob alle nachfolgenden Pfade zu step führen
+     * Überprüfen, ob alle nachfolgenden Pfade des Eingangsschrittes zum Ausgangsschritt führen. Wenn false, dann handelt
+     * es sich nicht um einen SESE Eingang, bzw. SESE Ausgang.
      * @param entry
      * @param exit
      * @return
@@ -145,7 +155,7 @@ public class ModelNavigator {
         boolean ret = true;
         for (ProcessStepModel next: getNextSteps(entry)) {
             if (isStepInArrayList(next, visited))
-                ; //System.out.println("!!Forward: Schleife entdeckt! ("+next.getName()+")");
+                ;
             else
                 ret = ret && isExitToEntryForward(next, exit, visited);
         }
@@ -160,9 +170,6 @@ public class ModelNavigator {
      * @return
      */
     private boolean isExitToEntryBackward(ProcessStepModel entry, ProcessStepModel exit, ArrayList<ProcessStepModel> visited) {
-        //System.out.println("- Bereits besuchte Steps: " + visited.size());
-        //System.out.println(" isExitToEntryBackward("+entry.getName()+", " +exit.getName()+")");
-
         visited.add(exit);
 
         if (exit == null)                      return false;
@@ -172,7 +179,7 @@ public class ModelNavigator {
         boolean ret = true;
         for (ProcessStepModel prev: getPrevSteps(exit)) {
             if (isStepInArrayList(prev, visited))
-                ; //System.out.println("!!Backward: Schleife entdeckt! ("+prev.getName()+")");
+                ;
 
             else
                 ret = ret && isExitToEntryBackward(entry, prev, visited);
@@ -181,6 +188,12 @@ public class ModelNavigator {
         return ret;
     }
 
+    /**
+     * Hiltsmethode. Überprüft ob ein ProcessStepModel Objekt in einer Arraylist aus ProcessStepModel vorhanden ist
+     * @param step
+     * @param visited
+     * @return
+     */
     private boolean isStepInArrayList(ProcessStepModel step, ArrayList<ProcessStepModel> visited) {
         for (ProcessStepModel x : visited)
             if (x.equals(step))
@@ -189,6 +202,13 @@ public class ModelNavigator {
         return false;
     }
 
+    /**
+     * Überprüft, ob step1 im Prozessmodell vohr step2 ausgeführt wird. Dient zum erkennen von Schleifen im
+     * Prozessmodell. Zum finden wird die Rekursive Methode isStepBeforeStep_2 aufgerufen
+     * @param step1
+     * @param step2
+     * @return
+     */
     public boolean isStepBeforeStep(ProcessStepModel step1, ProcessStepModel step2) {
         ArrayList<ProcessStepModel> visited = new ArrayList<>();
 
@@ -202,10 +222,8 @@ public class ModelNavigator {
      * @return
      */
     private boolean isStepBeforeStep_2(ProcessStepModel step1, ProcessStepModel step2, ArrayList<ProcessStepModel> visited) {
-        if (step2 == null)
-            return false;
-        if (step1.equals(step2))
-            return true;
+        if (step2 == null)          return false;
+        if (step1.equals(step2))    return true;
 
         for (ProcessStepModel visitedstep : visited)
             if (visitedstep.equals(step2))
@@ -215,7 +233,7 @@ public class ModelNavigator {
 
         boolean ret = false;
         for (ProcessStepModel prev: getPrevSteps(step2)) {
-            if (prev.equals(step1)) { System.out.println("ist Vorgänger!");  return true; }
+            if (prev.equals(step1)) { return true; } // Ist Vorgänger
             ret = ret || isStepBeforeStep_2(step1, prev, visited);
         }
 
@@ -228,6 +246,7 @@ public class ModelNavigator {
      * @param step2
      * @return
      */
+    @Deprecated
     public boolean isStepAfterStep(ProcessStepModel step1, ProcessStepModel step2) {
         if (step2 == null)                      return false;
         if (step1.equals(step2))                return true;
@@ -244,6 +263,7 @@ public class ModelNavigator {
      * Gibt textuell das gesamte Modell aus
      * @return
      */
+    @Deprecated
     public String printModel() {
 
         for (ProcessStepModel step: getFirstSteps())
@@ -256,6 +276,7 @@ public class ModelNavigator {
      * Rekursive Methode zur ausgabe des Modelles
      * @param step
      */
+    @Deprecated
     private void printStep(ProcessStepModel step) {
         System.out.println(step);
         for (ProcessStepModel next: getNextSteps(step))
@@ -267,7 +288,7 @@ public class ModelNavigator {
      * Liefert alle Start Steps (aller Units) in einer ArrayList zurück
      * @return
      */
-    public ArrayList<ProcessStepModel> getFirstSteps() { /***********************************************/
+    public ArrayList<ProcessStepModel> getFirstSteps() {
         ArrayList<ProcessStepModel> steps = new ArrayList<>();
 
         for (ProcessUnitModel unit : m.getProcessUnitModels().getValues() )
@@ -283,7 +304,7 @@ public class ModelNavigator {
      * @return
      * @deprecated
      */
-    public ProcessStepModel getStep(String step_id) { /************************************************/
+    public ProcessStepModel getStep(String step_id) {
         for (ProcessUnitModel unit : m.getProcessUnitModels().getValues() )
             for (ProcessStepModel step : unit.getProcessStepModels().getValues())
                 if (step.getName().equals(step_id))
@@ -304,6 +325,12 @@ public class ModelNavigator {
         return null;
     }
 
+    /**
+     * Liefert alle direkten vorgänger Steps des übergenen Steps. Abhängig vom im Konstruktor gesetzten Parameter
+     * dataObjectFlow, werden auch DataObjectFlows als Vorgänger gewertet.
+     * @param step
+     * @return
+     */
     public ArrayList<ProcessStepModel> getPrevSteps(ProcessStepModel step) {
         ArrayList<ProcessStepModel> steps = new ArrayList<>();
 
@@ -317,7 +344,7 @@ public class ModelNavigator {
     }
 
     /**
-     * Liefert alle direkten vorgänger Steps des übergenen Steps
+     * Liefert alle Vorgänger des übergebenen Step Objektes zurück, welche mit "getNext(..)" auf dieses Step verweisen
      * @param step
      * @return
      */
@@ -341,6 +368,11 @@ public class ModelNavigator {
         return steps;
     }
 
+    /**
+     * Liefert alle DataObjectFlow Vorgänger des übergenen steps zurück.
+     * @param step
+     * @return
+     */
     public ArrayList<ProcessStepModel> getPrevStepsDO(ProcessStepModel step) {
         ArrayList<ProcessStepModel> steps = new ArrayList<>();
 
@@ -364,13 +396,15 @@ public class ModelNavigator {
                                     }
                     }
 
-
-
-        //System.out.println("Unit: " + unit);
-        //System.out.println("Key: " + key);
         return steps;
     }
 
+    /**
+     * Liefert alle direkten nachfolger Steps des übergebnen Steps. Abhänig von der im Konstruktor gesetzten
+     * Variable dataObjectFlows, werden auch Empfänger von dataObjectsFlows als nächsten Schritt gewertet.
+     * @param step
+     * @return
+     */
     public ArrayList<ProcessStepModel> getNextSteps(ProcessStepModel step) {
         ArrayList<ProcessStepModel> steps = new ArrayList<>();
 
@@ -384,7 +418,8 @@ public class ModelNavigator {
     }
 
     /**
-     * Liefert alle direkten nachfolger Steps des übergebnen Steps
+     * Liefert alle Nachfolger des übergebenen Step Objektes zurück, auf welche mit "getNext(..)" von diesem
+     * Step verwiesen wird.
      * @param step
      * @return
      */
@@ -413,10 +448,13 @@ public class ModelNavigator {
         return steps;
     }
 
+    /**
+     * Liefert alle DataObjectFlow Nachfolger des übergenen steps zurück.
+     * @param step
+     * @return
+     */
     public ArrayList<ProcessStepModel> getNextStepsDO (ProcessStepModel step) {
         ArrayList<ProcessStepModel> steps = new ArrayList<>();
-
-        Id id = null;
 
         for (ProcessFunction func : step.getProcessFunctions()) {
             if (func.getClass() == ProvideFunction.class) {
@@ -428,11 +466,16 @@ public class ModelNavigator {
         return steps;
     }
 
+    /**
+     * Findet den Step einer Unit, welcher eine RequireFunction besitzt, welche den übergebenen key beinhaltet.
+     * @param unit
+     * @param key
+     * @return
+     */
     public ProcessStepModel getStepDO(String unit, String key) {
 
         /* Finde RequireFunction für den gesuchten Value in der gesuchten Unit */
         ProcessStepModel step = null;
-        Id id = null;
 
         for (ProcessUnitModel u : m.getProcessUnitModels().getValues() )
             if (u.getName().equals(unit))
