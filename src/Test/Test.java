@@ -2,6 +2,7 @@ package Test;
 
 import modulizer.factory.ProcessModelFactory;
 import modulizer.model.ModelNavigator;
+import uflow.data.base.DataItem;
 import uflow.data.common.immutable.Id;
 import uflow.data.model.immutable.ProcessModel;
 
@@ -75,5 +76,35 @@ public class Test {
         System.out.println("\n\nExit: " + mn5.getSESEExitToEntry(mn5.getStep(id)));
 
         //System.out.println("\n\nSteps Between: " + mn5.getStepsBetweenSteps(mn5.getStep(id), mn5.getStep(id2)));
+
+        System.out.println("=========================================================================================");
+        ProcessModel test6 = ProcessModelFactory.createPurchaseProduct();
+        ModelNavigator mn6 = new ModelNavigator(test6, false, 1);
+        id = new Id("ProcessStepModel", "SendApprovalRequest", "PurchaseProduct/Requester");
+        System.out.println(mn6.getStep(id));
+        System.out.println("X: " + mn6.getNextSteps(mn6.getStep(id)).size());
+
+        id = new Id("ProcessStepModel", "SendApprovalResponse", "PurchaseProduct/Approver");
+        System.out.println("");
+        System.out.println("Y: " +mn6.getNextSteps(mn6.getStep(id)));
+
+        //mn6.getNextStepsDO();
+
+
+        System.out.println("=========================================================================================");
+        ProcessModel test7 = ProcessModelFactory.createPurchaseProduct();
+        ModelNavigator mn7 = new ModelNavigator(test7, false, 1);
+        id = new Id("ProcessStepModel", "ReceiveApprovalRequest", "PurchaseProduct/Approver");
+        System.out.println(mn7.getStep(id));
+        System.out.println("X: " + mn7.getPrevStepsDO(mn7.getStep(id)));
+
+
+        System.out.println("=========================================================================================");
+        ProcessModel test8 = ProcessModelFactory.createDataObjectsV2();
+        ModelNavigator mn8 = new ModelNavigator(test8, true, 1);
+        id = new Id("ProcessStepModel", "Unit 1 Step 2", "DataObjectsV2/Unit-1");
+        System.out.println(mn8.getStep(id));
+        System.out.println("X(" + mn8.getPrevSteps(mn8.getStep(id)).size() + "): " + mn8.getPrevSteps(mn8.getStep(id)));
+
     }
 }
