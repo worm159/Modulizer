@@ -51,16 +51,20 @@ public class Print {
 
     private static void printProcessModel(ProcessModel model) {
         printedSteps.clear();
-        outputArea.append("Model: " + model.getId().getKey() + "\n");
-        for (ProcessUnitModel unit : model.getProcessUnitModels().getValues()) {
-            String startStep = unit.getStartProcessStep();
-            if (startStep != null && !startStep.isEmpty()) {
-                outputArea.append("Unit Start Process Step: " + unit.getName() + " - " + startStep + "\n");
-                ProcessStepModel step = unit.getProcessStepModels().get(startStep);
-                if (step != null && !printedSteps.contains(step.getId().getKey())) {
-                    printProcessSteps(step);
+        try {
+            outputArea.append("Model: " + model.getId().getKey() + "\n");
+            for (ProcessUnitModel unit : model.getProcessUnitModels().getValues()) {
+                String startStep = unit.getStartProcessStep();
+                if (startStep != null && !startStep.isEmpty()) {
+                    outputArea.append("Unit Start Process Step: " + unit.getName() + " - " + startStep + "\n");
+                    ProcessStepModel step = unit.getProcessStepModels().get(startStep);
+                    if (step != null && !printedSteps.contains(step.getId().getKey())) {
+                        printProcessSteps(step);
+                    }
                 }
             }
+        }catch(Exception e){
+            outputArea.append("Sorry an Error occured trying to print the model!");
         }
     }
 
@@ -115,13 +119,16 @@ public class Print {
         }
         boolean prevWithCycle = false;
         boolean prevWithoutCycle = false;
-        if(!prevFinished) {
+        if (!prevFinished) {
             //loop over the previous Steps of the current Step
             //check if the current Step is a previous Step of the previous Step -> cycle
-            for(ProcessStepModel prev : modelNavigator.getPrevSteps(step)){
-                boolean isPrev = modelNavigator.isStepBeforeStep(step,prev);
-                if(isPrev) prevWithCycle=true;
-                else if (!printedSteps.contains(prev.getId().getKey())) prevWithoutCycle=true;
+            for (ProcessStepModel prev : modelNavigator.getPrevSteps(step)) {
+                boolean isPrev = modelNavigator.isStepBeforeStep(step, prev);
+                if (isPrev) {
+                    prevWithCycle = true;
+                } else if (!printedSteps.contains(prev.getId().getKey())) {
+                    prevWithoutCycle = true;
+                }
             }
         }
         if (prevFinished || (prevWithCycle && !prevWithoutCycle)) {
