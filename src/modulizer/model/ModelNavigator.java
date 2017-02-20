@@ -124,17 +124,15 @@ public class ModelNavigator {
      */
     public boolean isExitToEntry(ProcessStepModel entry, ProcessStepModel exit) {
 
-        boolean ret = true;
+        boolean ret;
         ArrayList<ProcessStepModel> visited = new ArrayList<>();
 
-        ret = ret && isExitToEntryForward(entry, exit, visited);
+        ret = isExitToEntryForward(entry, exit, visited);
         if (!ret)
             return false;
 
         visited = new ArrayList<ProcessStepModel>();
-        ret = ret && isExitToEntryBackward(entry, exit, visited);
-
-        return ret;
+        return isExitToEntryBackward(entry, exit, visited);
     }
 
     /**
@@ -151,7 +149,7 @@ public class ModelNavigator {
             return false;
         if (entry.equals(exit))
             return true;
-        if (getNextSteps(entry).size() == 0)
+        if (getNextSteps(entry).isEmpty())
             return false;
 
         boolean ret = true;
@@ -176,7 +174,7 @@ public class ModelNavigator {
             return false;
         if (entry.equals(exit))
             return true;
-        if (getPrevSteps(exit).size() == 0)
+        if (getPrevSteps(exit).isEmpty())
             return false;
 
         boolean ret = true;
@@ -254,7 +252,7 @@ public class ModelNavigator {
             return false;
         if (step1.equals(step2))
             return true;
-        if (getPrevSteps(step2).size() == 0)
+        if (getPrevSteps(step2).isEmpty())
             return false;
 
         boolean ret = false;
@@ -356,13 +354,13 @@ public class ModelNavigator {
      */
     public ArrayList<ProcessStepModel> getPrevStepsNext(ProcessStepModel step) {
         ArrayList<ProcessStepModel> steps = new ArrayList<>();
-        Id id = null;
+        Id id;
 
         for (ProcessUnitModel unit : m.getProcessUnitModels().getValues() )
             for (ProcessStepModel step_tmp : unit.getProcessStepModels().getValues())
                 for (ProcessFunction func : step_tmp.getProcessFunctions()) {
                     if (func.getClass() == ProceedFunction.class) {
-                        if (((ProceedFunction) func).getTargetProcessUnit().equals(""))
+                        if (("").equals(((ProceedFunction) func).getTargetProcessUnit()))
                             id = new Id(MODELTYPE, ((ProceedFunction) func).getNext(), step.getId().getContext());
                         else
                             id = new Id(MODELTYPE, ((ProceedFunction) func).getNext(), unit.getId().getContext() + "/" + ((ProceedFunction) func).getTargetProcessUnit());
@@ -433,14 +431,14 @@ public class ModelNavigator {
 
         ArrayList<ProcessStepModel> steps = new ArrayList<>();
 
-        Id id = null;
+        Id id;
 
         for (ProcessFunction func : step.getProcessFunctions()) {
             if (func.getClass() == ProceedFunction.class) {
                 String qualifier = step.getId().getQualifier();
                 String context = step.getId().getContext();
                 String modelId = context.substring(0,context.indexOf('/')+1);
-                if (((ProceedFunction)func).getTargetProcessUnit().equals(""))
+                if (("").equals(((ProceedFunction)func).getTargetProcessUnit()))
                     id = new Id(qualifier, ((ProceedFunction)func).getNext(), context);
                 else
                     id = new Id(qualifier, ((ProceedFunction)func).getNext(), modelId + ((ProceedFunction)func).getTargetProcessUnit());

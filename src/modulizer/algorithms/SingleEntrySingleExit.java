@@ -173,8 +173,7 @@ public class SingleEntrySingleExit extends ModularizationAlgorithm{
                         // and the recursive method is called for all the following Steps
                         for(ProcessStepModel next : mn.getNextSteps(endStep)) {
                             String context = next.getId().getContext();
-                            String unit = context.substring(context.indexOf("/")+1);
-                            System.out.println(unit);
+                            String unit = context.substring(context.indexOf('/')+1);
                             modelStep.addProcessFunction(new ProceedFunctionModifier()
                                     .setTargetUnit(unit)
                                     .setNext(next.getId().getKey())

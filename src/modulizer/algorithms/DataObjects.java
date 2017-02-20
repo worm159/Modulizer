@@ -70,7 +70,7 @@ public class DataObjects extends ModularizationAlgorithm {
         }
         // loop over all the ProcessFunctions of this step
         for (ProcessFunction func : processStep.getProcessFunctions()) {
-            if(func.getClass().getName().equals("uflow.data.function.immutable.ProceedFunction")) {
+            if(("uflow.data.function.immutable.ProceedFunction").equals(func.getClass().getName())) {
                 // if it is a ProceedFunction save the function, the target Unit and the next Step
                 ProceedFunction f = (ProceedFunction) func;
                 String targetProcessUnit = f.getTargetProcessUnit();

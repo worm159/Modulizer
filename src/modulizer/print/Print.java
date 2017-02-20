@@ -144,20 +144,18 @@ public class Print {
                         RequireFunction reqFunc = (RequireFunction) func;
                         outputArea.append("    Requires:   " + reqFunc.getValues() + "\n");
                         break;
-                    case "uflow.data.function.immutable.RequestInputFunction":
-                        /* not used */
-                        break;
                     case "uflow.data.function.immutable.ProvideFunction":
                         ProvideFunction provFunc = (ProvideFunction) func;
                         outputArea.append("    Provides:   " + provFunc.getValue() + "\n");
-                        break;
-                    case "uflow.data.function.immutable.CallFunction":
-                        /* not used */
                         break;
                     case "uflow.data.function.immutable.ProceedFunction":
                         ProceedFunction procFunc = (ProceedFunction) func;
                         outputArea.append("   Next Step:   " + procFunc.getNext() + "\n");
                         break;
+                    case "uflow.data.function.immutable.CallFunction":
+                        /* not used */
+                    case "uflow.data.function.immutable.RequestInputFunction":
+                        /* not used */
                     default:
                         break;
                 }
