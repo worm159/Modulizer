@@ -1104,9 +1104,9 @@ public class ProcessModelFactory {
                 ).getProcessModel();
     }
 
-    public static ProcessModel createDataObjectsMitSeseV1() {
+    public static ProcessModel createSeseMitDataFlowsV1() {
         return new ProcessModelModifier()
-                .setId("DataObjectsMitSeseV1")
+                .setId("SeseMitDataFlowsV1")
                 .setName("Data Objects Mit Sese V1")
                 .setDescription("Testbeispiel für Modularisierung Data Objects Mit Sese V1")
 
@@ -1174,9 +1174,9 @@ public class ProcessModelFactory {
                 ).getProcessModel();
     }
 
-    public static ProcessModel createDataObjectsMitSeseV2() {
+    public static ProcessModel createSeseMitDataFlowsV2() {
         return new ProcessModelModifier()
-                .setId("DataObjectsMitSeseV2")
+                .setId("SeseMitDataFlowsV2")
                 .setName("Data Objects Mit Sese V2")
                 .setDescription("Testbeispiel für Modularisierung Data Objects Mit Sese V2")
 
