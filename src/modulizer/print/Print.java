@@ -29,11 +29,11 @@ public class Print {
         throw new IllegalAccessError("Print class");
     }
 
-    public static void printModel(ProcessModel model, String chosenAlgorithm, JTextArea jTextOutputArea, Boolean dataFlows) {
-        modelNavigator = new ModelNavigator(model, dataFlows);
+    public static void printModel(ProcessModel model, String chosenAlgorithm, JTextArea jTextOutputArea, boolean dataFlows) {
         outputArea = jTextOutputArea;
         switch (chosenAlgorithm) {
             case "Single Entry Single Exit":
+                modelNavigator = new ModelNavigator(model, dataFlows);
                 printProcessModel(model);
                 break;
             case "Data objects":
@@ -42,6 +42,7 @@ public class Print {
             case "Repetition":
             case "Clustering":
             case "Original":
+                modelNavigator = new ModelNavigator(model,true);
                 printProcessModel(model);
                 break;
             default:
@@ -56,9 +57,9 @@ public class Print {
             for (ProcessUnitModel unit : model.getProcessUnitModels().getValues()) {
                 String startStep = unit.getStartProcessStep();
                 if (startStep != null && !startStep.isEmpty()) {
-                    outputArea.append("Unit Start Process Step: " + unit.getName() + " - " + startStep + "\n");
                     ProcessStepModel step = unit.getProcessStepModels().get(startStep);
                     if (step != null && !printedSteps.contains(step.getId().getKey())) {
+                        outputArea.append("Unit Start Process Step: " + unit.getName() + " - " + startStep + "\n");
                         printProcessSteps(step);
                     }
                 }
@@ -164,6 +165,9 @@ public class Print {
             printedSteps.add(step.getId().getKey());
             outputArea.append("\n");
             List<ProcessStepModel> nextSteps = modelNavigator.getNextSteps(step);
+            for(ProcessStepModel x : nextSteps) {
+                System.out.println(x);
+            }
             for (ProcessStepModel nextStep : nextSteps) {
                 if (nextStep != null && !printedSteps.contains(nextStep.getId().getKey())) {
                     printProcessSteps(nextStep);
