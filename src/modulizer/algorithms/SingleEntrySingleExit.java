@@ -168,15 +168,18 @@ public class SingleEntrySingleExit extends ModularizationAlgorithm{
                         // the SESE Model is finished
                         // go back to the previous model
                         currentModel = prevModel;
-                        // loop over the ProcessFunctions of the seseEndStep
-                        // the ProceedFunctions are added to the Step that references the model
+                        // loop over the next ProcessStepModels of the endStep
+                        // a ProceedFunction for each is added to the Step that references the model
                         // and the recursive method is called for all the following Steps
-                        for(ProcessFunction func : endStep.getProcessFunctions()) {
-                            if ("uflow.data.function.immutable.ProceedFunction".equals(func.getClass().getName())) {
-                                modelStep.addProcessFunction(func);
-                                ProcessStepModel next = mn.getStep(((ProceedFunction)func).getNext());
-                                handleStep(next);
-                            }
+                        for(ProcessStepModel next : mn.getNextSteps(endStep)) {
+                            String context = next.getId().getContext();
+                            String unit = context.substring(context.indexOf("/")+1);
+                            System.out.println(unit);
+                            modelStep.addProcessFunction(new ProceedFunctionModifier()
+                                    .setTargetUnit(unit)
+                                    .setNext(next.getId().getKey())
+                                    .getProceedFunction());
+                            handleStep(next);
                         }
                     } else {
                         // if no seseEndStep was found continue in the current model
