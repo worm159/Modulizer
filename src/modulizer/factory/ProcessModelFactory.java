@@ -1107,8 +1107,8 @@ public class ProcessModelFactory {
     public static ProcessModel createSeseMitDataFlowsV1() {
         return new ProcessModelModifier()
                 .setId("SeseMitDataFlowsV1")
-                .setName("Data Objects Mit Sese V1")
-                .setDescription("Testbeispiel für Modularisierung Data Objects Mit Sese V1")
+                .setName("Sese Mit DataFlows V1")
+                .setDescription("Testbeispiel für Modularisierung Sese Mit DataFlows V1")
 
                 //Unit 1
                 .setProcessUnitModel("Unit-1", new ProcessUnitModelModifier()
@@ -1178,8 +1178,8 @@ public class ProcessModelFactory {
     public static ProcessModel createSeseMitDataFlowsV2() {
         return new ProcessModelModifier()
                 .setId("SeseMitDataFlowsV2")
-                .setName("Data Objects Mit Sese V2")
-                .setDescription("Testbeispiel für Modularisierung Data Objects Mit Sese V2")
+                .setName("Sese Mit DataFlows V2")
+                .setDescription("Testbeispiel für Modularisierung Sese Mit DataFlows V2")
 
                 //Unit 1
                 .setProcessUnitModel("Unit-1", new ProcessUnitModelModifier()
@@ -1266,11 +1266,11 @@ public class ProcessModelFactory {
 
     // Examples Clustering
 
-    public static ProcessModel createClusteringMitSeseV1() {
+    public static ProcessModel createSeseMitMindestanzahlV1() {
         return new ProcessModelModifier()
-                .setId("ClusteringMitSeseV1")
-                .setName("Clustering Mit Sese V1")
-                .setDescription("Testbeispiel für Modularisierung Clustering Mit Sese V1")
+                .setId("SeseMitMindestanzahlV1")
+                .setName("Sese mit Mindestanzahl V1")
+                .setDescription("Testbeispiel für Modularisierung Sese mit Mindestanzahl V1")
 
                 .setProcessUnitModel("Unit-1", new ProcessUnitModelModifier()
                         .setId("Unit-1")
@@ -1364,11 +1364,11 @@ public class ProcessModelFactory {
                 .getProcessModel();
     }
 
-    public static ProcessModel createClusteringMitSeseV2() {
+    public static ProcessModel createSeseMitMindestanzahlV2() {
         return new ProcessModelModifier()
-                .setId("ClusteringMitSeseV2")
-                .setName("Clustering Mit Sese V2")
-                .setDescription("Testbeispiel für Modularisierung Clustering Mit Sese V2")
+                .setId("SeseMitMindestanzahlV2")
+                .setName("Sese Mit Mindestanzahl V2")
+                .setDescription("Testbeispiel für Modularisierung Sese Mit Mindestanzahl V2")
 
                 .setProcessUnitModel("Unit-1", new ProcessUnitModelModifier()
                         .setId("Unit-1")
@@ -1462,11 +1462,11 @@ public class ProcessModelFactory {
                 .getProcessModel();
     }
 
-    public static ProcessModel createClusteringMitSeseV3() {
+    public static ProcessModel createSeseMitMindestanzahlV3() {
         return new ProcessModelModifier()
-                .setId("ClusteringMitSeseV3")
-                .setName("Clustering Mit Sese V3")
-                .setDescription("Testbeispiel für Modularisierung Clustering Mit Sese V3")
+                .setId("SeseMitMindestanzahlV3")
+                .setName("Sese Mit Mindestanzahl V3")
+                .setDescription("Testbeispiel für Modularisierung Sese Mit Mindestanzahl V3")
 
                 .setProcessUnitModel("Unit-1", new ProcessUnitModelModifier()
                         .setId("Unit-1")
