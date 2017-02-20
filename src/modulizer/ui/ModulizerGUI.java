@@ -123,8 +123,8 @@ public class ModulizerGUI extends javax.swing.JFrame {
         jCheckBoxDataFlows.setText("include Data Flows");
         jCheckBoxDataFlows.setToolTipText("");
 
-        jSpinnerMinElements.setModel(new javax.swing.SpinnerNumberModel(4, 4, null, 1));
-        jSpinnerMinElements.setToolTipText("4 Elements = modularize every time");
+        jSpinnerMinElements.setModel(new javax.swing.SpinnerNumberModel(3, 3, null, 1));
+        jSpinnerMinElements.setToolTipText("3 Elements = modularize every time");
 
         jLabelMinNumber.setText("min. Number of Elements for SESE Modularization");
 
@@ -306,7 +306,7 @@ public class ModulizerGUI extends javax.swing.JFrame {
             case "Repetition":
             case "Clustering":
             default:
-                jTextAreaOutputModularized.setText("Sorry! Something bad happend trying to use your chosen algorithm, please call your administrator!");
+                jTextAreaOutputModularized.setText("Sorry! Something bad happened trying to use your chosen algorithm, please call your administrator!");
                 break;
         }
         if (algorithm != null) {
