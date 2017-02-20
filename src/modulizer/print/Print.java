@@ -29,6 +29,13 @@ public class Print {
         throw new IllegalAccessError("Print class");
     }
 
+    /**
+     *
+     * @param model ProcessModel
+     * @param chosenAlgorithm chosenAlgorithm (Single Entry Single Exit, Data objects, Original)
+     * @param jTextOutputArea OutputArea were model should be printed
+     * @param dataFlows activated dataFlows for SESE Algorithm
+     */
     public static void printModel(ProcessModel model, String chosenAlgorithm, JTextArea jTextOutputArea, boolean dataFlows) {
         outputArea = jTextOutputArea;
         switch (chosenAlgorithm) {
