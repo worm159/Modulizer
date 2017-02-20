@@ -165,9 +165,6 @@ public class Print {
             printedSteps.add(step.getId().getKey());
             outputArea.append("\n");
             List<ProcessStepModel> nextSteps = modelNavigator.getNextSteps(step);
-            for(ProcessStepModel x : nextSteps) {
-                System.out.println(x);
-            }
             for (ProcessStepModel nextStep : nextSteps) {
                 if (nextStep != null && !printedSteps.contains(nextStep.getId().getKey())) {
                     printProcessSteps(nextStep);
