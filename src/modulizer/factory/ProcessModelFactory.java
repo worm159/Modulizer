@@ -1165,6 +1165,7 @@ public class ProcessModelFactory {
                                         .getRequireFunction()
                                 )
                                 .addProcessFunction(new ProceedFunctionModifier()
+                                        .setTargetUnit("Unit-1")
                                         .setNext("Unit 1 Step 2")
                                         .getProceedFunction()
                                 )
