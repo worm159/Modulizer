@@ -57,10 +57,13 @@ public class SingleEntrySingleExit extends ModularizationAlgorithm{
         // loop over each Step in the list firstSteps
         for (ProcessStepModel step : mn.getFirstSteps()) {
             ProcessUnitModelModifier unitModifier = getUnitModifier(step);
-            // call the recursive method handleStep
-            handleStep(step);
-            // set this step as StartProcessStep
-            unitModifier.setStartProcessStep(step.getId().getKey());
+            // only continue when the step is not finished yet
+            if(!finished.contains(step.getId())) {
+                // call the recursive method handleStep
+                handleStep(step);
+                // set this step as StartProcessStep
+                unitModifier.setStartProcessStep(step.getId().getKey());
+            }
         }
 
         // get the ProcessModels of each entry in the list models
